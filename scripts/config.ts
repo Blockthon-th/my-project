@@ -1,22 +1,71 @@
 import { config as loadEnv } from 'dotenv';
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 
-// .env 는 프로젝트 루트에 있다. 실행 위치(scripts/)와 무관하게 찾도록 절대 경로로 지정.
+/**
+ * 설정을 찾는 순서. 위로 갈수록 우선한다.
+ *
+ *  1. 환경변수 (CI·컨테이너)
+ *  2. 작업 중인 프로젝트의 `.env` (저장소 개발용)
+ *  3. **사용자 단위 설정** `~/.memory-market/config.json` (플러그인 사용자의 정상 경로)
+ *
+ * 비밀키는 플러그인과 함께 배포되지 않는다 — 지갑은 사람마다 다르고, 플러그인은 모두가
+ * 같은 코드를 받기 때문이다. MemWal 도 같은 구조로, 코드는 플러그인에 두고 자격 증명은
+ * 로그인 절차로 `~/.memwal/credentials.json` 에 따로 만든다.
+ *
+ * quiet: true 필수 — dotenv 가 stdout 에 로그를 찍으면 MCP 의 stdio JSON-RPC 스트림이 깨진다.
+ */
 const here = dirname(fileURLToPath(import.meta.url));
-loadEnv({ path: resolve(here, '..', '.env') });
+
+for (const p of [
+  process.env.MEMORY_MARKET_ENV,
+  resolve(process.cwd(), '.env'),
+  resolve(here, '..', '.env'),
+  resolve(here, '..', '..', '.env'),
+]) {
+  if (p && existsSync(p)) {
+    loadEnv({ path: p, quiet: true });
+    break;
+  }
+}
+
+/** 사용자 단위 설정 파일. 한 번 만들어두면 어느 프로젝트에서든 쓰인다. */
+export const USER_CONFIG_PATH = resolve(homedir(), '.memory-market', 'config.json');
+
+function loadUserConfig(): Record<string, string> {
+  try {
+    if (!existsSync(USER_CONFIG_PATH)) return {};
+    return JSON.parse(readFileSync(USER_CONFIG_PATH, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+const userConfig = loadUserConfig();
+
+/** 환경변수 → .env → 사용자 설정 순으로 찾는다. */
+function setting(name: string): string | undefined {
+  return process.env[name] ?? userConfig[name];
+}
 
 export const NETWORK = 'testnet' as const;
-export const PACKAGE_ID = req('MARKET_PACKAGE_ID');
+/**
+ * 배포된 시장 컨트랙트. 공개 정보이므로 기본값을 넣어둔다 —
+ * 구독자가 따로 설정해야 하는 건 자기 지갑 키뿐이다.
+ */
+const DEFAULT_PACKAGE_ID =
+  '0x9202b4c61a6ce136af797e9b85503b1ef2576d2e9f772d150a57227d12476b83';
+export const PACKAGE_ID = setting('MARKET_PACKAGE_ID') ?? DEFAULT_PACKAGE_ID;
 
 /**
  * 공개 풀노드는 JSON-RPC를 중단했다(Method not found / JsonRpcError).
  * 이제 gRPC(gRPC-web)로 붙는다. SDK는 반드시 @mysten/sui 2.x 이상 —
  * 1.x 의 gRPC 클라이언트는 transaction resolution 미지원 + read_mask 불일치로 현재 노드와 통신이 안 된다.
  */
-export const GRPC_URL = process.env.SUI_GRPC_URL ?? 'https://fullnode.testnet.sui.io:443';
+export const GRPC_URL = setting('SUI_GRPC_URL') ?? 'https://fullnode.testnet.sui.io:443';
 export const suiClient = new SuiGrpcClient({ network: NETWORK, baseUrl: GRPC_URL });
 
 /**
@@ -38,7 +87,7 @@ const INDEPENDENT_SERVERS = [
   { objectId: '0xf5d14a81a982144ae441cd7d64b09027f116a468bd36e7eca494f750591623c8', weight: 1 },
 ];
 
-export const SEAL_MODE = (process.env.SEAL_KEY_SERVERS ?? 'independent') as
+export const SEAL_MODE = (setting('SEAL_KEY_SERVERS') ?? 'independent') as
   | 'committee'
   | 'independent';
 export const KEY_SERVERS = SEAL_MODE === 'committee' ? COMMITTEE_SERVERS : INDEPENDENT_SERVERS;
@@ -50,7 +99,7 @@ export const SEAL_THRESHOLD = KEY_SERVERS.length;
  * `ExpiredSessionKeyError` 로 보여준다(실제 서버 코드: InvalidCertificate).
  * 서버 기본값은 30분이지만 배포에 따라 더 짧게 설정된 곳이 있다. 5분이면 대체로 안전.
  */
-export const SEAL_SESSION_TTL_MIN = Number(process.env.SEAL_SESSION_TTL_MIN ?? 5);
+export const SEAL_SESSION_TTL_MIN = Number(setting('SEAL_SESSION_TTL_MIN') ?? 5);
 
 /** Walrus testnet 공개 엔드포인트 */
 export const WALRUS_PUBLISHER = 'https://publisher.walrus-testnet.walrus.space';
@@ -59,8 +108,18 @@ export const WALRUS_AGGREGATOR = 'https://aggregator.walrus-testnet.walrus.space
 export const WALRUS_EPOCHS = 1;
 
 export function req(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`.env 에 ${name} 이 없습니다. .env.example 참고`);
+  const v = setting(name);
+  if (!v) {
+    throw new Error(
+      [
+        `설정 ${name} 이 없습니다. 다음 중 하나로 넣으세요:`,
+        `  1) 사용자 설정 (권장, 한 번만): ${USER_CONFIG_PATH}`,
+        `     { "${name}": "..." }`,
+        `  2) 프로젝트 .env: ${name}=...`,
+        `  3) 환경변수`,
+      ].join('\n'),
+    );
+  }
   return v;
 }
 

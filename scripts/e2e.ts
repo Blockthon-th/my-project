@@ -76,7 +76,7 @@ async function main() {
     tx.moveCall({
       target: `${PACKAGE_ID}::market::create_pack_entry`,
       arguments: [
-        tx.pure.string('sui-dev onboarding'),
+        tx.pure.string('[e2e-test] sui-dev onboarding'),
         tx.pure.string('Sui/Walrus/Seal 온보딩 과정에서 쌓인 실패와 해결 기록'),
         tx.pure.u64(FEE_MIST),
         tx.pure.u64(TTL_MS),

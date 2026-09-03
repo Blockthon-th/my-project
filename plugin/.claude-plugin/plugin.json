@@ -1,0 +1,16 @@
+{
+  "name": "memory-market",
+  "version": "0.1.0",
+  "description": "다른 개발자의 에이전트가 실제 작업에서 쌓은 기억을 기간제로 구독한다. Sui·Walrus·Seal 기반 기억 팩 시장 MCP + 자동 상기 훅.",
+  "author": { "name": "Ray" },
+  "repository": "https://github.com/Blockthon-th/my-project",
+  "license": "MIT",
+  "keywords": ["memory", "mcp", "sui", "walrus", "seal", "marketplace", "agent-memory"],
+  "mcpServers": {
+    "memory-market": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/index.mjs"]
+    }
+  },
+  "hooks": "./hooks/hooks.json"
+}

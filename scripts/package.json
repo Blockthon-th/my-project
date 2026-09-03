@@ -6,7 +6,9 @@
     "e2e": "tsx e2e.ts",
     "sync": "tsx sync.ts",
     "mcp": "tsx mcp/server.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check": "tsx check.ts",
+    "build:plugin": "esbuild mcp/server.ts --bundle --platform=node --format=esm --target=node20 --outfile=../plugin/server/index.mjs --banner:js=\"import{createRequire as __cr}from'node:module';const require=__cr(import.meta.url);\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
@@ -18,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.4.1",
+    "esbuild": "^0.28.2",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"
   }

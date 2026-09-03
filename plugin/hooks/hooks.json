@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "name": "memory-market-recall-nudge",
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/on_user_prompt.mjs\"",
+            "statusMessage": "기억 시장 확인 중...",
+            "timeout": 8
+          }
+        ]
+      }
+    ]
+  }
+}

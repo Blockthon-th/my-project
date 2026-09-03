@@ -45,3 +45,12 @@ MemWal 플러그인을 붙이기 전까지 여기에 수동 기록. 붙인 뒤�
 - [2026-09-03] 소유자의 기억 전체를 읽는 API가 있다: `GET /v1/owners/:owner/memories` (cursor 기반). Ed25519 서명 헤더 5개 또는 owner bearer 토큰으로 인증. SDK의 `recall`은 질의 기반이라 전량 덤프에는 이 API를 써야 한다.
 - [2026-09-03] MemWal의 Seal 열쇠 ID는 `BCS(owner) ‖ BCS(counter)` 하나뿐이다. 즉 **소유자당 열쇠 1개**라서 "기억 일부만 특정인에게" 같은 부분 접근이 구조적으로 불가능하다. 델리게이트를 등록하면 계정 전체가 열린다(최대 20개, 결제·만료 개념 없음). 팩 단위 거래는 별도 패키지에서 재암호화해야 한다.
 - [2026-09-03] Claude Code용 공식 플러그인이 저장소 안에 있다(`packages/mcp/plugin`). MCP 도구 5개 + SessionStart/UserPromptSubmit/PostToolUse 훅. 훅은 "저장해라"고 상기만 시키고 실제 저장 판단은 에이전트가 한다 → 확실히 쌓으려면 `CLAUDE.md`에 저장 규칙을 명시해야 한다.
+
+## MCP 서버
+
+- [2026-09-03] **stdio MCP 서버는 stdout 을 JSON-RPC 전용으로 비워둬야 한다.** 한 줄이라도 다른 출력이 섞이면 클라이언트가 `failed` 로 표시한다. 두 가지가 흔한 원인:
+  - `npm run <script>` 로 띄우면 npm 이 `> script` 배너를 stdout 에 찍는다 → **npm 을 거치지 말고 실행 파일을 직접 부를 것**. 예: `node scripts/node_modules/tsx/dist/cli.mjs scripts/mcp/server.ts`.
+  - dotenv v17 은 `◇ injected env (N) from .env` 를 stdout 에 찍는다 → `config({ quiet: true })` 필수.
+  로그는 전부 `console.error`(stderr)로 보낼 것. 디버깅은 `claude --debug`.
+- [2026-09-03] Windows 에서 `.mcp.json` 의 `command` 에 `npm`/`npx` 를 쓰면 `.cmd` 해석 문제로 실패할 수 있다. `node` + 스크립트 절대/상대 경로가 가장 안전하다.
+

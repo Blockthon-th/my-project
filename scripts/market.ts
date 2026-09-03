@@ -214,8 +214,26 @@ export async function getPack(packId: string): Promise<PackInfo | null> {
   };
 }
 
-/** PackCreated 이벤트로 모든 팩을 나열한다 */
-export async function listPacks(limit = 50): Promise<PackInfo[]> {
+/**
+ * 구독 기간이 이보다 짧은 팩은 목록에 띄우지 않는다.
+ * `e2e.ts` 가 만료를 시연하려고 만드는 60초짜리 테스트 팩을 걸러내기 위한 것이고,
+ * 실제 상품으로도 몇 분짜리 구독은 팔 물건이 아니다.
+ */
+const MIN_LISTED_TTL_MS = 5 * 60 * 1000;
+
+/** `.env` 의 MARKET_HIDDEN_PACKS 에 쉼표로 나열한 팩은 숨긴다. */
+const hiddenPacks = new Set(
+  (process.env.MARKET_HIDDEN_PACKS ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean),
+);
+
+/**
+ * PackCreated 이벤트로 시장의 팩을 나열한다.
+ * @param includeAll true 면 테스트 팩까지 전부 (점검용)
+ */
+export async function listPacks(limit = 50, includeAll = false): Promise<PackInfo[]> {
   const res = await suiClient.listEvents({
     filter: { eventType: `${PACKAGE_ID}::market::PackCreated` },
     limit,
@@ -224,7 +242,11 @@ export async function listPacks(limit = 50): Promise<PackInfo[]> {
     .map((e) => (e.json as { pack_id?: string } | null)?.pack_id)
     .filter((v): v is string => typeof v === 'string');
   const packs = await Promise.all([...new Set(ids)].map((id) => getPack(id).catch(() => null)));
-  return packs.filter((p): p is PackInfo => p !== null);
+  const all = packs.filter((p): p is PackInfo => p !== null);
+  if (includeAll) return all;
+  return all.filter(
+    (p) => p.ttlMs >= MIN_LISTED_TTL_MS && p.memoryCount > 0 && !hiddenPacks.has(p.packId),
+  );
 }
 
 /**

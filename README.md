@@ -33,8 +33,30 @@ scripts/
   mcp/server.ts            구독자 에이전트용 MCP 서버
   *.ps1                    설치·배포·지갑 준비 (Windows)
 docs/dev-memories.md       개발하며 쌓인 기억 — 데모에서 판매할 팩의 원천
+  hooks/on_user_prompt.mjs  매 질문마다 시장을 상기시키는 훅
+plugin/                    Claude Code 플러그인 (MCP + 훅을 한 번에 설치)
+.claude-plugin/            플러그인 마켓플레이스 정의
 docs/DEMO.md               3분 데모 시나리오 + 예상 질문
 ```
+
+## 플러그인
+
+MCP 도구는 에이전트가 "지금 쓸 상황"이라고 판단해야만 호출된다. 코딩 에이전트는 오류를 보면
+먼저 로컬 코드를 뒤지므로 도구 설명만으로는 잘 불리지 않는다. 그래서 **MCP + 훅**을 플러그인 하나로 묶었다.
+(MemWal 공식 플러그인도 같은 이유로 같은 구조를 쓴다.)
+
+```powershell
+cd scripts; npm run build:plugin    # 서버를 plugin/server/index.mjs 로 번들
+```
+
+Claude Code 에서:
+
+```
+/plugin marketplace add C:\Users\pc\source\my-project
+/plugin install memory-market
+```
+
+설치하면 프로젝트마다 설정할 필요 없이 도구 넷과 상기 훅이 함께 붙는다.
 
 ## 사용
 

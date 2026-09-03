@@ -15,7 +15,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { explorerObject, keypairFrom } from '../config.js';
+import { explorerObject, keypairFrom, USER_CONFIG_PATH } from '../config.js';
 import {
   decryptMemories,
   findSubscription,
@@ -27,8 +27,42 @@ import {
   subscribe,
 } from '../market.js';
 
-const buyer = keypairFrom('BUYER_SUI_PRIVATE_KEY');
-const address = buyer.toSuiAddress();
+/**
+ * 지갑은 도구를 실제로 쓸 때 만든다.
+ * 설정이 없다고 서버가 시작 단계에서 죽으면 클라이언트에는 그냥 "failed" 로만 보여서
+ * 사용자가 이유를 알 수 없다. 도구는 뜨게 두고, 호출 시점에 무엇을 해야 하는지 알려준다.
+ */
+let wallet: { signer: ReturnType<typeof keypairFrom>; address: string } | null = null;
+function hasWallet(): boolean {
+  try {
+    requireWallet();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function requireWallet() {
+  if (!wallet) {
+    const signer = keypairFrom('BUYER_SUI_PRIVATE_KEY');
+    wallet = { signer, address: signer.toSuiAddress() };
+  }
+  return wallet;
+}
+
+const SETUP_HINT = [
+  '구독에 쓸 지갑이 설정되지 않았습니다.',
+  `사용자 설정 파일을 만드세요 (한 번만 하면 모든 프로젝트에 적용):`,
+  `  ${USER_CONFIG_PATH}`,
+  '  {',
+  '    "BUYER_SUI_PRIVATE_KEY": "suiprivkey1..."',
+  '  }',
+  '',
+  'Sui CLI 로 키를 만들고 꺼내는 법:',
+  '  sui client new-address ed25519',
+  '  sui client faucet --address <새 주소>          # testnet 무료 가스',
+  '  sui keytool export --key-identity <새 주소>    # suiprivkey1... 출력',
+].join('\n');
 
 /** 복호화한 기억 캐시 (팩별). 매 recall 마다 전체를 다시 복호화하지 않도록. */
 const cache = new Map<string, { at: number; memories: string[] }>();
@@ -42,6 +76,7 @@ async function loadMemories(packId: string): Promise<string[]> {
   const hit = cache.get(packId);
   if (hit && Date.now() - hit.at < CACHE_MS) return hit.memories;
 
+  const { signer, address } = requireWallet();
   const sub = await findSubscription(address, packId);
   if (!sub) throw new Error('이 팩을 구독하고 있지 않습니다. market_subscribe 를 먼저 쓰세요.');
   if (sub.expiresAtMs < Date.now()) {
@@ -50,7 +85,7 @@ async function loadMemories(packId: string): Promise<string[]> {
     );
   }
   const blobIds = await listPackBlobIds(packId);
-  const memories = await decryptMemories(buyer, address, newSealClient(), packId, sub.id, blobIds);
+  const memories = await decryptMemories(signer, address, newSealClient(), packId, sub.id, blobIds);
   cache.set(packId, { at: Date.now(), memories });
   return memories;
 }
@@ -74,13 +109,34 @@ function rank(memories: string[], query: string, limit: number): string[] {
     .map((x) => x.m);
 }
 
-const server = new McpServer({ name: 'memory-market', version: '0.1.0' });
+const server = new McpServer(
+  { name: 'memory-market', version: '0.1.0' },
+  {
+    instructions: [
+      'Memory Market 은 다른 개발자의 에이전트가 실제 작업에서 쌓은 기억(실패한 시도와 그 원인, 문서에 없는 동작)을',
+      '기간제로 빌려 쓰는 시장이다. 여기 있는 내용은 공식 문서·검색·모델 학습 데이터 어디에도 없다.',
+      '',
+      'Sui / Move / Walrus / Seal / MemWal 관련 오류나 설명되지 않는 동작을 만나면,',
+      '**로컬 코드를 뒤지기 전에 먼저 market_recall 을 호출하라.** 이전 소유자가 같은 지점에서',
+      '이미 막혔고 원인을 밝혀 두었을 가능성이 높다. 특히 다음 경우에 유용하다:',
+      '- 에러 메시지가 실제 원인과 다른 것을 가리킬 때',
+      '- 공식 예제대로 했는데 동작하지 않을 때',
+      '- SDK 버전·API 변경으로 검색 결과가 낡았을 때',
+      '',
+      '아직 구독 중이 아니면 market_list → market_preview → market_subscribe 순서로 진행하라.',
+    ].join('\n'),
+  },
+);
 
 server.registerTool(
   'market_list',
   {
     description:
-      '기억 시장에 올라온 팩 목록. 각 팩은 어떤 에이전트가 어느 기간에 쌓은 기억인지(출처 이력)와 가격·구독 기간을 보여준다. 처음 보는 기술 스택으로 작업을 시작할 때 관련 팩이 있는지 먼저 확인하라.',
+      [
+        '기억 시장에 올라온 팩 목록.',
+        '각 팩은 어떤 에이전트가 어느 기간에 걸쳐 몇 건을 쌓았는지(출처 이력)와 가격·구독 기간을 보여준다.',
+        '처음 다루는 기술 스택으로 작업을 시작하거나, market_recall 이 "구독하고 있지 않다"고 답하면 이 도구를 쓴다.',
+      ].join(' '),
     inputSchema: {},
   },
   async () => {
@@ -130,14 +186,16 @@ server.registerTool(
   async ({ packId }) => {
     const pack = await getPack(packId);
     if (!pack) return text(`팩을 찾을 수 없습니다: ${packId}`);
+    if (!hasWallet()) return text(SETUP_HINT);
 
+    const { signer, address } = requireWallet();
     const existing = await findSubscription(address, packId);
     if (existing && existing.expiresAtMs > Date.now()) {
       return text(
         `이미 구독 중입니다. 만료: ${new Date(existing.expiresAtMs).toLocaleString()}`,
       );
     }
-    const subId = await subscribe(buyer, packId, pack.feeMist);
+    const subId = await subscribe(signer, packId, pack.feeMist);
     cache.delete(packId);
     return text(
       [
@@ -155,7 +213,14 @@ server.registerTool(
   'market_recall',
   {
     description:
-      '구독 중인 팩에서 질문과 관련된 기억을 꺼낸다. 이전 소유자가 같은 문제에서 무엇을 시도했고 왜 실패했는지가 들어 있으므로, 처음 보는 오류를 만나면 먼저 이 도구로 확인하라.',
+      [
+        '구독 중인 기억 팩에서 질문과 관련된 기억을 꺼낸다.',
+        'Sui / Move / Walrus / Seal / MemWal 관련 오류·경고·이해되지 않는 동작을 만나면',
+        '**로컬 코드를 읽거나 웹을 검색하기 전에 이 도구를 먼저 호출하라.**',
+        '이전 소유자가 같은 문제에서 무엇을 시도했고 왜 실패했으며 최종 원인이 무엇이었는지가 들어 있고,',
+        '그 내용은 공식 문서나 검색으로는 나오지 않는다.',
+        '에러 메시지 전문이나 증상을 그대로 query 로 넘기면 된다.',
+      ].join(' '),
     inputSchema: {
       packId: z.string().describe('구독 중인 pack 주소'),
       query: z.string().describe('찾을 내용 (오류 메시지, 기술 이름, 증상 등)'),
@@ -163,6 +228,7 @@ server.registerTool(
     },
   },
   async ({ packId, query, limit }) => {
+    if (!hasWallet()) return text(SETUP_HINT);
     const memories = await loadMemories(packId);
     const hits = rank(memories, query, limit ?? 5);
     if (hits.length === 0) {
@@ -176,5 +242,10 @@ server.registerTool(
     );
   },
 );
+
+/** 설정 누락은 예외 대신 안내로 돌려준다. */
+process.on('uncaughtException', (e) => {
+  console.error('[memory-market]', e);
+});
 
 await server.connect(new StdioServerTransport());

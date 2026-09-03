@@ -2,6 +2,72 @@
 
 > 핵심 한 장면: **같은 질문에 대해, 구독 전 에이전트는 일반론을 말하고 구독 후 에이전트는 이전 소유자의 실제 삽질 기록으로 답한다.**
 
+## 구독자 환경 — 반드시 별도 폴더
+
+**판매자 저장소 안에서 데모하면 안 된다.** 그 안에는 `docs/dev-memories.md` 가 평문으로 있어서,
+에이전트가 `market_recall` 을 쓰지 않고 그 파일을 그냥 읽어버린다(실제로 리허설에서 그렇게 됐다).
+심사위원이 바로 알아챌 지점이다.
+
+구독자용 빈 폴더를 따로 만든다:
+
+```powershell
+mkdir C:\Users\pc\source\memory-market-demo
+cd C:\Users\pc\source\memory-market-demo
+```
+
+`.mcp.json` (판매자 저장소의 서버를 절대 경로로 가리킨다 — 서버는 자기 위치 기준으로 .env 를 찾으므로 그대로 동작한다):
+
+```json
+{
+  "mcpServers": {
+    "memory-market": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\pc\\source\\my-project\\scripts\\node_modules\\tsx\\dist\\cli.mjs",
+        "C:\\Users\\pc\\source\\my-project\\scripts\\mcp\\server.ts"
+      ]
+    }
+  }
+}
+```
+
+`CLAUDE.md` — 새 프로젝트를 시작하는 상황을 만든다:
+
+```markdown
+# my-sui-app
+
+Sui 위에 dApp 을 만들려고 한다. 아직 아무것도 없다.
+```
+
+`.claude/settings.json` — **훅**. 매 질문마다 에이전트에게 시장을 상기시킨다.
+MCP 도구는 에이전트가 "쓸 상황"이라고 판단해야만 호출되는데, 코딩 에이전트는 오류를 보면
+먼저 로컬 코드를 뒤진다. MemWal 공식 플러그인도 같은 이유로 훅을 넣었다
+(설계 문서: "agent rarely called it unprompted").
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\pc\\source\\my-project\\scripts\\hooks\\on_user_prompt.mjs\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+훅은 Sui / Move / Walrus / Seal 관련 질문일 때만 반응하고, 세션 첫 질문엔 전체 안내,
+이후엔 한 줄 상기, 무관한 대화엔 아무것도 하지 않는다.
+
+> 실제 배포에서는 이 훅과 MCP 설정을 **플러그인 하나로 묶어** 한 번 설치하면 끝나게 한다.
+> "에이전트가 도구를 안 쓰면 어쩌나"에 대한 답이 바로 이것이다.
+
 ## 준비 (데모 전에 미리)
 
 1. 판매자 팩을 채워둔다.
