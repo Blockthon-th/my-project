@@ -8,3 +8,5 @@ dist/
 .DS_Store
 contracts/**/build/
 scripts/.sync-state.json
+_to_delete/
+node_modules/
