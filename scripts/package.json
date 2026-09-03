@@ -1,0 +1,24 @@
+{
+  "name": "memory-market-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "tsx e2e.ts",
+    "sync": "tsx sync.ts",
+    "mcp": "tsx mcp/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@mysten-incubation/memwal": "^0.1.5",
+    "@mysten/seal": "^1.4.8",
+    "@mysten/sui": "^2.29.0",
+    "dotenv": "^17.2.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
