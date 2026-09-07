@@ -215,7 +215,7 @@ export function evidenceToLive(
       shot: shot ?? prev?.shot ?? null,
       passed: passed.length,
       total: passed.length + failed.length,
-      ts: typeof j.ts === 'number' ? j.ts : Date.now(),
+      ts: Date.now() /* 영수증 시각 — 에이전트가 쓴 evidence.ts 는 신뢰하지 않는다 */,
       applied: Array.isArray(j.applied) ? (j.applied as { step: number; selector: string }[]) : (prev?.applied ?? []),
       failed,
     };

@@ -60443,7 +60443,7 @@ function evidenceToLive(json2, shot, prev) {
       shot: shot ?? prev?.shot ?? null,
       passed: passed.length,
       total: passed.length + failed.length,
-      ts: typeof j.ts === "number" ? j.ts : Date.now(),
+      ts: Date.now(),
       applied: Array.isArray(j.applied) ? j.applied : prev?.applied ?? [],
       failed
     };

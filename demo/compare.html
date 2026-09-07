@@ -479,7 +479,7 @@ function renderCompare() {
     const fb = { tint: '#5fc3b3', label: `사전 실행 ${i + 1}`, fixed: b._fixed ?? [] };
     return `<div class="bl">
       <div class="thumb">${img(imgSrc(b.shot, fb), `baseline ${i + 1}`, fb)}</div>
-      <div class="meta"><span class="who">${i + 1}회차 · 같은 프롬프트, 팩 없음</span>
+      <div class="meta"><span class="who">${i + 1}회차 · 팩 없음${/^oracle/.test(b.label || "") ? " · 검사 도구 있음" : /^noq/.test(b.label || "") ? " · 검사 도구 없음" : ""}</span>
         <span class="score sm ${scoreClass(b.passed, b.total)}">${esc(b.passed)} / ${esc(b.total)}</span>
         <span class="when">${hhmmss(b.ts)}</span></div></div>`;
   }).join('') : `<div class="empty">기준선이 없습니다 — <code>mm baseline --dir …</code> 를 3회</div>`;
