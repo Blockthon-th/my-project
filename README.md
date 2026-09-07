@@ -5,17 +5,21 @@ Sui · Walrus · Seal · MemWal 위에 얹는 앱 층 프로젝트 (프로토콜
 
 Blockthon 2026 출품작. 기획은 [PLANNING.md](PLANNING.md).
 
-## 지금까지 동작 확인된 것 (testnet)
+## 지금까지 동작 확인된 것 (testnet, 2026-09-07 실측)
 
-`scripts/e2e.ts` 가 전 과정을 통과한다:
+텍스트 기억 팩(`scripts/e2e.ts`)과 디자인 과정 팩(`scripts/e2e-design.ts` + 실제 세션) 둘 다 전 과정을 통과한다.
 
 1. 판매자가 **기억 팩** 생성 (가격·구독 기간·출처 이력이 담긴 Sui 공유 객체)
-2. 기억을 **Seal 로 암호화 → Walrus 업로드 → 팩에 등록**
+2. 기억을 **Seal 로 암호화 → Walrus 업로드 → 팩에 등록** (디자인 팩은 publish×5 + 미리보기×3 을 트랜잭션 1건으로)
 3. 구독자가 **SUI 결제 → 구독권 발급** (수수료는 판매자에게 즉시 전송)
-4. 구독 유효 → **복호화 성공**, 원문 회수
-5. 만료 후 → **새 클라이언트는 키를 받지 못함** (NoAccessError)
+4. 구독 유효 → **배치 fetchKeys 1회로 전 단계 복호화**, record_hash 를 공개 manifest 와 대조
+5. 만료 후 → **새 클라이언트는 키를 받지 못함** (`seal_approve aborted: subscription expired`, Seal 키 서버 거부 실측)
+6. 구독자만 남길 수 있는 **해결 영수증** (`leave_receipt`, 구독당 1회 — 두 번째는 abort code 5)
+7. 판매자의 **단계 폐기** (`retract`) → 다음 recall 에서 제외
+8. **실제 Claude Code 세션**에서 훅이 판매자의 5턴을 자동 기록했고(전부 targeted, step-note 5/5), 구매자 에이전트가 `/improve` 한 번으로 팩을 찾아 사고(0.05 SUI) 교훈 5개를 적용해 검사 5/5 를 첫 시도에 통과한 뒤 영수증을 남겼다 (15턴 125초)
 
 배포된 패키지: `0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196` (testnet)
+디자인 팩: `0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` · Sui 기억 팩(30건): `0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40`
 
 ## 구조
 
@@ -151,9 +155,11 @@ cd scripts; npm install; npm run e2e
 
 ## 다음
 
+- [x] `npm run sync` 실측 — Sui 기억 팩 30건 업로드 (새 패키지)
+- [x] MCP 서버를 구독자 Claude Code 에 붙여 리허설 — 헤드리스 구매자 세션 통과 (신뢰 대화상자 수락이 선행 조건, docs/DEMO.md)
+- [x] 만료 후 캐시 문제 — `mm recall --fresh` 와 market_acquire 는 호출마다 새 SealClient/SessionKey
 - [ ] **MemWal 플러그인 연결** — 개발 기억을 `sui-dev` 네임스페이스에 자동 수집
       (`npx -y @mysten-incubation/memwal-mcp login` 후 `.env` 에 키 기록 → `MEMORY_SOURCE=memwal`)
-- [ ] `npm run sync` 실측 (팩 생성 · 업로드 · 미리보기)
-- [ ] MCP 서버를 구독자 Claude Code 에 붙여 데모 리허설
-- [ ] 팩 목록 웹 (선택, Walrus Sites 배포하면 활용도 점수 +)
-- [ ] 만료 후 캐시 문제 — MCP 서버가 요청마다 키를 새로 받도록 (현재 60초 캐시)
+- [ ] 기준선 설계 — 검사 도구를 쥐여준 기준선은 5/5 를 맞추므로(실측 3/3) 비교는 첫 수정 점수·턴 수·소요로. 결함 유형을 모델이 기본으로 못 맞히는 쪽으로 조정
+- [ ] 스폰서 결제 (재단이 예치 → 신규 개발자 구독 무료) — 발표에서는 로드맵으로
+- [ ] supersede(정정), 수수료 싱크(자기 구독 영수증 비용화), Quilt 로 단계 묶음 저장, Walrus Sites 카탈로그 (선택)

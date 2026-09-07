@@ -13,7 +13,7 @@
  *
  * capture.mjs 는 runChecks() 를 직접 import 해서(브라우저 공유) 쓴다.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import {mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { dirname } from 'node:path';
 import { budget, jpegUnder, openPage } from './shot.mjs';
 import { isMain, parseWH, sha256 } from './lib.mjs';
@@ -547,6 +547,11 @@ if (isMain(import.meta.url)) {
   if (!a.html) {
     console.error('usage: node check.mjs <html> [--viewport WxH] [--mobile WxH] [--only id,id]');
     process.exit(2);
+  }
+  if (!existsSync(a.html)) {
+    // 없는 파일은 빈 페이지로 렌더되어 4/5 처럼 보인다 — 점수 대신 오류로 끝낸다.
+    process.stdout.write(JSON.stringify({ error: "file not found", html: a.html, passed: [], failed: [] }) + "\n");
+    process.exit(3);
   }
   const r = await runChecks(a.html, { viewport: a.viewport, mobile: a.mobile, only: a.only });
   process.stdout.write(JSON.stringify(r) + '\n');
