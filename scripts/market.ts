@@ -11,7 +11,7 @@
  */
 import { EncryptedObject, NoAccessError, SealClient } from '@mysten/seal';
 import { Transaction } from '@mysten/sui/transactions';
-import { fromHex, toHex, SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
+import { fromHex, isValidSuiObjectId, normalizeSuiObjectId, toHex, SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
 import { bcs } from '@mysten/sui/bcs';
 import type { Signer } from '@mysten/sui/cryptography';
 import {
@@ -41,7 +41,17 @@ export const newSealClient = () =>
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
-/** Seal 이 키를 거부했는지 (만료·비구독·폐기 등 seal_approve abort) */
+/**
+ * 에이전트·CLI 가 넘긴 객체 ID 를 검증하고 정규화한다 (0x + 64 hex).
+ * 팩 ID 는 캐시 폴더 이름과 Seal identity 접두사에 쓰이므로 임의 문자열이 흘러들면 안 된다.
+ */
+export function normalizeObjectId(id: string, what = 'pack id'): string {
+  const s = String(id ?? '').trim();
+  if (!isValidSuiObjectId(s)) throw new Error(`${what} 형식이 아닙니다 (0x + 64 hex): ${s.slice(0, 80)}`);
+  return normalizeSuiObjectId(s);
+}
+
+/** Seal 이 키를 거부했는지 (만료·비구독 등 seal_approve abort) */
 export const isNoAccess = (e: unknown): boolean =>
   e instanceof NoAccessError || /no ?access/i.test(String(e));
 
@@ -377,11 +387,20 @@ export async function decryptAll(
 ): Promise<DecryptedBlob[]> {
   const log = opts.log ?? (() => {});
   if (blobIds.length === 0) return [];
-  const items = await mapLimit(blobIds, 4, async (blobId) => {
+  const fetched = await mapLimit(blobIds, 4, async (blobId) => {
     const data = await readBlob(blobId);
     const id = EncryptedObject.parse(data).id;
     return { blobId, data, id };
   });
+  // 블롭은 판매자가 올린 것이다. identity 가 이 팩의 접두사가 아니면 seal_approve 가 ENoAccess 로 abort 하고
+  // 배치 전체가 "거부" 로 보이므로(만료로 오인), 그런 블롭은 미리 빼고 알린다.
+  const prefix = toHex(fromHex(packId));
+  const items = fetched.filter((it) => {
+    const ok = it.id.toLowerCase().startsWith(prefix.toLowerCase());
+    if (!ok) log(`Seal: 블롭 ${it.blobId.slice(0, 12)}… 의 identity 가 이 팩 접두사가 아님 → 제외`);
+    return ok;
+  });
+  if (items.length === 0) return [];
   const sessionKey = await createSessionKey(signer, address);
   const ids = [...new Set(items.map((i) => i.id))];
   const batchTx = await approveTxBytes(ids, subscriptionId, packId);

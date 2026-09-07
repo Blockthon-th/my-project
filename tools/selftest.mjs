@@ -420,6 +420,64 @@ async function scenarioC() {
   return [dir, plain];
 }
 
+/* ───────────── 시나리오 D ───────────── */
+
+/** Claude Code 실제 동작에 맞춘 견고성: last_assistant_message 우선, cwd 가 딴 데를 가리켜도 CLAUDE_PROJECT_DIR 로 세션 폴더를 찾는다 */
+async function scenarioD() {
+  section("D. last_assistant_message 우선 · CLAUDE_PROJECT_DIR 로 세션 폴더 · 딴 cwd 는 무시");
+  const dir = makeProject("D", { entryHtml: V1, seriesId: "d-series" });
+  const entry = join(dir, "index.html");
+  const tr = new Transcript(join(dir, "transcript.jsonl"));
+  const elsewhere = mkdtempSync(join(ROOT, "mm-selftest-D-elsewhere-"));
+  const step = (n, ext) => join(dir, ".mm", "steps", `step-${n}${ext}`);
+  const state = () => readJson(join(dir, ".mm", "state.json"), {});
+
+  // D1: transcript 가 늦어서(이번 턴 assistant 메시지가 아직 없음) 마지막 사람 프롬프트만 있다 → last_assistant_message 의 step-note 가 쓰여야 한다
+  tr.human(P3);
+  hook(dir, "prompt", { cwd: dir, transcript_path: tr.path, prompt: P3 }, "D1 prompt");
+  writeFileSync(entry, V2);
+  hook(dir, "tool", { cwd: dir, tool_name: "Edit", tool_input: { file_path: entry } }, "D1 tool");
+  const d1 = hook(dir, "stop", { cwd: dir, transcript_path: tr.path, last_assistant_message: A3 }, "D1 stop (transcript lagging)");
+  const r1 = readJson(step(1, ".json"));
+  validateRecord(r1, "D step-1");
+  if (r1) {
+    assert(r1.why === NOTE3.why && r1.lesson === NOTE3.lesson && r1.verdict === "accepted" && r1.intent === "fix", "D1: step-note(intent/why/lesson/verdict) 는 last_assistant_message 에서 (transcript 에는 아직 없음)", { why: r1.why, lesson: r1.lesson });
+  }
+  assert(/step 1 captured/.test(parseSystemMessage(d1.stdout) || ""), "D1: systemMessage", d1.stdout);
+
+  // D2: transcript 에는 옛 턴의 note 가 있고 last_assistant_message 에는 note 없이 문단만 → 문단이 why, lesson null (옛 note 가 새지 않는다)
+  tr.assistant([{ type: "text", text: A3 }]);
+  tr.human("nav 겹침도 고쳐");
+  hook(dir, "prompt", { cwd: dir, transcript_path: tr.path, prompt: "nav 겹침도 고쳐" }, "D2 prompt");
+  writeFileSync(entry, V3);
+  hook(dir, "tool", { cwd: dir, tool_name: "Edit", tool_input: { file_path: entry } }, "D2 tool");
+  hook(dir, "stop", { cwd: dir, transcript_path: tr.path, last_assistant_message: "body 에 padding-top 을 줬습니다.\n\nnav 높이 64px 만큼 밀었습니다." }, "D2 stop");
+  const r2 = readJson(step(2, ".json"));
+  validateRecord(r2, "D step-2");
+  if (r2) assert(r2.why === "nav 높이 64px 만큼 밀었습니다." && r2.lesson === null && r2.prev_hash === r1?.record_hash, "D2: last_assistant_message 문단이 why, 옛 note 미사용, 체인 연결", { why: r2.why, lesson: r2.lesson });
+
+  // D3: 모델이 Bash 로 cd 해서 hook 의 cwd 가 다른 폴더 — CLAUDE_PROJECT_DIR 로 세션 폴더를 찾아야 한다
+  const withEnv = (ev, input, label) => {
+    const t = Date.now();
+    const r = spawnSync(process.execPath, [CAPTURE, ev], { cwd: elsewhere, input: JSON.stringify(input), encoding: "utf8", timeout: 90000, windowsHide: true, env: { ...process.env, CLAUDE_PROJECT_DIR: dir } });
+    assert(r.status === 0, `${label}: exit 0 (${Date.now() - t}ms)`, { status: r.status, stderr: (r.stderr || "").slice(0, 300) });
+    return { stdout: r.stdout || "" };
+  };
+  withEnv("prompt", { cwd: elsewhere, prompt: "아까 걸로 되돌려줘" }, "D3 prompt (cwd elsewhere)");
+  writeFileSync(entry, V2);
+  withEnv("tool", { cwd: elsewhere, tool_name: "Edit", tool_input: { file_path: entry } }, "D3 tool (cwd elsewhere)");
+  const d3 = withEnv("stop", { cwd: elsewhere, last_assistant_message: "되돌렸습니다." }, "D3 stop (cwd elsewhere)");
+  assert(/step 3 captured/.test(parseSystemMessage(d3.stdout) || "") && state().step === 3, "D3: cwd 가 딴 폴더여도 CLAUDE_PROJECT_DIR 의 .mm 에 기록", d3.stdout);
+  assert(!existsSync(join(elsewhere, ".mm")), "D3: 딴 폴더에는 .mm 을 만들지 않는다");
+  const r3 = readJson(step(3, ".json"));
+  if (r3) assert(r3.files_touched[0] === "index.html" && r3.intent === "revert", "D3: 경로는 세션 폴더 기준, intent revert", { files: r3.files_touched, intent: r3.intent });
+
+  // D4: CLAUDE_PROJECT_DIR 없이 cwd 만 딴 폴더 → 조용히 아무것도 안 함 (구매자 폴더 등으로 누출 없음)
+  const d4 = spawnSync(process.execPath, [CAPTURE, "stop"], { cwd: elsewhere, input: JSON.stringify({ cwd: elsewhere }), encoding: "utf8", windowsHide: true, env: Object.fromEntries(Object.entries(process.env).filter(([k]) => k !== "CLAUDE_PROJECT_DIR")) });
+  assert(d4.status === 0 && !d4.stdout.trim() && !existsSync(join(elsewhere, ".mm")) && state().step === 3, "D4: .mm 없는 cwd + CLAUDE_PROJECT_DIR 없음 → 무동작", d4.stdout);
+  return [dir, elsewhere];
+}
+
 /* ───────────── 실행 ───────────── */
 
 const t0 = Date.now();
@@ -428,6 +486,7 @@ try {
   made.push(await scenarioA());
   made.push(await scenarioB());
   made.push(...(await scenarioC()));
+  made.push(...(await scenarioD()));
 } catch (e) {
   failures++;
   process.stdout.write(`  FAIL uncaught: ${e?.stack || e}\n`);

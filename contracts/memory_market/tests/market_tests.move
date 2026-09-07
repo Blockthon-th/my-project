@@ -329,6 +329,59 @@ fun seller_retracts_blob() {
     scn.end();
 }
 
+/// 폐기는 회수가 아니다: 유효한 구독권으로는 폐기 뒤에도 seal_approve 가 통과한다 (문서화된 한계).
+/// 구매자 도구가 is_retracted 로 걸러야 한다.
+#[test]
+fun retracted_blob_key_still_approves_for_valid_subscriber() {
+    let mut scn = ts::begin(SELLER);
+    let cap = new_pack(&mut scn, 1_000);
+    scn.next_tx(SELLER);
+    let mut pack = scn.take_shared<MemoryPack>();
+    market::publish(&mut pack, &cap, string::utf8(b"blob-A"), 500);
+    let c = clock_at(&mut scn, 5_000);
+    market::retract(&mut pack, &cap, string::utf8(b"blob-A"), 2, &c);
+    assert!(market::is_retracted(&pack, string::utf8(b"blob-A")));
+    c.destroy_for_testing();
+    ts::return_shared(pack);
+    transfer::public_transfer(cap, SELLER);
+
+    scn.next_tx(BUYER);
+    let mut pack = scn.take_shared<MemoryPack>();
+    let sub = buy(&mut scn, &mut pack, 10_000);
+    let c = clock_at(&mut scn, 20_000);
+    market::seal_approve(key_id(&pack, 1), &sub, &pack, &c);
+    c.destroy_for_testing();
+    transfer::public_transfer(sub, BUYER);
+    ts::return_shared(pack);
+    scn.end();
+}
+
+/// 구독권이 양도되면 영수증의 subscriber 는 tx sender(양수인)다 — 원 구매자 이름으로 남길 수 없다.
+#[test]
+fun receipt_records_current_holder_after_transfer() {
+    let mut scn = ts::begin(SELLER);
+    let cap = new_pack(&mut scn, 1_000);
+    transfer::public_transfer(cap, SELLER);
+
+    scn.next_tx(BUYER);
+    let mut pack = scn.take_shared<MemoryPack>();
+    let sub = buy(&mut scn, &mut pack, 10_000);
+    ts::return_shared(pack);
+    transfer::public_transfer(sub, @0xC0FFEE);
+
+    scn.next_tx(@0xC0FFEE);
+    let mut pack = scn.take_shared<MemoryPack>();
+    let sub = scn.take_from_sender<Subscription>();
+    let c = clock_at(&mut scn, 20_000);
+    market::leave_receipt(&mut pack, &sub, 1, string::utf8(b"evidence"), &c, scn.ctx());
+    let (who, _, _, _) = market::receipt(&pack, object::id(&sub));
+    assert!(who == @0xC0FFEE);
+    c.destroy_for_testing();
+    scn.return_to_sender(sub);
+    ts::return_shared(pack);
+    scn.end();
+}
+
 #[test, expected_failure(abort_code = market::ENoSuchBlob)]
 fun retract_unknown_blob_fails() {
     let mut scn = ts::begin(SELLER);

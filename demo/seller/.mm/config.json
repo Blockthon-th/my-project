@@ -1,10 +1,23 @@
 {
   "entry": "index.html",
-  "viewport": [1280, 800],
-  "mobile": [375, 812],
+  "viewport": [
+    1280,
+    800
+  ],
+  "mobile": [
+    375,
+    812
+  ],
   "series_id": "fintech-landing-01",
   "domain": "design.web",
   "name": "Paylane 랜딩 5턴 교정 과정",
   "brief": "핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정",
-  "checks": ["cta-contrast", "h1-lines", "no-hscroll", "card-height", "nav-overlap"]
+  "checks": [
+    "cta-contrast",
+    "h1-lines",
+    "no-hscroll",
+    "card-height",
+    "nav-overlap"
+  ],
+  "git": false
 }

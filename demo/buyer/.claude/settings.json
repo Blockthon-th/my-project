@@ -1,4 +1,6 @@
 {
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": ["memory-market"],
   "permissions": {
     "allow": [
       "mcp__memory-market",

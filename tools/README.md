@@ -32,11 +32,11 @@ JSON 안에서는 백슬래시를 두 번 쓴다 (`C:/mm/tools/capture.mjs` 처�
 {
   "hooks": {
     "UserPromptSubmit": [
-      { "hooks": [ { "type": "command", "command": "node C:\\mm\\tools\\capture.mjs prompt", "timeout": 10 } ] }
+      { "hooks": [ { "type": "command", "command": "node C:\\mm\\tools\\capture.mjs prompt", "timeout": 60 } ] }
     ],
     "PostToolUse": [
       { "matcher": "Edit|MultiEdit|Write",
-        "hooks": [ { "type": "command", "command": "node C:\\mm\\tools\\capture.mjs tool", "timeout": 10 } ] }
+        "hooks": [ { "type": "command", "command": "node C:\\mm\\tools\\capture.mjs tool", "timeout": 60 } ] }
     ],
     "Stop": [
       { "hooks": [ { "type": "command", "command": "node C:\\mm\\tools\\capture.mjs stop", "timeout": 120 } ] }
@@ -45,7 +45,7 @@ JSON 안에서는 백슬래시를 두 번 쓴다 (`C:/mm/tools/capture.mjs` 처�
 }
 ```
 
-훅은 **cwd 에 `.mm/config.json` 이 있을 때만** 동작한다. 없으면 아무 일도 하지 않고 0 으로 끝난다.
+훅은 **세션 폴더에 `.mm/config.json` 이 있을 때만** 동작한다. 세션 폴더는 `CLAUDE_PROJECT_DIR`(Claude Code 가 세션을 시작한 프로젝트 루트) → 훅 입력의 `cwd` → 프로세스 cwd 순으로 `.mm/config.json` 이 있는 첫 폴더다 — 훅 입력 `cwd` 는 모델이 Bash 로 `cd` 하면 따라 바뀌므로(Claude Code 문서) 그것만 믿지 않는다. 어디에도 없으면 아무 일도 하지 않고 0 으로 끝난다.
 그래서 전역(`~/.claude/settings.json`)에 등록해 두어도 mm 세션이 아닌 폴더에는 영향이 없다.
 
 `.mm/config.json` (`mm init` 이 만든다; 손으로 만들어도 된다):
@@ -77,7 +77,7 @@ JSON 안에서는 백슬래시를 두 번 쓴다 (`C:/mm/tools/capture.mjs` 처�
 
 1. `steps/step-N.html` 복사
 2. `steps/step-(N-1).html`(없으면 빈 문자열)과 unified diff (`diff` 패키지, 8KB 로 절단, 문맥 2줄)
-3. `transcript_path` JSONL 에서 **마지막 사람 프롬프트 이후** assistant 텍스트를 모은다. `tool_result` 가 든 user 메시지, `isMeta`, `isSidechain` 은 사람 프롬프트가 아니다.
+3. 이번 턴의 assistant 텍스트를 구한다. **Stop 입력의 `last_assistant_message` 를 우선**한다(Claude Code 문서: transcript 파일은 비동기로 써져서 Stop 시점에 이번 턴의 마지막 메시지가 아직 없을 수 있다). 그것이 없거나 비면 `transcript_path` JSONL 에서 **마지막 사람 프롬프트 이후** assistant 텍스트를 모은다. `model`/`tool.version` 은 항상 transcript 에서. `tool_result` 가 든 user 메시지, `isMeta`, `isSidechain` 은 사람 프롬프트가 아니다.
    - assistant 텍스트에 ` ```step-note ` 펜스의 JSON `{intent,target,why,lesson,verdict}` 이 있으면 우선(마지막 유효 블록). `target` 은 기록하지 않는다.
    - 없으면 `why` = 마지막 문단, `lesson = null`, `verdict = null`, `intent` 는 규칙 분류: 첫 단계 `init` / "되돌려·원래대로·revert·undo·롤백" `revert` / "다듬·정리·polish·tidy·clean up·refine" `polish` / 그 외 `fix`.
    - `model` 은 마지막 assistant 메시지의 `message.model`, `tool.version` 은 transcript 줄의 `version`.
@@ -150,6 +150,7 @@ cd C:\mm\tools && node selftest.mjs [--keep]      # MM_SELFTEST_DIR 로 임시 �
 ```
 
 - A: 생성(결함 4개) → 내용 같은 Edit 턴 → 도구 없는 턴 → 수정(step-note). step-1/2 스키마·해시 체인·check 결과·git 커밋·시간 검사
+- D: transcript 가 늦어도 `last_assistant_message` 의 step-note 가 쓰임 · 훅 `cwd` 가 딴 폴더여도 `CLAUDE_PROJECT_DIR` 로 세션 폴더를 찾음 · 둘 다 없으면 무동작
 - B: entry 가 이미 있는 폴더의 step-0 기준선
 - C: 결함 없는 페이지 5/5(오탐 없음), `--only`, `.mm` 없는 폴더, 깨진 stdin
 
@@ -158,6 +159,7 @@ cd C:\mm\tools && node selftest.mjs [--keep]      # MM_SELFTEST_DIR 로 임시 �
 - **Playwright chromium 필요.** 없으면 스크린샷/검사는 `null` 로 기록되고 단계 자체는 남는다(`shot fail · check n/a`).
 - Write 가 새 파일인지(`create`)는 Claude Code 의 `tool_response.type` 에 의존한다. 없으면 entry 의 첫 생성일 때만 create 로 본다.
 - 셸(`Bash`)로 파일을 고친 경우 `edit_mode` 는 알 수 없어 `null`. 훅 matcher 에 `Bash` 를 넣지 않으면 그 턴은 폐기될 수 있다.
+- `why`/`lesson`/`verdict` 는 Stop 의 `last_assistant_message` 에서 읽는다(없으면 transcript). `.mm/capture.log` 의 `text last_assistant_message|transcript|none` 으로 어느 쪽이 쓰였는지, `(no lesson)` 으로 step-note 누락을 확인할 수 있다.
 - transcript 형식은 Claude Code 의 JSONL(`type: user|assistant`, `message.content`, `isMeta`, `isSidechain`, `version`)을 가정한다. 없거나 깨져도 단계는 기록되며 `why` 는 마지막 프롬프트로 대체.
 - 대비 계산은 계산된 스타일 기반이다. 배경 사진 위의 CTA, `color()`/`lab()` 색, `mix-blend-mode` 는 정확하지 않다.
 - `card-height` 는 flex/grid 의 `stretch` 로 이미 같은 높이면 통과한다(의도). 모바일 세로 배치는 보지 않는다.

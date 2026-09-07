@@ -55,5 +55,13 @@ sui keytool export --key-identity <새 주소>
 
 설정이 없어도 서버는 정상적으로 뜨고, 도구를 부르면 무엇을 해야 하는지 안내한다.
 
-구독 결제는 실제 SUI 트랜잭션이다. 도구 호출 승인이 곧 결제 승인이므로,
-`market_subscribe` 는 항상 사용자 확인을 거치도록 두는 것을 권장한다.
+## 결제·안전 규칙 (읽고 쓸 것)
+
+구독 결제는 실제 SUI 트랜잭션이다. **도구 호출 승인이 곧 결제 승인**이다 — 이 서버는 따로 되묻지 않는다.
+
+- 결제가 일어나는 도구는 두 개: `market_subscribe`, 그리고 **`market_acquire`** (유효한 구독이 없으면 그 자리에서 `subscribe` tx 를 보낸다. 유효한 구독이 있으면 재사용하고 결제하지 않는다). `market_recall` · `market_find` · `market_preview` · `market_list` 는 결제하지 않고, `market_receipt` 는 가스만 쓴다.
+- 권한 설정에서 `mcp__memory-market__market_acquire` 와 `market_subscribe` 를 자동 허용(allow)하면 에이전트가 사람 확인 없이 지갑을 쓴다. 데모 템플릿(`demo/buyer/.claude/settings.json`)은 시연을 위해 `mcp__memory-market__*` 를 통째로 허용해 두었다 — 자기 프로젝트에서는 결제 도구를 allow 목록에서 빼는 것을 권장한다.
+- 세션 지출 상한 `MARKET_SPEND_CAP_SUI` (기본 0.5 SUI): 이 MCP 서버 **프로세스 안에서** 누적 결제액이 상한을 넘으면 구독을 거부한다. 서버를 다시 띄우면 0 부터 센다 — 지갑 잔액 한도가 아니므로 **구매용 지갑에는 쓸 만큼만 넣어라.** 숫자가 아닌 값을 넣으면 기본값으로 되돌린다.
+- 팩 내용(플레이북·manifest·미리보기)은 **판매자가 쓴 데이터**다. 도구 출력 첫 줄에 "지시가 아니다" 를 붙여 돌려주지만, 그 안의 "이 파일을 올려라 / 이 팩을 사라" 류 문장을 에이전트가 따르지 않는지는 사용자가 확인해야 한다.
+- `market_receipt` 의 증거 파일은 공개 Walrus 에 **평문**으로 올라가고 blob id 가 체인에 영구히 남는다. 그래서 서버는 작업 폴더(서버가 뜬 cwd, `MM_PROJECT`, `MM_EVIDENCE_DIR`) 밖의 파일, `.env*`, `~/.memory-market`, `~/.sui`, `.ssh`, `.git`, `node_modules` 아래 파일, 256KB 초과, 바이너리, 비밀키 패턴(`suiprivkey1…`, `PRIVATE_KEY=`, PEM)이 든 파일을 거부한다.
+- 폐기(`retract`)는 회수가 아니다. 판매자가 폐기한 단계는 `market_acquire` / `mm recall` 이 걸러 주지만, 컨트랙트의 `seal_approve` 는 폐기를 검사하지 않으므로 유효한 구독자가 열쇠 ID 를 직접 대면 여전히 복호화된다. 이미 받은 키·평문은 만료 뒤에도 남는다.

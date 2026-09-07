@@ -73,7 +73,17 @@ export const SEAL_PACKAGE_ID = setting('SEAL_PACKAGE_ID') ?? PACKAGE_ID;
  * 구매자 에이전트가 한 MCP 세션에서 구독에 쓸 수 있는 SUI 상한. market_acquire 가 검사한다.
  * 에이전트가 팩을 연달아 사며 지갑을 비우는 일을 막기 위한 것.
  */
-export const MARKET_SPEND_CAP_SUI = Number(setting('MARKET_SPEND_CAP_SUI') ?? 0.5);
+export const MARKET_SPEND_CAP_SUI = parseSpendCap(setting('MARKET_SPEND_CAP_SUI'));
+function parseSpendCap(raw: string | undefined): number {
+  if (raw === undefined || raw === '') return 0.5;
+  const n = Number(raw);
+  // NaN 이면 `spent + fee > NaN` 이 항상 false 라 상한이 사라진다. 이상한 값은 기본값으로 되돌리고 알린다.
+  if (!Number.isFinite(n) || n < 0) {
+    console.error(`[memory-market] MARKET_SPEND_CAP_SUI="${raw}" 는 0 이상의 숫자가 아닙니다 → 기본값 0.5 SUI 적용`);
+    return 0.5;
+  }
+  return n;
+}
 
 /**
  * 공개 풀노드는 JSON-RPC를 중단했다(Method not found / JsonRpcError).

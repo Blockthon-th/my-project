@@ -273,10 +273,40 @@ export function finalizeChain(
   });
 }
 
+/** 단계 번호로 안전한 값인지 (파일명 `step-N.*` 과 Seal identity u16 에 쓰인다) */
+export const isSafeStep = (n: unknown): n is number =>
+  typeof n === 'number' && Number.isInteger(n) && n >= 1 && n <= 0xffff;
+
+const isStrArr = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
+const isShot = (v: unknown): boolean =>
+  v === null ||
+  v === undefined ||
+  (!!v && typeof v === 'object' && typeof (v as Screenshot).b64 === 'string' && /^[A-Za-z0-9+/=\s]*$/.test((v as Screenshot).b64));
+
+/**
+ * 복호화한 평문이 mm.step/1 로 **다룰 수 있는 모양**인지 확인하고 파싱한다.
+ * 기록은 판매자가 쓴 데이터다 — 구매자 쪽에서 `step` 이 파일명·경로에, `prompts`/`diff` 가 그대로 출력에 쓰이므로
+ * 모양이 어긋나면 null (건너뜀). 해시·사슬의 진위는 verifyRecord / manifest 대조가 본다.
+ */
 export function parseStepRecord(text: string): StepRecord | null {
   try {
-    const j = JSON.parse(text);
-    return j && j.schema === 'mm.step/1' ? (j as StepRecord) : null;
+    const j: unknown = JSON.parse(text);
+    if (!j || typeof j !== 'object') return null;
+    const x = j as Record<string, unknown>;
+    if (x.schema !== 'mm.step/1') return null;
+    if (!isSafeStep(x.step)) return null;
+    if (typeof x.pack_id !== 'string' && x.pack_id !== null && x.pack_id !== undefined) return null;
+    if (!isStrArr(x.prompts) || !isStrArr(x.files_touched)) return null;
+    if (typeof x.diff !== 'string' || typeof x.why !== 'string') return null;
+    if (typeof x.intent !== 'string' || typeof x.prev_hash !== 'string' || typeof x.record_hash !== 'string') return null;
+    if (x.html_full !== null && x.html_full !== undefined && typeof x.html_full !== 'string') return null;
+    if (!isShot(x.screenshot) || !isShot(x.screenshot_mobile)) return null;
+    if (x.check !== null && x.check !== undefined) {
+      const c = x.check as Record<string, unknown>;
+      if (!isStrArr(c.passed) || !isStrArr(c.failed)) return null;
+    }
+    if (x.lesson !== null && x.lesson !== undefined && typeof x.lesson !== 'string') return null;
+    return x as unknown as StepRecord;
   } catch {
     return null;
   }

@@ -97,6 +97,8 @@
 | 구독자가 복호화한 HTML·스크린샷을 재배포하면 | 막지 못한다. 다만 사본에는 record_hash 체인·영수증·폐기 이력이 없어 정품과 구분된다. 향후 과제. |
 | 검사 5항목은 누가 정하나 | 판매자가 manifest 에 **구매 전에** 선언한다. 구매자 에이전트가 같은 공개 검사기(`tools/check.mjs`)로 채점해 영수증을 남기므로 판매자가 스스로 채점하지 않는다. |
 | 만료 뒤에도 이미 받은 키로 읽히지 않나 | 그렇다. Seal 은 발급된 키를 소급 회수하지 않는다. 회수는 **새 클라이언트·새 세션**에 즉시 적용된다. 그래서 `mm recall --fresh` 와 MCP 의 acquire 는 매번 새 SealClient·SessionKey 를 쓴다. |
+| 폐기한 단계를 구독자가 여전히 열 수 있지 않나 | 열 수 있다. 폐기는 "더는 권하지 않음" 표식이지 회수가 아니다 — `seal_approve` 는 열쇠 ID(pack ‖ nonce)만 보고 blob_id 를 모르므로 폐기를 검사하지 않는다(Move 테스트 `retracted_blob_key_still_approves_for_valid_subscriber` 로 명시). 구매자 도구가 `is_retracted` 로 걸러 준다. |
+| 에이전트가 사용자 확인 없이 결제하나 | `market_acquire` 는 유효한 구독이 없으면 그 자리에서 결제한다. 데모 템플릿은 `mcp__memory-market__*` 를 allow 해 두었고 `/improve` 가 "0.5 SUI 안에서 알아서 사라" 고 명시한다. 상한은 서버 프로세스당 `MARKET_SPEND_CAP_SUI`(0.5) — 자세한 규칙은 `plugin/README.md` 의 "결제·안전 규칙". |
 | 판매자가 가짜 단계를 올리면 | 단계는 `prev_hash → record_hash` 체인이라 사후 수정이 드러난다. 전·후 스크린샷 sha 가 manifest 에 공개돼 구매 전 대조할 수 있고, 영수증 수·폐기 수가 팩에 남는다. |
 | 왜 Sui 인가 | 구독권이 **소유 객체**라 `seal_approve` 가 sender 소유를 자연스럽게 검증하고, `Clock` 으로 만료를 온체인 판정하며, Seal 정책 함수와 Walrus 가 같은 생태계에 있다. 프로토콜 수정 없이 앱 층만으로 됐다. |
 | 팔 사람이 있나 | 코딩 에이전트로 매일 디자인·개발을 반복하는 사람 전부. 판매자가 **따로 쓰는 것이 없다** — 평소처럼 고치면 훅이 기록한다. |

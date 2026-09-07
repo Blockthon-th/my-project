@@ -235,6 +235,11 @@ public fun set_terms(pack: &mut MemoryPack, cap: &PackCap, fee: u64, ttl_ms: u64
 
 /// 등록된 블롭을 폐기한다 (모델·SDK 변경, 잘못된 지식 등).
 /// 블롭 등록은 그대로 두고 `RetractKey → Retraction` 을 덧붙인다. 구매자 측(recall)은 폐기분을 제외한다.
+///
+/// **한계 (의도된 것):** `seal_approve` 는 폐기를 검사하지 않는다. Seal 열쇠 ID(pack ‖ nonce)만으로는
+/// 어느 blob_id 인지 알 수 없고, 폐기는 "더는 권하지 않음" 의 표식이지 회수가 아니다.
+/// 따라서 유효한 구독자가 열쇠 ID 를 직접 대면 폐기된 블롭도 여전히 복호화된다.
+/// 구매자 도구(mm recall / market_acquire)가 `is_retracted` 를 보고 걸러 준다.
 /// reason: 1 model-changed · 2 wrong · 3 sdk-changed
 entry fun retract(pack: &mut MemoryPack, cap: &PackCap, blob_id: String, reason: u8, c: &Clock) {
     assert!(cap.pack_id == object::id(pack), EInvalidCap);
@@ -282,7 +287,9 @@ entry fun subscribe_entry(pack: &mut MemoryPack, fee: Coin<SUI>, c: &Clock, ctx:
 
 /// 구독자가 팩 지식을 적용한 결과 영수증을 남긴다. 구독권 1개당 1회.
 /// 만료 여부는 검사하지 않는다 — 구독 중 받은 지식의 결과는 만료 뒤에 나올 수 있다.
-/// (구독권은 owned object 이므로 소유자만 참조를 넘길 수 있다 → sender = 구독자.)
+/// (구독권은 owned object 이고 이 함수는 `entry` 라 다른 모듈이 감싸서 부를 수 없다 →
+///  PTB 입력으로 참조를 넘길 수 있는 건 현재 소유자뿐 → `Receipt.subscriber = ctx.sender()`.
+///  구독권은 `store` 가 있어 양도될 수 있고, 그 경우 영수증의 subscriber 는 양수인이다.)
 /// outcome: 0 unresolved · 1 partial · 2 resolved. `evidence_blob_id` 는 Walrus 평문 검사 결과.
 entry fun leave_receipt(
     pack: &mut MemoryPack,

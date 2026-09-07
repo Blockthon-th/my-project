@@ -23,7 +23,8 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpat
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { explorerObject, explorerTx, keypairFrom, storeBlob } from './config.js';
+import { explorerObject, explorerTx, keypairFrom, MARKET_SPEND_CAP_SUI, storeBlob } from './config.js';
+import { EvidenceError, readEvidenceFile } from './evidence.js';
 import {
   evidenceToLive,
   findExistingShot,
@@ -47,6 +48,7 @@ import {
   listPackBlobIds,
   listReceipts,
   newSealClient,
+  normalizeObjectId,
   publishBatch,
   readManifest,
   readSubscription,
@@ -59,6 +61,7 @@ import {
   canonicalJson,
   finalizeChain,
   genesisHash,
+  isSafeStep,
   OUTCOME,
   parseStepRecord,
   REASON,
@@ -671,7 +674,8 @@ async function cmdPublish() {
 }
 
 async function cmdRecall() {
-  const packId = need(opt.pack, '--pack');
+  const packId = normalizeObjectId(need(opt.pack, '--pack'));
+  if (opt.sub) opt.sub = normalizeObjectId(opt.sub, 'subscription id');
   const buyer = keypairFrom('BUYER_SUI_PRIVATE_KEY');
   const address = buyer.toSuiAddress();
   const pack = await getPack(packId);
@@ -688,7 +692,13 @@ async function cmdRecall() {
   // 유효한 구독이 없으면 구독한다 (market_acquire 와 같은 동작). --sub 를 명시했으면 그대로 시도(만료 시연용).
   if (!opt.sub && (!sub || sub.expiresAtMs < Date.now())) {
     if (opt['no-subscribe']) throw new Error(`이 팩의 유효한 구독권이 없습니다 (${address}). --no-subscribe 를 빼면 구독합니다.`);
-    console.log(`구독    ${sub ? `만료됨(${when(sub.expiresAtMs)}) → ` : '없음 → '}${mist(pack.feeMist)} 결제하고 새로 구독`);
+    // MCP 의 세션 지출 상한과 같은 기준. 비싼 팩을 실수로 사지 않게 — 정말 사려면 --force.
+    if (pack.feeMist > MARKET_SPEND_CAP_SUI * 1e9 && !opt.force) {
+      throw new Error(
+        `이 팩의 구독료 ${mist(pack.feeMist)} 가 지출 상한 ${MARKET_SPEND_CAP_SUI} SUI 를 넘습니다. 그래도 결제하려면 --force (또는 MARKET_SPEND_CAP_SUI 조정).`,
+      );
+    }
+    console.log(`구독    ${sub ? `만료됨(${when(sub.expiresAtMs)}) → ` : '없음 → '}${mist(pack.feeMist)} 결제하고 새로 구독 (→ ${pack.owner.slice(0, 10)}…)`);
     const r = await subscribeTx(buyer, packId, pack.feeMist);
     appendTxLog({ kind: 'subscribe', digest: r.digest, actor: 'buyer', pack_id: packId, subscription_id: r.subscriptionId, fee_mist: pack.feeMist });
     console.log(`        sub ${r.subscriptionId}\n        tx  ${explorerTx(r.digest)}`);
@@ -771,6 +781,8 @@ function stripImages(r: StepRecord) {
 
 /** 기록의 이미지·HTML 을 파일로 (텍스트에는 b64 를 넣지 않는다) */
 function saveImages(dir: string, r: StepRecord): string | null {
+  // step 은 판매자 데이터다 — 파일명에 들어가므로 정수 범위를 다시 확인한다
+  if (!isSafeStep(r.step)) throw new Error(`step 값이 파일명으로 안전하지 않음: ${String(r.step).slice(0, 40)}`);
   let main: string | null = null;
   if (r.screenshot?.b64) {
     main = resolve(dir, `step-${r.step}.jpg`);
@@ -782,7 +794,7 @@ function saveImages(dir: string, r: StepRecord): string | null {
 }
 
 async function cmdRetract() {
-  const packId = need(opt.pack, '--pack');
+  const packId = normalizeObjectId(need(opt.pack, '--pack'));
   const step = parseStep(opt.step);
   const reasonName = need(opt.reason, '--reason') as keyof typeof REASON;
   const reason = REASON[reasonName] ?? (Number.isInteger(Number(reasonName)) ? Number(reasonName) : undefined);
@@ -817,19 +829,26 @@ async function cmdRetract() {
 }
 
 async function cmdReceipt() {
-  const packId = need(opt.pack, '--pack');
+  const packId = normalizeObjectId(need(opt.pack, '--pack'));
   const outcomeName = need(opt.outcome, '--outcome') as keyof typeof OUTCOME;
   const outcome = OUTCOME[outcomeName] ?? (Number.isInteger(Number(outcomeName)) ? Number(outcomeName) : undefined);
   if (outcome === undefined || outcome < 0 || outcome > 2) throw new Error('--outcome 은 resolved|partial|unresolved');
-  const evidencePath = resolve(need(opt.evidence, '--evidence'));
-  if (!existsSync(evidencePath)) throw new Error(`증거 파일이 없음: ${evidencePath}`);
+  // 위치 제한은 두지 않는다(사람이 직접 준 경로) — 크기·텍스트·비밀키 패턴만 거른다. Walrus 는 공개 평문 저장소다.
+  let ev: ReturnType<typeof readEvidenceFile>;
+  try {
+    ev = readEvidenceFile(need(opt.evidence, '--evidence'));
+  } catch (e) {
+    if (e instanceof EvidenceError) throw new Error(`증거 파일 거부: ${e.message}`);
+    throw e;
+  }
+  const evidencePath = ev.path;
 
   const buyer = keypairFrom('BUYER_SUI_PRIVATE_KEY');
   const address = buyer.toSuiAddress();
-  const sub = opt.sub ? { id: opt.sub } : await findSubscription(address, packId);
+  const sub = opt.sub ? { id: normalizeObjectId(opt.sub, 'subscription id') } : await findSubscription(address, packId);
   if (!sub) throw new Error(`이 팩의 구독권이 없습니다 (${address})`);
 
-  const bytes = new Uint8Array(readFileSync(evidencePath));
+  const bytes = ev.bytes;
   console.log(`증거 업로드: ${basename(evidencePath)} (${bytes.length}B) → Walrus 평문`);
   const evidenceBlobId = await storeBlob(bytes);
   console.log(`  blob ${evidenceBlobId}`);
@@ -837,14 +856,8 @@ async function cmdReceipt() {
   appendTxLog({ kind: 'leave_receipt', digest: res.digest, actor: 'buyer', pack_id: packId, subscription_id: sub.id, outcome, evidence_blob_id: evidenceBlobId });
   console.log(`✓ 영수증: outcome ${outcomeName}(${outcome}) · sub ${sub.id.slice(0, 10)}… · ${explorerTx(res.digest)}`);
 
-  let ev: unknown = null;
-  try {
-    ev = JSON.parse(Buffer.from(bytes).toString('utf8'));
-  } catch {
-    /* 평문 증거가 JSON 이 아닐 수 있다 */
-  }
   await refreshCompareState(packId, (s) => {
-    const live = evidenceToLive(ev, null, s.live);
+    const live = evidenceToLive(ev.json, null, s.live);
     if (live) s.live = live;
   });
 }

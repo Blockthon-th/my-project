@@ -220,8 +220,14 @@ async function onStop(ctx, input) {
   const prevStr = existsSync(prevPath) ? readFileSync(prevPath, 'utf8') : '';
   const { diff, added, removed } = await makeDiff(ctx, prevStr, htmlStr, N);
 
-  // transcript → why / lesson / verdict / intent / model / version
+  // why / lesson / verdict / intent ← 이번 턴의 마지막 assistant 텍스트.
+  // Claude Code 문서: transcript 파일은 비동기로 써져서 Stop 시점에 이번 턴의 마지막 메시지가 아직 없을 수 있다 →
+  // "final assistant text 가 필요한 훅은 Stop 의 last_assistant_message 를 써라". 그래서 그것을 우선하고 transcript 는 보조.
   const tr = parseTranscript(input.transcript_path);
+  const lam = typeof input.last_assistant_message === 'string' ? extractFromAssistantText(input.last_assistant_message) : null;
+  if (lam?.note) tr.note = lam.note;
+  if (lam?.lastParagraph) tr.lastParagraph = lam.lastParagraph;
+  tr.textSource = lam?.note || lam?.lastParagraph ? 'last_assistant_message' : tr.note || tr.lastParagraph ? 'transcript' : 'none';
   const note = tr.note || {};
   const intent = INTENTS.has(note.intent) ? note.intent : N === 1 ? 'init' : classifyIntent(pending.prompts);
   const why = clip(
@@ -272,7 +278,10 @@ async function onStop(ctx, input) {
   const modeStr = record.edit_mode ?? (N === 1 ? 'init' : 'edit');
   const msg = `[mm] step ${N} captured · ${modeStr} +${added}/-${removed} · shot ${vis.shotStatus} · check ${vis.checkStr}`;
   process.stdout.write(JSON.stringify({ systemMessage: msg }) + '\n');
-  log(ctx, `${msg} · git ${git} · ${((Date.now() - T0) / 1000).toFixed(1)}s · hash ${record.record_hash.slice(0, 12)}`);
+  log(
+    ctx,
+    `${msg} · git ${git} · text ${tr.textSource}${lesson ? '' : ' (no lesson)'} · ${((Date.now() - T0) / 1000).toFixed(1)}s · hash ${record.record_hash.slice(0, 12)}`,
+  );
 }
 
 const record0Seed = (ctx) => genesisHash(ctx.config.pack_id, ctx.config.series_id ?? basename(ctx.cwd));
@@ -356,26 +365,35 @@ function parseTranscript(path) {
       if (typeof c === 'string') texts.push(c);
       else if (Array.isArray(c)) for (const b of c) if (b?.type === 'text' && b.text) texts.push(b.text);
     }
-    const joined = texts.join('\n\n');
-    let m;
-    NOTE_RE.lastIndex = 0;
-    while ((m = NOTE_RE.exec(joined))) {
-      try {
-        const parsed = JSON.parse(m[1]);
-        if (parsed && typeof parsed === 'object') res.note = parsed; // 마지막 유효 블록이 이긴다
-      } catch {
-        /* ignore */
-      }
-    }
-    const cleaned = joined.replace(NOTE_RE, '').trim();
-    const paras = cleaned
-      .split(/\n\s*\n/)
-      .map((s) => s.trim())
-      .filter(Boolean);
-    res.lastParagraph = paras.length ? paras[paras.length - 1] : '';
+    const ex = extractFromAssistantText(texts.join('\n\n'));
+    res.note = ex.note;
+    res.lastParagraph = ex.lastParagraph;
   } catch {
     /* transcript 는 선택 사항 */
   }
+  return res;
+}
+
+/** assistant 텍스트에서 마지막 유효 ```step-note``` JSON 과, 그 블록을 뺀 마지막 문단을 뽑는다 */
+function extractFromAssistantText(text) {
+  const res = { note: null, lastParagraph: '' };
+  const joined = String(text ?? '');
+  let m;
+  NOTE_RE.lastIndex = 0;
+  while ((m = NOTE_RE.exec(joined))) {
+    try {
+      const parsed = JSON.parse(m[1]);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) res.note = parsed; // 마지막 유효 블록이 이긴다
+    } catch {
+      /* ignore */
+    }
+  }
+  const cleaned = joined.replace(NOTE_RE, '').trim();
+  const paras = cleaned
+    .split(/\n\s*\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  res.lastParagraph = paras.length ? paras[paras.length - 1] : '';
   return res;
 }
 
@@ -441,11 +459,38 @@ function gitCommit(ctx, N) {
 
 /* ───────────── main ───────────── */
 
+/**
+ * 세션 폴더 결정. Claude Code 의 훅 입력 `cwd` 는 모델이 Bash 로 `cd` 하면 그 폴더로 바뀐다(문서: "cwd follows Claude").
+ * 판매자 모델이 `cd C:\mm\tools` 같은 것을 한 번이라도 하면 그 뒤의 Stop 이 .mm 을 못 찾아 단계가 조용히 사라지므로,
+ * 세션이 시작된 프로젝트 루트(CLAUDE_PROJECT_DIR)를 먼저 보고, 그다음 입력 cwd, 마지막으로 프로세스 cwd 순으로
+ * `.mm/config.json` 이 있는 첫 폴더를 고른다.
+ */
+function pickSessionDir(input) {
+  const cands = [process.env.CLAUDE_PROJECT_DIR, input && typeof input.cwd === 'string' ? input.cwd : null, process.cwd()];
+  const seen = new Set();
+  for (const c of cands) {
+    if (!c) continue;
+    let abs;
+    try {
+      abs = resolve(String(c));
+    } catch {
+      continue;
+    }
+    const key = abs.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (existsSync(join(abs, '.mm', 'config.json'))) return abs;
+  }
+  return null;
+}
+
 async function main() {
-  const input = readStdinJson();
-  const cwd = resolve(String(input.cwd || process.cwd()));
+  const raw = readStdinJson();
+  const input = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  const cwd = pickSessionDir(input);
+  if (!cwd) return; // mm 세션이 아닌 폴더 — 조용히 종료
   const ctx = loadCtx(cwd);
-  if (!ctx) return; // mm 세션이 아닌 폴더 — 조용히 종료
+  if (!ctx) return;
   CTX = ctx;
   try {
     if (EVENT === 'prompt') onPrompt(ctx, input);
