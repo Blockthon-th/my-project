@@ -5,9 +5,15 @@
 /// - `PackCap`      : 팩 관리 권한 (판매자 소유).
 /// - `Subscription` : 결제 후 구독자에게 발행. `expires_at_ms` 지나면 무효.
 ///
+/// 팩(MemoryPack) UID 아래 dynamic field 로 붙는 기록:
+/// - `String(blob_id) → MARKER`            : 등록된 암호화 기억 블롭 (publish)
+/// - `ReceiptKey{subscription_id} → Receipt` : 구독자가 남긴 적용 결과 영수증 (leave_receipt, 구독당 1개)
+/// - `RetractKey{blob_id} → Retraction`      : 판매자가 폐기한 블롭 (retract, 블롭당 1개)
+///
 /// Seal 열쇠 ID 규약: [pkg id]::[pack id][nonce]
 ///   → 팩 ID를 접두사로 갖는 모든 열쇠 ID는 이 팩의 `seal_approve`로 판단된다.
 ///   sync 스크립트는 팩 ID + 랜덤 nonce 로 각 블롭을 암호화한다.
+///   디자인 단계 기록(mm.step/1)은 nonce = u16 big-endian step 번호(2바이트).
 module memory_market::market;
 
 use std::string::String;
@@ -19,8 +25,26 @@ const EInvalidCap: u64 = 0;
 const EInvalidFee: u64 = 1;
 const ENoAccess: u64 = 2;
 const EBlobAlreadyPublished: u64 = 3;
+/// 구독권이 이 팩의 것이 아님
+const EInvalidSubscription: u64 = 4;
+/// 이 구독권으로 이미 영수증을 남김
+const EReceiptExists: u64 = 5;
+/// outcome 이 {0,1,2} 밖
+const EInvalidOutcome: u64 = 6;
+/// 팩에 등록되지 않은 블롭
+const ENoSuchBlob: u64 = 7;
+/// 이미 폐기된 블롭
+const EAlreadyRetracted: u64 = 8;
+/// reason 이 {1,2,3} 밖
+const EInvalidReason: u64 = 9;
 
 const MARKER: u64 = 1;
+
+/// 영수증 결과: 0 unresolved · 1 partial · 2 resolved
+const OUTCOME_MAX: u8 = 2;
+/// 폐기 사유: 1 model-changed · 2 wrong · 3 sdk-changed
+const REASON_MIN: u8 = 1;
+const REASON_MAX: u8 = 3;
 
 // ───────────────────────── objects ─────────────────────────
 
@@ -67,6 +91,31 @@ public struct Subscription has key, store {
     expires_at_ms: u64,
 }
 
+// ───────────────────────── dynamic field records ─────────────────────────
+// (팩 UID 아래에 붙는다. 기존 객체 레이아웃은 건드리지 않으므로 업그레이드 호환.)
+
+/// 영수증 키: 구독권 1개당 영수증 1개.
+public struct ReceiptKey has copy, drop, store { subscription_id: ID }
+
+/// 구독자가 팩 지식을 적용한 결과. `evidence_blob_id` 는 Walrus 에 평문으로 올린 검사 결과.
+public struct Receipt has store {
+    subscriber: address,
+    /// 0 unresolved · 1 partial · 2 resolved
+    outcome: u8,
+    evidence_blob_id: String,
+    at_ms: u64,
+}
+
+/// 폐기 키: 블롭 1개당 폐기 기록 1개.
+public struct RetractKey has copy, drop, store { blob_id: String }
+
+/// 판매자가 블롭을 폐기한 기록. 블롭 등록(dynamic field) 자체는 남겨 이력을 보존한다.
+public struct Retraction has store {
+    /// 1 model-changed · 2 wrong · 3 sdk-changed
+    reason: u8,
+    at_ms: u64,
+}
+
 // ───────────────────────── events ─────────────────────────
 
 public struct PackCreated has copy, drop {
@@ -88,6 +137,20 @@ public struct Subscribed has copy, drop {
     subscription_id: ID,
     subscriber: address,
     expires_at_ms: u64,
+}
+
+public struct ReceiptLeft has copy, drop {
+    pack_id: ID,
+    subscription_id: ID,
+    subscriber: address,
+    outcome: u8,
+    evidence_blob_id: String,
+}
+
+public struct Retracted has copy, drop {
+    pack_id: ID,
+    blob_id: String,
+    reason: u8,
 }
 
 // ───────────────────────── seller ─────────────────────────
@@ -170,6 +233,18 @@ public fun set_terms(pack: &mut MemoryPack, cap: &PackCap, fee: u64, ttl_ms: u64
     pack.ttl_ms = ttl_ms;
 }
 
+/// 등록된 블롭을 폐기한다 (모델·SDK 변경, 잘못된 지식 등).
+/// 블롭 등록은 그대로 두고 `RetractKey → Retraction` 을 덧붙인다. 구매자 측(recall)은 폐기분을 제외한다.
+/// reason: 1 model-changed · 2 wrong · 3 sdk-changed
+entry fun retract(pack: &mut MemoryPack, cap: &PackCap, blob_id: String, reason: u8, c: &Clock) {
+    assert!(cap.pack_id == object::id(pack), EInvalidCap);
+    assert!(df::exists(&pack.id, blob_id), ENoSuchBlob);
+    assert!(!df::exists(&pack.id, RetractKey { blob_id }), EAlreadyRetracted);
+    assert!(reason >= REASON_MIN && reason <= REASON_MAX, EInvalidReason);
+    df::add(&mut pack.id, RetractKey { blob_id }, Retraction { reason, at_ms: c.timestamp_ms() });
+    event::emit(Retracted { pack_id: object::id(pack), blob_id, reason });
+}
+
 // ───────────────────────── subscriber ─────────────────────────
 
 /// 구독. 정확히 `pack.fee` 만큼의 SUI를 내면 구독권을 돌려준다. 수수료는 판매자에게 즉시 전송.
@@ -203,6 +278,37 @@ public fun subscribe(
 entry fun subscribe_entry(pack: &mut MemoryPack, fee: Coin<SUI>, c: &Clock, ctx: &mut TxContext) {
     let sub = subscribe(pack, fee, c, ctx);
     transfer::transfer(sub, ctx.sender());
+}
+
+/// 구독자가 팩 지식을 적용한 결과 영수증을 남긴다. 구독권 1개당 1회.
+/// 만료 여부는 검사하지 않는다 — 구독 중 받은 지식의 결과는 만료 뒤에 나올 수 있다.
+/// (구독권은 owned object 이므로 소유자만 참조를 넘길 수 있다 → sender = 구독자.)
+/// outcome: 0 unresolved · 1 partial · 2 resolved. `evidence_blob_id` 는 Walrus 평문 검사 결과.
+entry fun leave_receipt(
+    pack: &mut MemoryPack,
+    sub: &Subscription,
+    outcome: u8,
+    evidence_blob_id: String,
+    c: &Clock,
+    ctx: &TxContext,
+) {
+    assert!(sub.pack_id == object::id(pack), EInvalidSubscription);
+    let subscription_id = object::id(sub);
+    assert!(!df::exists(&pack.id, ReceiptKey { subscription_id }), EReceiptExists);
+    assert!(outcome <= OUTCOME_MAX, EInvalidOutcome);
+    let subscriber = ctx.sender();
+    df::add(
+        &mut pack.id,
+        ReceiptKey { subscription_id },
+        Receipt { subscriber, outcome, evidence_blob_id, at_ms: c.timestamp_ms() },
+    );
+    event::emit(ReceiptLeft {
+        pack_id: object::id(pack),
+        subscription_id,
+        subscriber,
+        outcome,
+        evidence_blob_id,
+    });
 }
 
 // ───────────────────────── Seal access control ─────────────────────────
@@ -246,6 +352,28 @@ public fun subscriber_count(pack: &MemoryPack): u64 { pack.subscriber_count }
 public fun has_blob(pack: &MemoryPack, blob_id: String): bool { df::exists(&pack.id, blob_id) }
 /// 팩 ID 바이트 = Seal 열쇠 ID 접두사.
 public fun namespace(pack: &MemoryPack): vector<u8> { pack.id.to_bytes() }
+
+/// 이 구독권으로 영수증을 남겼는지.
+public fun has_receipt(pack: &MemoryPack, subscription_id: ID): bool {
+    df::exists(&pack.id, ReceiptKey { subscription_id })
+}
+
+/// 영수증 내용 (subscriber, outcome, evidence_blob_id, at_ms). 없으면 abort.
+public fun receipt(pack: &MemoryPack, subscription_id: ID): (address, u8, String, u64) {
+    let r: &Receipt = df::borrow(&pack.id, ReceiptKey { subscription_id });
+    (r.subscriber, r.outcome, r.evidence_blob_id, r.at_ms)
+}
+
+/// 블롭이 폐기됐는지. (등록되지 않은 블롭도 false)
+public fun is_retracted(pack: &MemoryPack, blob_id: String): bool {
+    df::exists(&pack.id, RetractKey { blob_id })
+}
+
+/// 폐기 내용 (reason, at_ms). 없으면 abort.
+public fun retraction(pack: &MemoryPack, blob_id: String): (u8, u64) {
+    let r: &Retraction = df::borrow(&pack.id, RetractKey { blob_id });
+    (r.reason, r.at_ms)
+}
 
 // ───────────────────────── test helpers ─────────────────────────
 

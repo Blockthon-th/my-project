@@ -57,8 +57,23 @@ export const NETWORK = 'testnet' as const;
  * 구독자가 따로 설정해야 하는 건 자기 지갑 키뿐이다.
  */
 const DEFAULT_PACKAGE_ID =
-  '0x9202b4c61a6ce136af797e9b85503b1ef2576d2e9f772d150a57227d12476b83';
+  '0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196';
 export const PACKAGE_ID = setting('MARKET_PACKAGE_ID') ?? DEFAULT_PACKAGE_ID;
+
+/**
+ * Seal 네임스페이스로 쓰는 패키지 ID.
+ * Seal SDK 는 `SessionKey.create` / `encrypt` 의 packageId 가 **패키지의 첫 버전**이어야 한다고 검사한다
+ * (`InvalidPackageError: Package … is not the first version`). 컨트랙트를 `sui client upgrade` 로 올리면
+ * MARKET_PACKAGE_ID(최신, moveCall 대상)와 첫 버전 ID 가 달라지므로, 그때는 .env 에
+ * SEAL_PACKAGE_ID=<첫 버전 ID> 를 둔다. 새로 배포(publish)했다면 둘이 같으므로 비워도 된다.
+ */
+export const SEAL_PACKAGE_ID = setting('SEAL_PACKAGE_ID') ?? PACKAGE_ID;
+
+/**
+ * 구매자 에이전트가 한 MCP 세션에서 구독에 쓸 수 있는 SUI 상한. market_acquire 가 검사한다.
+ * 에이전트가 팩을 연달아 사며 지갑을 비우는 일을 막기 위한 것.
+ */
+export const MARKET_SPEND_CAP_SUI = Number(setting('MARKET_SPEND_CAP_SUI') ?? 0.5);
 
 /**
  * 공개 풀노드는 JSON-RPC를 중단했다(Method not found / JsonRpcError).
@@ -104,8 +119,11 @@ export const SEAL_SESSION_TTL_MIN = Number(setting('SEAL_SESSION_TTL_MIN') ?? 5)
 /** Walrus testnet 공개 엔드포인트 */
 export const WALRUS_PUBLISHER = 'https://publisher.walrus-testnet.walrus.space';
 export const WALRUS_AGGREGATOR = 'https://aggregator.walrus-testnet.walrus.space';
-/** blob 보관 기간 (epoch) */
-export const WALRUS_EPOCHS = 1;
+/**
+ * blob 보관 기간 (epoch). testnet 1 epoch ≈ 1일.
+ * 1 로 두면 데모 전날 올린 팩이 당일 사라진다 — 30 으로 둔다. .env 의 WALRUS_EPOCHS 로 조정.
+ */
+export const WALRUS_EPOCHS = Number(setting('WALRUS_EPOCHS') ?? 30);
 
 export function req(name: string): string {
   const v = setting(name);

@@ -1,0 +1,14 @@
+{
+  "name": "memory-market-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "diff": "^8.0.2",
+    "playwright": "^1.58.0"
+  },
+  "scripts": {
+    "selftest": "node selftest.mjs",
+    "check": "node check.mjs",
+    "shot": "node shot.mjs"
+  }
+}

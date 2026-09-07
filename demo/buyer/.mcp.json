@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memory-market": {
+      "command": "node",
+      "args": [
+        "C:\\mm\\scripts\\node_modules\\tsx\\dist\\cli.mjs",
+        "C:\\mm\\scripts\\mcp\\server.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__memory-market",
+      "mcp__memory-market__*",
+      "Read",
+      "Edit",
+      "Write",
+      "Bash(node *check.mjs*)"
+    ]
+  }
+}

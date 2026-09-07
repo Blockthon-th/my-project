@@ -11,7 +11,7 @@
  */
 import { SessionKey } from '@mysten/seal';
 import type { Signer } from '@mysten/sui/cryptography';
-import { clockSkewMs, PACKAGE_ID, SEAL_SESSION_TTL_MIN, suiClient } from './config.js';
+import { clockSkewMs, SEAL_PACKAGE_ID, SEAL_SESSION_TTL_MIN, suiClient } from './config.js';
 
 /** 서버보다 확실히 과거로 밀어둘 여유분 */
 const SAFETY_MS = 10_000;
@@ -32,9 +32,10 @@ export async function createSessionKey(signer: Signer, address: string): Promise
   const realNow = Date.now;
   Date.now = () => realNow.call(Date) - shift;
   try {
+    // Seal 은 첫 버전 패키지 ID 만 받는다 (config.ts 의 SEAL_PACKAGE_ID 주석 참고)
     return await SessionKey.create({
       address,
-      packageId: PACKAGE_ID,
+      packageId: SEAL_PACKAGE_ID,
       ttlMin: SEAL_SESSION_TTL_MIN,
       suiClient,
       signer,

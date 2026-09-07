@@ -21,7 +21,7 @@
 
 | 구성 | 역할 |
 |---|---|
-| MCP 서버 | `market_list` · `market_preview` · `market_subscribe` · `market_recall` |
+| MCP 서버 | `market_list` · `market_preview` · `market_subscribe` · `market_recall` · `market_find` · `market_acquire` · `market_receipt` |
 | UserPromptSubmit 훅 | Sui/Move/Walrus/Seal 관련 질문일 때 "코드를 뒤지기 전에 시장을 먼저 확인하라"고 상기 |
 
 훅이 필요한 이유: MCP 도구는 에이전트가 "지금 쓸 상황"이라고 판단해야만 호출된다.

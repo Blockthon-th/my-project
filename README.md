@@ -15,7 +15,7 @@ Blockthon 2026 출품작. 기획은 [PLANNING.md](PLANNING.md).
 4. 구독 유효 → **복호화 성공**, 원문 회수
 5. 만료 후 → **새 클라이언트는 키를 받지 못함** (NoAccessError)
 
-배포된 패키지: `0x9202b4c61a6ce136af797e9b85503b1ef2576d2e9f772d150a57227d12476b83` (testnet)
+배포된 패키지: `0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196` (testnet)
 
 ## 구조
 
@@ -92,6 +92,28 @@ npm run typecheck
 
 `memwal` 서버는 판매자 쪽 기억 자동 수집용이다. 처음 한 번
 `npx -y @mysten-incubation/memwal-mcp login` 으로 지갑을 연결한다.
+
+## 디자인 과정 팩 데모
+
+상품을 "AI 디자인 반복 과정 팩" 으로 넓힌 데모. 판매자가 Claude Code 로 랜딩 `index.html` 을 5턴 고치면 훅이 턴마다
+(프롬프트 · diff · 스크린샷 · 왜 · 교훈)을 한 단계(`mm.step/1`)로 기록하고, 단계들을 Seal 로 잠가 Walrus 에 올려 팩에 등록한다.
+구매자 에이전트는 `/improve` 한 번으로 `market_find → market_acquire → 교훈 선적용 → 검사 → market_receipt` 를 끝낸다.
+
+```
+demo/seller/     판매자 템플릿 — Paylane(핀테크 송금) 랜딩 v1 + 결함 5개, step-note 규칙, capture 훅, 5턴 대본
+demo/buyer/      구매자 템플릿 — 케어핏(헬스케어 예약) 랜딩 v1 + 같은 결함 유형 5개, MCP 설정, /improve
+demo/baseline/   팩 없이 돌릴 때의 규칙 (비교용 사전 실행 3회)
+demo/compare.html  발표 화면 — 소개 / 판매자 필름스트립 / 구독 전·후 (키 1·2·3, R = 사전 실행 전환)
+demo/state/      mm CLI 가 쓰는 compare-state.json + 스크린샷 (샘플: compare-state.sample.json)
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File demo\setup.ps1   # 템플릿을 C:\demo\ 로 복사 (저장소 밖에서 실행해야 상위 CLAUDE.md 가 안 섞인다)
+node demo\serve.mjs                                        # http://localhost:8787/compare.html
+node tools\check.mjs demo\buyer\index.html                 # 검사 5항목 (v1 은 5개 전부 fail 이 정상)
+```
+
+3분 타임라인·준비 체크리스트·실패 시 대체 절차는 [docs/DEMO.md](docs/DEMO.md).
 
 ## 실행
 
