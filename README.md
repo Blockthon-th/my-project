@@ -52,15 +52,15 @@ Paylane 기록(다섯 번 고친 것)에서 두 번째로 고친 대목입니다
 
 ## 지금 올라와 있는 기록: 정확히 4개
 
-이름은 판 사람이 체인에 적은 그대로라 저희가 고칠 수 없습니다. 기준값은 [docs/ground-truth.md](docs/ground-truth.md).
+기준값은 [docs/ground-truth.md](docs/ground-truth.md).
 **산 사람 수는 2026-09-13 기준입니다.** 이 값은 누가 살 때마다 늘어납니다. `node tools/consistency.mjs` 를 돌리면 이 표와 체인이 어긋나는지 알려줍니다.
 
-| 기록 (판 사람이 적은 이름) | 랜딩에서 부르는 이름 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
+| 기록 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
 |---||---|---|---|---|---|---|
-| Paylane 랜딩 5턴 교정 과정 | 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
-| AI가 뱉은 랜딩을 고쳐나간 기록 | 웹디자이너 경험 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
-| 한국어 랜딩 카피 8번 고친 과정 | 카피라이터 경험 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
-| Sui 온보딩 실전 기억 | 블록체인 개발자 경험 | 글 30건 | 0.01 SUI | 24시간 | 1 | 실제 교훈 글 2건 |
+| 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
+| 웹디자이너 경험 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
+| 카피라이터 경험 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
+| 블록체인 개발자 경험 | 글 33건 | 0.01 SUI | 24시간 | 0 | 실제 교훈 글 2건 |
 
 SUI 는 Sui 네트워크의 가상화폐 단위입니다. 지금은 연습용 네트워크(testnet)라 진짜 돈이 들지 않습니다.
 객체 주소와 링크는 아래 [체인에 올라간 주소](#체인에-올라간-주소-sui-testnet) 에 있습니다.
@@ -184,14 +184,14 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 
 지갑, 파는 쪽 `0xb31cf4c4…560f` · 사는 쪽 `0x40648673…e5a6` · 예비 `0xf4f552bd…992a`
 
-| 기록 | 랜딩에서 부르는 이름 | 개수 | 값 | 기간 | 산 사람 | 객체 |
+| 기록 | 개수 | 값 | 기간 | 산 사람 | 객체 |
 |---||---|---|---|---|---|---|
-| Paylane 랜딩 5턴 교정 과정 | 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 1 | [`0x75b25d24…22cfcb1d`](https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d) |
-| AI가 뱉은 랜딩을 고쳐나간 기록 | 웹디자이너 경험 | 10 | 0.05 SUI | 7일 | 0 | [`0x02524aa2…cd27387e`](https://suiscan.xyz/testnet/object/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e) |
-| 한국어 랜딩 카피 8번 고친 과정 | 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x8e366e40…1ecde683`](https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683) |
-| Sui 온보딩 실전 기억 | 블록체인 개발자 경험 | 30 (글) | 0.01 SUI | 24시간 | 1 | [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40) |
+| 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 0 | [`0x8ac6510d…29cd3132`](https://suiscan.xyz/testnet/object/0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132) |
+| 웹디자이너 경험 | 10 | 0.05 SUI | 7일 | 0 | [`0xef238e43…9f2a813d`](https://suiscan.xyz/testnet/object/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d) |
+| 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x0dcb9195…b23993e8`](https://suiscan.xyz/testnet/object/0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8) |
+| 블록체인 개발자 경험 | 33 (글) | 0.01 SUI | 24시간 | 0 | [`0x66c6eefe…8766fa7a`](https://suiscan.xyz/testnet/object/0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a) |
 
-- `0x02524aa2…` 는 이번에 새로 올린 것입니다. AI에게 "랜딩 만들어줘" 해서 나온 보라색 그라데이션 페이지
+- `0xef238e43…` 는 이번에 새로 올린 것입니다. AI에게 "랜딩 만들어줘" 해서 나온 보라색 그라데이션 페이지
   (Supercharge · Power of AI · 🚀 · Lightning Fast 카드)에서 시작해, 한 번에 하나씩 열 번 고쳐 실제 제품이 보이는 페이지로 만든 과정입니다.
   시작은 디자인 검사 5개 중 3개 · 카피 검사 6개 중 4개 통과였고, 끝은 디자인 5개 전부 · 카피 6개 중 5개입니다
   (따옴표 절제만 걸렸습니다, 예시 문구를 따옴표로 감싸서). 5~6번째에서 awwwards 올해의 사이트 cerebrium.ai 를 참고했고
@@ -199,8 +199,8 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
   **7번째가 이 기록의 값어치입니다**, 그 수치를 그대로 베꼈더니 한국어 제목이 네 줄로 터져 첫 화면을 통째로 먹었고,
   크기를 낮추는 대신 카피를 줄여서 잡았습니다. publish 트랜잭션
   [`7vZ9WXZz…`](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg) 한 건에 10단계 + 미리보기 3건.
-- `0x8e366e40…` 은 미리보기 블롭이 manifest 하나뿐이라 스크린샷이 없습니다. 검사 결과 칸도 비어 있습니다(위 "솔직한 한계" 참고).
-- `0xaa3b7edc…` 는 텍스트 기억이라 manifest 가 없고, 미리보기 자리에 기억 두 건이 그대로 올라가 있습니다.
+- `0x0dcb9195…` 은 미리보기 블롭이 manifest 하나뿐이라 스크린샷이 없습니다. 검사 결과 칸도 비어 있습니다(위 "솔직한 한계" 참고).
+- `0x66c6eefe…` 는 텍스트 기억이라 manifest 가 없고, 미리보기 자리에 기억 두 건이 그대로 올라가 있습니다.
   사기 전에 이만큼이 보입니다, *"한글이 포함된 `.ps1` 은 UTF-8 BOM 없이 저장하면 PowerShell 5.x 가 CP949 로 읽어 깨진다"* ·
   *"`expected_failure(abort_code = ...)` 를 쓰는 Move 테스트는 마지막에 도달 불가 코드가 필요해서 `abort 0` 으로 끝내면 컴파일이 통과한다"*.
 - 라이브 트랜잭션, [영수증](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP)(`0x75b2…` 에 남은 것) ·

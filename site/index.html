@@ -542,7 +542,7 @@
         </div>
       </div>
 
-      <p class="body reveal" style="margin-top:26px"><a href="#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e" style="color:var(--accent-dark);text-decoration:none">이 기록 안을 더 보기 →</a></p>
+      <p class="body reveal" style="margin-top:26px"><a href="#/pack/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d" style="color:var(--accent-dark);text-decoration:none">이 기록 안을 더 보기 →</a></p>
     </div>
   </section>
 
@@ -591,9 +591,9 @@
   var MIN_TTL = 300000;
 
   /* 어두운 칸의 대화와 실측 숫자가 붙은 기록. 실측은 이 기록 하나에만 있다. */
-  var STORY_ID = '0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d';
+  var STORY_ID = '0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132';
   /* 화면 두 장이 붙는 기록. 목록에서 맨 앞에 세운다. */
-  var SLOP_ID  = '0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e';
+  var SLOP_ID  = '0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d';
   var FIRST    = [SLOP_ID, STORY_ID];
 
   /* 사는 사람이 알아보게 우리가 붙인 이름과 한 줄 설명.
@@ -602,9 +602,9 @@
   var OURNAME = {};
   OURNAME[SLOP_ID]  = ['웹디자이너 경험', 'AI 가 뱉은 보라색 화면을 열 번에 걸쳐 고쳤어요. 색을 몇 개까지 줄일지 정한 판단이 들어 있어요.'];
   OURNAME[STORY_ID] = ['웹퍼블리셔 경험', '버튼이 묻히고 제목이 넘치고 폰에서 옆으로 밀리던 것을 다섯 번에 걸쳐 잡았어요.'];
-  OURNAME['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] =
+  OURNAME['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] =
     ['카피라이터 경험', '한국어 랜딩 문구를 여덟 번 고쳤어요. 첫 화면에 어떤 말을 쓰면 안 되는지가 들어 있어요.'];
-  OURNAME['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] =
+  OURNAME['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] =
     ['블록체인 개발자 경험', '처음 붙이는 사람이 막히는 자리만 서른 개 모았어요. 사진 없이 글로만 들어 있어요.'];
 
   /* 판 사람 프로필. 데모용으로 붙인 역할 표시다. [역할, 아바타 글자, 아바타 색] */
@@ -614,21 +614,21 @@
   var SELLER = {};
   SELLER[SLOP_ID]  = ['5년차 웹디자이너', 'WD', '#ffd2c4'];
   SELLER[STORY_ID] = ['7년차 웹퍼블리셔', 'WP', '#d9e8ff'];
-  SELLER['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = ['4년차 카피라이터', 'CW', '#e6f2d9'];
-  SELLER['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = ['3년차 블록체인 개발자', 'DEV', '#efe6ff'];
+  SELLER['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = ['4년차 카피라이터', 'CW', '#e6f2d9'];
+  SELLER['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = ['3년차 블록체인 개발자', 'DEV', '#efe6ff'];
 
   /* 뭘 만들었나 · 상세 머리에 쓰는 한 줄 */
   var MADE = {};
   MADE[SLOP_ID]  = 'AI 가 뱉은 보라색 랜딩을 열 번 고쳐서 제품이 보이는 페이지로 만들었어요.';
   MADE[STORY_ID] = '송금 앱 랜딩에서 틀린 다섯 군데를 하나씩 잡았어요.';
-  MADE['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = '한국어 랜딩 문구를 여덟 번 고쳤어요.';
-  MADE['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = 'Sui 를 처음 붙이며 막힌 자리 서른 개를 적어뒀어요.';
+  MADE['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = '한국어 랜딩 문구를 여덟 번 고쳤어요.';
+  MADE['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = 'Sui 를 처음 붙이며 막힌 자리 서른 개를 적어뒀어요.';
 
   /* 체인에 사진이 없는 기록에 붙이는 우리 사진. 안에 든 실제 글로 만들었다. */
   var OURIMG = {};
-  OURIMG['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] =
+  OURIMG['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] =
     ['img/copy-record.jpg', '한국어 랜딩 문구를 고치며 알게 된 것들'];
-  OURIMG['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] =
+  OURIMG['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] =
     ['img/sui-record.jpg', 'Sui 를 처음 붙이며 막힌 자리를 적어둔 것'];
 
   /* 어두운 칸에 옮겨 적은 다섯 마디. 저장된 값의 지문으로 이어 붙여 어긋날 수 없게 한다. */
@@ -638,50 +638,50 @@
   var IC_AI = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3.5" fill="currentColor"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><rect x="11" y="3.5" width="2" height="4.5" rx="1" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/></svg>';
   var SAID_BY_SHA = {};
   var REPLY_BY_SHA = {};
-  SAID_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '보라색 그라데이션이랑 빛나는 효과 빼줘. 색은 하나만.';
-  REPLY_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '그라데이션을 걷어내고 색을 하나만 남겼어요.';
-  SAID_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼은 각진 사각형으로. 강조색은 딱 한 곳만.';
-  REPLY_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼을 각지게 바꾸고 강조색을 하나에만 남겼어요.';
-  SAID_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '제목이 네 줄이야. 크기 말고 문장을 줄여서 두 줄로.';
-  REPLY_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '문장을 줄여서 제목을 두 줄에 맞췄어요.';
-  SAID_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼이 배경에 묻혀서 안 보여. 버튼만 고쳐.';
-  REPLY_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼 배경을 꽉 찬 색으로 바꿨어요.';
-  SAID_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '제목이 세 줄이야. 두 줄 안에 넣어줘.';
-  REPLY_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '문장을 줄여서 두 줄에 맞췄어요.';
-  SAID_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '폰에서 옆으로 스크롤돼. 이것만 없애줘.';
-  REPLY_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '국가 목록이 좁아지면 아랫줄로 넘어가게 했어요.';
-  SAID_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '우리 서비스 소개 랜딩을 만들어줘. 어려운 걸 쉽게.';
-  REPLY_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '첫 화면에서 회사 이름과 기술 용어를 뺐어요.';
-  SAID_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '처음 보는 사람이 이해가 가겠어? 멋부리지 말고 진솔하게.';
-  REPLY_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '제목을 읽는 사람이 겪어본 상황으로 바꿨어요.';
-  SAID_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '스크롤하면 대화가 한 줄씩 보이게 해줘.';
-  REPLY_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '대화처럼 한 줄씩 풀고 말투를 해요체로 통일했어요.';
+  SAID_BY_SHA['65e5dec6af80224db525af1171477df10d74ce07762c2dd75cd90f1e5dc7489f'] = '보라색 그라데이션이랑 빛나는 효과 빼줘. 색은 하나만.';
+  REPLY_BY_SHA['65e5dec6af80224db525af1171477df10d74ce07762c2dd75cd90f1e5dc7489f'] = '그라데이션을 걷어내고 색을 하나만 남겼어요.';
+  SAID_BY_SHA['ec65b5687d196e85d2932acacf13329a897a1fe301044db53ca95ec5022f3dfa'] = '버튼은 각진 사각형으로. 강조색은 딱 한 곳만.';
+  REPLY_BY_SHA['ec65b5687d196e85d2932acacf13329a897a1fe301044db53ca95ec5022f3dfa'] = '버튼을 각지게 바꾸고 강조색을 하나에만 남겼어요.';
+  SAID_BY_SHA['d8042c7d8c5607b586eb17d58f8a74c813d5f4b19b626e3c6c4171e46c16c5ef'] = '제목이 네 줄이야. 크기 말고 문장을 줄여서 두 줄로.';
+  REPLY_BY_SHA['d8042c7d8c5607b586eb17d58f8a74c813d5f4b19b626e3c6c4171e46c16c5ef'] = '문장을 줄여서 제목을 두 줄에 맞췄어요.';
+  SAID_BY_SHA['681a9a75f56191e6080855f21ff78c770976f931c2b4afcdc22ed76dfab4857e'] = '버튼이 배경에 묻혀서 안 보여. 버튼만 고쳐.';
+  REPLY_BY_SHA['681a9a75f56191e6080855f21ff78c770976f931c2b4afcdc22ed76dfab4857e'] = '버튼 배경을 꽉 찬 색으로 바꿨어요.';
+  SAID_BY_SHA['d885109f639aa53b73826e78347867d63964117c7d604447130de34f6c68697c'] = '제목이 세 줄이야. 두 줄 안에 넣어줘.';
+  REPLY_BY_SHA['d885109f639aa53b73826e78347867d63964117c7d604447130de34f6c68697c'] = '문장을 줄여서 두 줄에 맞췄어요.';
+  SAID_BY_SHA['81b5fb97f0ed77f6569e2308b2f768bcac36a1d465e9b0f3b514a01a5ca01a54'] = '폰에서 옆으로 스크롤돼. 이것만 없애줘.';
+  REPLY_BY_SHA['81b5fb97f0ed77f6569e2308b2f768bcac36a1d465e9b0f3b514a01a5ca01a54'] = '국가 목록이 좁아지면 아랫줄로 넘어가게 했어요.';
+  SAID_BY_SHA['d6e5ddc7e4ea9d4b867344241e8e44344d065778d18758fa5346a11758049add'] = '우리 서비스 소개 랜딩을 만들어줘. 어려운 걸 쉽게.';
+  REPLY_BY_SHA['d6e5ddc7e4ea9d4b867344241e8e44344d065778d18758fa5346a11758049add'] = '첫 화면에서 회사 이름과 기술 용어를 뺐어요.';
+  SAID_BY_SHA['141d070dc5104fc41dc25ca6fce949aeebfa83bb4d1d8de74885c1522b384da4'] = '처음 보는 사람이 이해가 가겠어? 멋부리지 말고 진솔하게.';
+  REPLY_BY_SHA['141d070dc5104fc41dc25ca6fce949aeebfa83bb4d1d8de74885c1522b384da4'] = '제목을 읽는 사람이 겪어본 상황으로 바꿨어요.';
+  SAID_BY_SHA['5f4317e988582477782d130feca33688c92b96af8bcc629cd032b18b63a47e9a'] = '스크롤하면 대화가 한 줄씩 보이게 해줘.';
+  REPLY_BY_SHA['5f4317e988582477782d130feca33688c92b96af8bcc629cd032b18b63a47e9a'] = '대화처럼 한 줄씩 풀고 말투를 해요체로 통일했어요.';
   var SHOW3 = {};
-  SHOW3['0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e'] = ['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31', 'e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757', '8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'];
-  SHOW3['0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d'] = ['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222', '8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e', 'c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'];
-  SHOW3['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = ['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb', '80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f', 'f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'];
+  SHOW3['0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d'] = ['65e5dec6af80224db525af1171477df10d74ce07762c2dd75cd90f1e5dc7489f', 'ec65b5687d196e85d2932acacf13329a897a1fe301044db53ca95ec5022f3dfa', 'd8042c7d8c5607b586eb17d58f8a74c813d5f4b19b626e3c6c4171e46c16c5ef'];
+  SHOW3['0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132'] = ['681a9a75f56191e6080855f21ff78c770976f931c2b4afcdc22ed76dfab4857e', 'd885109f639aa53b73826e78347867d63964117c7d604447130de34f6c68697c', '81b5fb97f0ed77f6569e2308b2f768bcac36a1d465e9b0f3b514a01a5ca01a54'];
+  SHOW3['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = ['d6e5ddc7e4ea9d4b867344241e8e44344d065778d18758fa5346a11758049add', '141d070dc5104fc41dc25ca6fce949aeebfa83bb4d1d8de74885c1522b384da4', '5f4317e988582477782d130feca33688c92b96af8bcc629cd032b18b63a47e9a'];
   var LESSON_BY_SHA = {
-    '7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31':
+    '65e5dec6af80224db525af1171477df10d74ce07762c2dd75cd90f1e5dc7489f':
       '꾸미는 색은 하나만 써요. 나머지는 검정 글자와 가는 선으로 정리해요. 그라데이션은 빼요.',
-    'e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757':
+    'ec65b5687d196e85d2932acacf13329a897a1fe301044db53ca95ec5022f3dfa':
       '강조색은 제일 중요한 버튼 하나에만 칠해요. 나머지 버튼은 테두리만 남겨요.',
-    '8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10':
+    'd8042c7d8c5607b586eb17d58f8a74c813d5f4b19b626e3c6c4171e46c16c5ef':
       '제목이 넘치면 글자를 줄이지 말고 문장을 줄여요. 한 줄에 몇 글자 들어가는지 먼저 세요.',
-    'dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb':
+    'd6e5ddc7e4ea9d4b867344241e8e44344d065778d18758fa5346a11758049add':
       '첫 화면에는 회사 이름이나 기술 이름을 쓰지 않아요. 처음 온 사람은 그 말을 몰라요.',
-    '80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f':
+    '141d070dc5104fc41dc25ca6fce949aeebfa83bb4d1d8de74885c1522b384da4':
       '제목은 제품 소개가 아니라 읽는 사람이 겪어본 상황으로 써요.',
-    'f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30':
+    '5f4317e988582477782d130feca33688c92b96af8bcc629cd032b18b63a47e9a':
       '말투는 해요체 하나로 통일해요. 설명하지 말고 읽는 사람이 했을 법한 말로 써요.',
-    '02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222':
+    '681a9a75f56191e6080855f21ff78c770976f931c2b4afcdc22ed76dfab4857e':
       '색이 깔린 배경 위에 버튼을 올릴 때는 비치는 색을 쓰면 안 돼요. 뒤가 무슨 색이든 글자가 보이는 색으로 꽉 채워요.',
-    '8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e':
+    'd885109f639aa53b73826e78347867d63964117c7d604447130de34f6c68697c':
       '한글 제목이 넘치면 글자 크기부터 줄이게 되는데, 줄일 건 문장이에요. 폭 640px 에 56px 글자로 두 줄이면 22자 안쪽이에요.',
-    'c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8':
+    '81b5fb97f0ed77f6569e2308b2f768bcac36a1d465e9b0f3b514a01a5ca01a54':
       '가로로 늘어놓은 목록에 폭을 못 박아두면 폰에서 화면 밖으로 나가요. 좁아질 때 아랫줄로 넘어가게 두면 넓은 화면 모양은 안 바뀌어요.',
-    'df7fb11e9b351032ad56dec59d49fd93606140416a17901116e6323aae8947af':
+    '2a5f3b7726867e00c0a32478e65aede64ed253f021e0126ec20b08eb068dd998':
       '글 길이가 다른 카드는 키를 서로 맞추고 버튼만 맨 아래로 내려요.',
-    '80a07fe37e6185d09ba919571cc74e7b41ada0147402f5958cb790be3f20e743':
+    '15760c7b903985b697a6a6514100a7b481c11aeb0b94743fc89190e0e89af638':
       '메뉴를 위에 붙여뒀으면 그 아래 첫 글이 시작하는 자리를 메뉴 높이보다 아래로 내려요.'
   };
 
@@ -1018,8 +1018,8 @@
   var STORY_TXT = {};
   STORY_TXT[SLOP_ID]  = 'AI 한테 랜딩을 시켰더니 보라색 그라데이션에 영어 문구가 박힌 화면이 나왔어요. 열 번 고치면서 색을 몇 개까지 줄일지, 제목을 몇 자로 쓸지 기준이 생겼어요.';
   STORY_TXT[STORY_ID] = '송금 앱 랜딩을 받았는데 버튼이 안 보이고 폰에서 옆으로 밀렸어요. 다섯 번 만에 다 잡았고, 어디부터 손대면 되돌아가지 않는지 알게 됐어요.';
-  STORY_TXT['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = '우리 서비스를 소개하는 문장이 저희끼리만 알아듣는 말투성이였어요. 여덟 번 고치면서 첫 화면에 쓰면 안 되는 말이 뭔지 정리됐어요.';
-  STORY_TXT['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = 'Sui 를 처음 붙이는데 문서대로 해도 막히는 데가 계속 나왔어요. 막힌 자리마다 원인과 해결을 적어 서른 개가 모였어요.';
+  STORY_TXT['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = '우리 서비스를 소개하는 문장이 저희끼리만 알아듣는 말투성이였어요. 여덟 번 고치면서 첫 화면에 쓰면 안 되는 말이 뭔지 정리됐어요.';
+  STORY_TXT['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = 'Sui 를 처음 붙이는데 문서대로 해도 막히는 데가 계속 나왔어요. 막힌 자리마다 원인과 해결을 적어 서른 개가 모였어요.';
   function storyBlock(p){
     var t = STORY_TXT[p.id];
     if(!t) return '';
@@ -1073,8 +1073,8 @@
   var SAVE = {};
   SAVE[STORY_ID] = ['3분 30초', '2분 0초', '43% 빨라요', '$1.17', '$0.70', '40% 덜 들어요'];
   SAVE[SLOP_ID]  = ['6분 10초', '2분 40초', '57% 빨라요', '$2.05', '$0.85', '59% 덜 들어요'];
-  SAVE['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = ['4분 50초', '1분 50초', '62% 빨라요', '$1.48', '$0.55', '63% 덜 들어요'];
-  SAVE['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = ['12분 30초', '4분 10초', '67% 빨라요', '$3.60', '$1.15', '68% 덜 들어요'];
+  SAVE['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = ['4분 50초', '1분 50초', '62% 빨라요', '$1.48', '$0.55', '63% 덜 들어요'];
+  SAVE['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = ['12분 30초', '4분 10초', '67% 빨라요', '$3.60', '$1.15', '68% 덜 들어요'];
   function savingsBlock(p){
     var v = SAVE[p.id];
     if(!v) return '';

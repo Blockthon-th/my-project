@@ -74,7 +74,7 @@
 ```powershell
 node site/serve.mjs   # http://localhost:8788
 ```
-상세 화면은 `http://localhost:8788/#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e` 처럼 해시를 직접 붙여도 열린다.
+상세 화면은 `http://localhost:8788/#/pack/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d` 처럼 해시를 직접 붙여도 열린다.
 그냥 `start site/index.html` 로 파일을 열어도 동작한다(fetch 대상이 전부 외부 https 라 CORS 문제 없음).
 
 `.preview/` 는 Playwright 로 찍은 검증 스크린샷이라 커밋하지 않는다(`.gitignore`).

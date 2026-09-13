@@ -15,9 +15,9 @@
 **아래 명령의 `$PACK` · `$SUIMEM` 은 터미널 C 에서 미리 잡아 두는 변수다** (PowerShell, 준비 단계에서 한 번):
 
 ```powershell
-$PACK   = '0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d'   # Paylane 랜딩 5턴 교정 과정
-$NEW    = '0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e'   # AI가 뱉은 랜딩을 고쳐나간 기록
-$SUIMEM = '0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'   # Sui 온보딩 실전 기억
+$PACK   = '0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132'   # Paylane 랜딩 5턴 교정 과정
+$NEW    = '0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d'   # AI가 뱉은 랜딩을 고쳐나간 기록
+$SUIMEM = '0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'   # Sui 온보딩 실전 기억
 ```
 
 ## 먼저 알아야 할 두 가지 함정
@@ -52,10 +52,10 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 
 | 팩 | id | 개수 | 값 · 기간 | 구독 | 데모에서 |
 |---|---|---|---|---|---|
-| Paylane 랜딩 5턴 교정 과정 | `0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` | 5 | 0.05 SUI · 7일 | 1 | **본 시나리오.** 미리보기 3건(manifest + 전·후 스크린샷). 비교 표가 이 팩 것이다 |
-| AI가 뱉은 랜딩을 고쳐나간 기록 | `0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e` | 10 | 0.05 SUI · 7일 | 0 | 이번에 새로 올린 것. 미리보기 3건. 구독·영수증이 0 이라 **지갑을 안 바꿔도 라이브 구매가 되는 유일한 디자인 팩**. 단 비교 표는 못 쓴다 |
-| 한국어 랜딩 카피 8번 고친 과정 | `0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683` | 8 | 0.03 SUI · 7일 | 0 | 미리보기가 manifest 1건뿐이라 스크린샷이 없다(필름스트립이 와이어프레임으로 그려진다). **검사 결과 칸이 비어 있다** |
-| Sui 온보딩 실전 기억 | `0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40` | 30 (글) | 0.01 SUI · 24시간 | 0 | 텍스트 팩이라 manifest 가 없고 미리보기가 기억 샘플 자체다. **150초 폐기 장면에서 쓴다** |
+| Paylane 랜딩 5턴 교정 과정 | `0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132` | 5 | 0.05 SUI · 7일 | 1 | **본 시나리오.** 미리보기 3건(manifest + 전·후 스크린샷). 비교 표가 이 팩 것이다 |
+| AI가 뱉은 랜딩을 고쳐나간 기록 | `0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d` | 10 | 0.05 SUI · 7일 | 0 | 이번에 새로 올린 것. 미리보기 3건. 구독·영수증이 0 이라 **지갑을 안 바꿔도 라이브 구매가 되는 유일한 디자인 팩**. 단 비교 표는 못 쓴다 |
+| 한국어 랜딩 카피 8번 고친 과정 | `0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8` | 8 | 0.03 SUI · 7일 | 0 | 미리보기가 manifest 1건뿐이라 스크린샷이 없다(필름스트립이 와이어프레임으로 그려진다). **검사 결과 칸이 비어 있다** |
+| Sui 온보딩 실전 기억 | `0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a` | 30 (글) | 0.01 SUI · 24시간 | 0 | 텍스트 팩이라 manifest 가 없고 미리보기가 기억 샘플 자체다. **150초 폐기 장면에서 쓴다** |
 
 목록에 없지만 체인에는 남아 있는 것: e2e 테스트 팩 2개 · 통합 검증용 1개(기간 5분 미만이라 자동 제외),
 그리고 `0xd2902d30…`(이름은 "다섯 번에"인데 14개가 들어 있어 기간을 5분 아래로 내려 내렸다). 심사위원이 체인에서 보면 물어볼 수 있다.
@@ -94,7 +94,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 | 항목 | 결과 |
 |---|---|
 | 판매자 5턴 (실제 Claude Code 헤드리스, 훅 자동 기록) | 단계 5개 전부 targeted, step-note 5/5, 검사 1/5→5/5, 턴당 41/70/46/55/40초, Stop 훅 1.7~2.1초 |
-| 팩 발행 | publish×5 + add_preview×3 을 트랜잭션 1건으로, 팩 `0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` |
+| 팩 발행 | publish×5 + add_preview×3 을 트랜잭션 1건으로, 팩 `0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132` |
 | 구매자 라이브 (/improve 1회) | market_find → market_acquire(0.05 SUI 결제, 5단계 배치 복호화) → Edit 6회(Write 1) → 검사 **5/5 첫 시도** → evidence.json → market_receipt. 15턴 120초, AI 사용료 $0.70 |
 | 기준선 A: 팩 없음 + 검사 도구 **있음** ×3 | 5/5, 5/5, 5/5, **도구를 주면 결국 맞춘다. 176초 / 201초 / 226초.** 숨기지 않고 말한다 |
 | 기준선 B: 팩 없음 + 검사 도구 **없음** ×3 | 첫 수정 1/5 → 최종 4/5 (16턴 210초, Edit 11, $1.17) · 첫 수정 0/5 → 최종 4/5 (26턴 350초, Edit 20, $1.88) · 첫 수정 1/5 → 최종 4/5 (17턴 218초, Edit 14, $1.20) |
@@ -111,7 +111,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
   - npm 설치본은 PATH 에 없다: `& "$env:APPDATA\npm\claude.cmd" auth login` (또는 사용자 PATH 에 `%APPDATA%\npm` 추가)
   - 각 데모 폴더(`C:\demo\seller`, `buyer`, `baseline-*`)에서 `claude` 를 한 번 열어 **신뢰 대화상자 수락**. 수락 전에는 `.claude/settings.json` 의 `permissions.allow` 가 무시되어 `market_find` 가 "haven't granted" 로 거부된다. 헤드리스(`claude -p`)로 돌릴 때는 `~/.claude.json` 의 `projects["C:/demo/buyer"].hasTrustDialogAccepted: true` 가 있어야 한다
 - [ ] **오늘 체인 상태를 다시 확인한다**, 위 "지금 체인에 올라와 있는 것" 표와 [ground-truth.md](ground-truth.md) 가 같은 값인지.
-- [ ] **`0x02524aa2…` 로 돌릴지 결정.** Paylane 팩으로 갈 거면 **예비 지갑 BUYER2 로 바꾼다**(맨 위 "예비 지갑으로 바꾸기").
+- [ ] **`0xef238e43…` 로 돌릴지 결정.** Paylane 팩으로 갈 거면 **예비 지갑 BUYER2 로 바꾼다**(맨 위 "예비 지갑으로 바꾸기").
       구독권 만료(2026-09-14 23:14:31 KST) 뒤라면 원래 구매자 지갑 그대로도 된다, 새 구독권이 발급되므로 영수증도 새로 남는다
 - [ ] `powershell -ExecutionPolicy Bypass -File C:\mm\demo\setup.ps1` → `C:\demo\{seller,buyer,baseline-1..3}`
 - [ ] **판매자 5턴**: `C:\demo\seller` 에서 `claude`, [SESSION-SCRIPT.md](../demo/seller/SESSION-SCRIPT.md) 의 프롬프트 순서대로. 턴마다 ```step-note``` 블록 확인
@@ -119,7 +119,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 - [ ] `npm run mm -- --project C:\demo\seller review` → 단계 5개, 스크린샷 5쌍, record_hash 체인 OK. lesson 이 빈 단계는 `--step N --lesson ".."` 로 보충
 - [ ] **publish 하기 전에** 만료 시연용 사본을 떠 둔다: `robocopy C:\demo\seller C:\demo\seller-expiry /E` (publish 는 `state.json` 에 발행 기록을 남겨 같은 폴더에서 두 번째 팩을 만들 수 없다)
 - [ ] (새 팩을 또 올릴 거면) `npm run mm -- --project C:\demo\seller publish --new --fee 0.05 --ttl 7d --label claude-code` → **pack id 를 여기 적는다**: `0x________` (팩 이름은 `.mm/config.json` 의 `name`). **올린 팩은 ground-truth.md 표에 바로 추가한다**
-- [ ] `npm run mm -- --project C:\demo\seller state --pack 0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` → 오류 없이 끝나는지
+- [ ] `npm run mm -- --project C:\demo\seller state --pack 0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132` → 오류 없이 끝나는지
 - [ ] **기준선 3회** (템플릿은 **검사 도구 없이** 돌린다, 검사 도구를 쥐여준 기준선은 실측 3/3 이 5/5 를 맞췄고 176 / 201 / 226초가 걸렸다. 비교는 **첫 수정 점수 / 최종 점수 / 턴 수 / 소요 / AI 사용료** 로 한다): `C:\demo\baseline-1..3` 각각 `claude` → `/improve` → `npm run mm -- --project C:\demo\seller baseline --dir C:\demo\baseline-N --label run-N` → 탭3 왼쪽에 3장. 첫 수정 직후 파일은 훅이 `.first-edit.html` 로 남긴다 (`node C:\mm\tools\check.mjs C:\demo\baseline-N\.first-edit.html`)
 - [ ] **만료 구독 준비** (사본 폴더에서, 6분 ttl, 5분 미만 팩은 목록에서 자동으로 숨겨져 구독 스크립트가 못 찾는다):
   1. `npm run mm -- --project C:\demo\seller-expiry publish --new --fee 0.01 --ttl 6m --name expiry-demo --label claude-code` → pack id `0x________`
@@ -127,7 +127,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
   3. **`.env` 의 `MARKET_HIDDEN_PACKS` 에 그 pack id 추가**, 안 그러면 데모 중 `market_find` 가 같은 manifest 의 이 팩을 후보로 띄운다 (`recall --pack` 은 영향 없음)
   4. **구독한 시각** 기준 6분 뒤(발행 시각이 아니다, 리허설 스크립트가 이걸 틀려 만료 26초 전에 실행한 적 있다) `npm run mm -- recall --pack <id> --sub <sub id> --fresh` 가 `seal_approve aborted: subscription expired …` 를 내는지 확인. 출력을 `C:\demo\logs\expired.txt` 로 저장
   - 빠른 대안: `npm run e2e` 가 짧은 ttl 팩 + 구매자 구독을 만들고 `pack:` 을 출력한다. 만료 뒤 그 id 로 `recall --fresh` 하면 같은 거부가 난다 (단, 이 팩은 텍스트 형식이라 만료 전에는 recall 이 파싱에 실패할 수 있다, 만료 장면 전용)
-- [ ] **폐기 대상 정하기**: Sui 기억 팩(`0xaa3b7edc…`)에서 `@mysten/sui 1.x` 시절 항목의 step 번호. retract 는 단계당 1회뿐이므로 **리허설용 N 과 본 데모용 N' 을 다르게** 잡는다. `recall` 은 구독이 없으면 자동으로 0.01 SUI 를 결제해 구독한다는 점을 알고 있을 것
+- [ ] **폐기 대상 정하기**: Sui 기억 팩(`0x66c6eefe…`)에서 `@mysten/sui 1.x` 시절 항목의 step 번호. retract 는 단계당 1회뿐이므로 **리허설용 N 과 본 데모용 N' 을 다르게** 잡는다. `recall` 은 구독이 없으면 자동으로 0.01 SUI 를 결제해 구독한다는 점을 알고 있을 것
 - [ ] 영수증 대체용: 리허설의 `leave_receipt` digest 기록: `________`
 - [ ] **전체 리허설 1회를 녹화** (OBS, 1920×1080, 3분) → `C:\demo\recording\memory-market-demo.mp4`. 전면 실패 시 이 영상으로 발표
 - [ ] 리허설 뒤 `setup.ps1 -Only buyer` 와 `-Only baseline` 으로 구매자·기준선만 초기화 (판매자는 `-KeepSellerSteps` 로 단계 보존)
@@ -136,7 +136,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 
 - [ ] 구매자(또는 예비)·판매자 지갑 가스 각각 ≥ 1 SUI (`sui client gas --address <주소>`), 부족하면 faucet
 - [ ] 시계: `cd C:\mm\scripts; npm run check` 첫 줄의 skew 확인. `session.ts` 가 보정하지만 120초 넘으면 중단되므로 관리자 PowerShell 에서 `w32tm /resync /force`
-- [ ] 랜딩 상세(`#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d`)가 체인 값을 제대로 읽어 오는지 (값 · 기간 · 산 사람 수)
+- [ ] 랜딩 상세(`#/pack/0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132`)가 체인 값을 제대로 읽어 오는지 (값 · 기간 · 산 사람 수)
 - [ ] D 탭2 Suiscan 팩 객체 미리 로드 (첫 로드가 느리다)
 - [ ] A: `C:\demo\buyer` 에서 `claude` → `/mcp` 에 memory-market **connected** → `market_find` 한 번 호출해 워밍(첫 Walrus 읽기가 느림) → `/clear`
 - [ ] 구매자 `index.html` 이 v1 인지: `node C:\mm\tools\check.mjs C:\demo\buyer\index.html` → failed 5
@@ -186,7 +186,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 ## 부록: Sui 기억 팩 (150초 폐기 장면에서 사용)
 
 이 프로젝트를 만들며 쌓인 Sui/Seal/Walrus 삽질 기록([dev-memories.md](dev-memories.md))이 `npm run sync` 로 평문 텍스트 기억
-(항목당 블롭 1개, 랜덤 nonce)으로 `0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40` 에 올라가 있다
+(항목당 블롭 1개, 랜덤 nonce)으로 `0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a` 에 올라가 있다
 (`.env` 의 `MARKET_PACK_ID` 와 같은 값).
 `mm retract --pack $SUIMEM --step N` 은 이 팩에서 체인 등록 순서 N번째 블롭(= `mm recall` 출력의 번호)을 폐기한다.
 `@mysten/sui 1.x` 시절 항목(예: "signAndExecuteTransaction 이 sender 를 안 채운다")은 2.x 에서는 틀린 답이라 폐기 대상으로 딱 맞는다.
