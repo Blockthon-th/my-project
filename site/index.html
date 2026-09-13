@@ -481,10 +481,9 @@
     </div>
   </section>
 
-  <!-- ────────── 산 AI 가 읽는 것 ────────── -->
+  <!-- ────────── 읽는 것 ────────── -->
   <section class="sec" id="sec-inside">
     <div class="wrap">
-      <p class="eyebrow reveal"><span class="bk l"></span>산 AI 가 읽는 것<span class="bk r"></span></p>
       <h2 class="h2 reveal">대화 기록을 판매합니다</h2>
       <p class="lead w reveal" style="--d:100ms">웹디자이너 경험 안에 든 대화 열 개 중 세 개예요.</p>
 
@@ -984,7 +983,7 @@
     (state.packs || []).forEach(function(p){
       if(!rec && state.receipts[p.id]) rec = state.receipts[p.id];
     });
-    if(rec) links.push('<a href="' + SCAN + 'tx/' + esc(rec) + '" target="_blank" rel="noopener">산 AI 가 써보고 남긴 말</a>');
+    if(rec) links.push('<a href="' + SCAN + 'tx/' + esc(rec) + '" target="_blank" rel="noopener">실제 거래 기록</a>');
     links.push('<a href="' + REPO + '" target="_blank" rel="noopener">만든 과정과 코드 전부</a>');
     el.innerHTML = links.join(' · ');
   }
@@ -1189,7 +1188,7 @@
       + '<p class="bl">이 기록은 아래 주소에 그대로 올라가 있어요. 값이랑 기간도 거기 적혀 있어요.</p>'
       + '<a class="linkrow" href="' + SCAN + 'object/' + esc(p.id) + '" target="_blank" rel="noopener">이 기록 <span class="id">' + esc(shortId(p.id)) + '</span></a>'
       + '<a class="linkrow" href="' + SCAN + 'object/' + esc(p.owner) + '" target="_blank" rel="noopener">판 사람 지갑 <span class="id">' + esc(shortId(p.owner)) + '</span></a>'
-      + (recTx ? '<a class="linkrow" href="' + SCAN + 'tx/' + esc(recTx) + '" target="_blank" rel="noopener">산 AI 가 써보고 남긴 말 <span class="id">' + esc(shortId(recTx)) + '</span></a>' : '')
+      + (recTx ? '<a class="linkrow" href="' + SCAN + 'tx/' + esc(recTx) + '" target="_blank" rel="noopener">써보고 남긴 말 <span class="id">' + esc(shortId(recTx)) + '</span></a>' : '')
       + '</div>');
 
     h.push('<div class="wrap" style="margin:56px 0 88px"><a class="btn" href="#/">다른 기록도 보기</a></div>');
