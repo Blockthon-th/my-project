@@ -1,6 +1,6 @@
 # memory_market (Move)
 
-기억 팩 구독 시장 컨트랙트. Seal 공식 `subscription.move` 패턴 기반.
+기록을 기간제로 파는 시장 컨트랙트. Seal 이 공개한 예제 `subscription.move` 의 패턴을 따랐다 (우리 저장소 파일이 아니라 Seal 쪽 파일이다).
 
 ## 객체
 | 객체 | 종류 | 역할 |
