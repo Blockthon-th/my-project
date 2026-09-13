@@ -39,8 +39,8 @@
   .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding-left:24px; padding-right:24px; }
   /* every section shares one left edge; prose just stops earlier */
   .hero-body, .hero-line, .btns, .h2, .sub, .plain, .chat, .closing,
-  .bottom .t, .flinks, .ddesc, .dmeta, .block h2, .block .lead,
-  .howto, .linklist, .errbox, .quote, .sellcmd, .skill,
+  .bottom .t, .flinks, .ddesc, .dmeta, .dnote, .block h2, .block .lead,
+  .howto, .linklist, .errbox, .quote, .sellcmd, .skill, .prooflink,
   .unlock, .unote{ max-width:var(--col); }
   h1, .dtitle{ max-width:840px; }
 
@@ -145,7 +145,8 @@
     color:#fafaf9; background:rgba(28,25,23,.62);
     border-radius:5px; padding:0 6px; font-size:12px; line-height:1.6;
   }
-  .crop img{ position:absolute; top:0; left:0; max-width:none; }
+  /* height:auto 가 없으면 img 의 height 속성이 그대로 먹혀 세로로 늘어난 채 잘린다. */
+  .crop img{ position:absolute; top:0; left:0; max-width:none; height:auto; }
   .crop .skel{ position:absolute; inset:0; }
   .crop.k1{ aspect-ratio:680/230; }
   .crop.k1 img{ width:188.24%; margin-left:-13.24%; margin-top:-8.82%; }
@@ -241,6 +242,12 @@
   .card .ds{ color:var(--muted); font-size:14px; line-height:1.7; margin-bottom:18px; }
   .card .mt{ color:var(--faint); font-size:13px; font-variant-numeric:tabular-nums; }
   .card .go{ margin-top:18px; font-size:14px; font-weight:700; color:var(--accent); }
+  /* 사진이 있는 기록에만 붙는다. 없으면 이 칸 자체를 안 만들고, 못 불러오면 지운다. */
+  .card .th{
+    aspect-ratio:16/9; margin:0 0 18px; overflow:hidden;
+    border:1px solid var(--line); border-radius:9px; background:#f3f2f0;
+  }
+  .card .th img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
   .card.sk{ pointer-events:none; min-height:212px; }
   .card.sk .l{ height:14px; border-radius:4px; background:#f0efed; margin-bottom:10px; }
 
@@ -280,6 +287,10 @@
   .block{ padding-top:60px; }
   .block h2{ font-size:20px; font-weight:800; margin:0 0 6px; letter-spacing:-0.01em; }
   .block .lead{ color:var(--muted); font-size:15px; margin:0 0 22px; }
+  .dnote{ color:var(--muted); font-size:15px; line-height:1.75; margin:0 0 24px; }
+  .prooflink{ margin:40px 0 0; font-size:16px; font-weight:700; }
+  .prooflink a{ color:var(--accent); text-decoration:none; }
+  .prooflink a:hover{ text-decoration:underline; text-underline-offset:4px; }
 
   .checks{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .chk{ border:1px solid var(--line); background:var(--card); border-radius:10px; padding:14px 16px; }
@@ -430,17 +441,46 @@
       </p>
       <p class="hero-line">여기서는 그걸 사고팔아요. 사는 쪽도 사람이 아니라 AI예요.</p>
       <div class="btns">
-        <a class="btn" href="#sec-packs">지금 팔리는 것 보기</a>
-        <a class="btn ghost" href="#sec-sell">내 것도 팔아보기</a>
+        <a class="btn" href="#sec-sell">내 것도 팔아보기</a>
+        <a class="btn ghost" href="#sec-packs">남들이 올린 것 먼저 보기</a>
       </div>
     </div>
     <div class="cue"><span class="arw">↓</span><span>내려보면 그 요령이 어떻게 생기는지 한 줄씩 나와요</span></div>
   </header>
 
-  <!-- 2. 스크롤 대화 -->
+  <!-- 2. 이번에 올라온 기록 — AI 가 뱉은 것과 열 번 고친 것 -->
+  <section id="sec-slop">
+    <div class="wrap">
+      <h2 class="h2 reveal">AI한테 랜딩을 시키면 보통 이런 게 나와요</h2>
+      <p class="sub reveal">왼쪽이 AI가 뱉은 그대로고, 오른쪽이 열 번 고친 거예요. 그 열 번이 지금 올라와 있어요.</p>
+
+      <div class="diffs reveal" style="margin-top:0">
+        <div class="cpair"><div class="cgrid">
+          <div class="cbox">
+            <div class="clab">AI가 만든 것</div>
+            <button class="crop full" type="button" data-full="img/slop-before.jpg" data-cap="AI가 만든 것" aria-label="AI가 만든 것 — 눌러서 전체 보기">
+              <img src="img/slop-before.jpg" width="1280" height="800" alt="보라색 그라데이션에 영어 문구가 박힌 랜딩 화면">
+            </button>
+          </div>
+          <div class="cbox">
+            <div class="clab">열 번 고친 것</div>
+            <button class="crop full" type="button" data-full="img/clean-after.jpg" data-cap="열 번 고친 것" aria-label="열 번 고친 것 — 눌러서 전체 보기">
+              <img src="img/clean-after.jpg" width="1280" height="800" alt="장식을 걷어내고 실제 제품 화면이 보이는 랜딩">
+            </button>
+          </div>
+        </div></div>
+      </div>
+
+      <p class="closing reveal" style="margin-top:52px">올해의 사이트로 뽑힌 영어 사이트의 제목 크기를 그대로 베꼈더니 한국어 제목이 네 줄로 터졌고, 크기를 낮추는 대신 카피를 줄여서 잡았어요.</p>
+      <p class="prooflink reveal"><a href="#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e">이 열 번 안에 뭐가 들었는지 보기 →</a></p>
+    </div>
+  </section>
+
+  <!-- 3. 스크롤 대화 -->
   <section id="sec-chat">
     <div class="wrap">
-      <h2 class="h2 reveal">어떤 사람이 송금 앱 랜딩을 만들다가 AI에게 다섯 번 지적했어요</h2>
+      <h2 class="h2 reveal">기록 하나를 열면 이런 게 들어 있어요</h2>
+      <p class="sub reveal">다른 사람이 송금 앱 랜딩을 만들다가 AI에게 다섯 번 지적한 기록이에요. 지적한 말이랑, 그래서 알게 된 것이 같이 들어 있어요.</p>
 
       <div class="chat">
 
@@ -476,11 +516,11 @@
 
       </div>
 
-      <p class="closing reveal">다섯 번 만에 다 고쳤어요.<br>그리고 이 대화는 보통 여기서 사라져요.</p>
-      <p class="closing two reveal">사라지는 대신 팔 수 있으면 어떨까요.</p>
-
       <div class="diffs reveal" id="diffs"></div>
       <div id="ba-err" hidden style="margin-top:24px"></div>
+
+      <p class="closing reveal">다섯 번 만에 다 고쳤어요.<br>그리고 이 대화는 보통 여기서 사라져요.</p>
+      <p class="closing two reveal">사라지는 대신 팔면, 남의 AI 가 이걸 읽고 일을 시작해요.</p>
     </div>
   </section>
 
@@ -488,6 +528,7 @@
   <section id="sec-skill">
     <div class="wrap">
       <h2 class="h2 reveal">사면 AI 가 이걸 읽어요</h2>
+      <p class="sub reveal">값을 치른 AI 한테만 통째로 열려요. 아직 안 산 자리는 이렇게 안 보여요.</p>
       <div class="skill reveal">
         <div class="bar"><span class="dot"></span>알게 된 것.md</div>
         <div class="bd">
@@ -504,28 +545,29 @@
   <!-- 4. 첫 삽 비교 -->
   <section id="sec-proof">
     <div class="wrap">
-      <h2 class="h2 reveal">같은 문제가 있는 페이지를 AI에게 고치게 해봤어요</h2>
-      <p class="sub reveal">고칠 곳은 다섯 군데예요. 첫 수정에서 몇 군데를 잡았는지 봤어요.</p>
+      <h2 class="h2 reveal">위에서 다섯 번 지적한 그 기록으로 재봤어요</h2>
+      <p class="sub reveal">같은 곳이 틀린 페이지를 AI에게 고치게 했어요. 그 기록을 산 AI 로 한 번, 기록 없이 세 번이요. 얼마나 빨리 잡는지를 잰 거예요. 다른 기록에는 이런 실험이 없어요.</p>
       <div class="nums">
         <div class="num reveal">
-          <div class="big">5개 중 1개</div>
-          <div class="who">이 기록 없이, 제일 잘한 회차</div>
-          <div class="desc">세 번 해봤어요. 첫 수정에서 잡은 게 1개 · 0개 · 1개였고, 세 번 다 제목 줄바꿈은 끝까지 못 잡았어요.</div>
-          <div class="meta">3분 30초 · 주고받은 횟수 16 · AI 사용료 $1.17</div>
+          <div class="big">3분 30초</div>
+          <div class="who">기록 없이, 세 번 중 제일 빨랐던 때</div>
+          <div class="desc">세 번 다 첫 수정에서는 제목 줄바꿈을 놓쳤어요. 시간을 더 쓰면 결국 잡긴 해요.</div>
+          <div class="meta">주고받은 횟수 16 · AI 사용료 $1.17</div>
         </div>
         <div class="num win reveal" style="--d:160ms">
-          <div class="big">5개 전부</div>
+          <div class="big">2분 0초</div>
           <div class="who">이 기록을 산 AI</div>
-          <div class="desc">첫 수정에서 다섯 군데가 다 잡혔어요. 되돌아간 적이 없어요.</div>
-          <div class="meta">2분 0초 · 주고받은 횟수 15 · AI 사용료 $0.70</div>
+          <div class="desc">다섯 군데를 첫 수정에서 다 잡았어요. 되돌아간 적이 없어요.</div>
+          <div class="meta">주고받은 횟수 15 · AI 사용료 $0.70</div>
         </div>
         <div class="num reveal" style="--d:320ms">
-          <div class="big">0.05 SUI</div>
+          <div class="big" id="story-fee">0.05 SUI</div>
           <div class="who">이 기록 값</div>
-          <div class="desc">SUI 는 값을 매기는 단위예요. 한 번 사면 아낀 AI 사용료가 더 커요.</div>
-          <div class="meta">7일 동안 열려요</div>
+          <div class="desc">SUI 는 가상화폐 단위예요. 아직 연습용이라 진짜 돈은 안 들어요.</div>
+          <div class="meta" id="story-ttl">7일 동안 열려요</div>
         </div>
       </div>
+      <p class="prooflink reveal"><a href="#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d">이 수치를 낸 기록 보러 가기 →</a></p>
     </div>
   </section>
 
@@ -533,7 +575,7 @@
   <section id="sec-packs">
     <div class="wrap">
       <h2 class="h2">지금 올라와 있는 기록</h2>
-      <p class="sub">눌러보면 안에 뭐가 들었는지 볼 수 있어요.</p>
+      <p class="sub"><span id="packcount" hidden></span>이름이랑 설명은 판 사람이 쓴 그대로예요. 눌러보면 안에 뭐가 들었는지 볼 수 있어요.</p>
       <div class="cards" id="cards">
         <div class="card sk"><div class="l" style="width:70%"></div><div class="l" style="width:52%;height:10px"></div><div class="l" style="width:96%;margin-top:18px"></div><div class="l" style="width:88%"></div><div class="l" style="width:64%;margin-top:18px;height:10px"></div></div>
         <div class="card sk"><div class="l" style="width:60%"></div><div class="l" style="width:44%;height:10px"></div><div class="l" style="width:92%;margin-top:18px"></div><div class="l" style="width:80%"></div><div class="l" style="width:58%;margin-top:18px;height:10px"></div></div>
@@ -562,7 +604,7 @@
   <div class="bottom">
     <div class="wrap">
       <p class="t">
-        <span>기록은 암호로 잠가서 여러 컴퓨터에 나눠 저장해요. 값을 치른 사람만 열 수 있고, 기간이 지나면 다시 안 열려요.</span>
+        <span>기록은 암호를 걸어서 여러 컴퓨터에 나눠 저장해요. 값을 치른 쪽만 열 수 있고, 기간이 지나면 다시 안 열려요.</span>
         <span>Sui 위에서 값을 치르고, Walrus 에 저장하고, Seal 로 잠가요.</span>
       </p>
       <div class="flinks" id="flinks"></div>
@@ -591,8 +633,11 @@
   var SCAN = 'https://suiscan.xyz/testnet/';
   var MIN_TTL = 300000;
 
-  /* 이 페이지 위쪽 대화가 다루는 기록. 비교 수치도 이것으로 잰 것이라 여기에만 붙인다. */
+  /* 이 페이지 대화가 다루는 기록. 비교 수치도 이것으로 잰 것이라 여기에만 붙인다. */
   var STORY_ID = '0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d';
+  /* 첫 화면 바로 아래 전후 사진이 나온 기록. 목록에서 맨 앞에 세운다. */
+  var SLOP_ID  = '0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e';
+  var FIRST    = [SLOP_ID, STORY_ID];
 
   /* 위 대화에 나온 다섯 마디. 저장된 값의 해시로만 이어 붙여서 어긋날 수 없게 한다. */
   var LESSON_BY_SHA = {
@@ -680,7 +725,9 @@
     [/(\d+)\s*턴/g, '$1번'], [/한 턴에/g, '한 번에'], [/턴/g, '번'],
     [/교정한/g, '고친'], [/교정 과정/g, '고친 과정'], [/교정/g, '고치기'],
     [/결함/g, '틀린 곳'], [/핀테크\s+/g, ''], [/\bv1\b/g, '첫 판'],
-    [/단계/g, '번'], [/묶음/g, '기록'], [/팩/g, '기록']
+    /* 숫자가 붙은 "5단계" 는 "5번", 홀로 선 "단계" 는 "번" 으로 바꾸면 말이 안 된다. */
+    [/(\d+)\s*단계/g, '$1번'], [/단계/g, '대목'],
+    [/묶음/g, '기록'], [/팩/g, '기록']
   ];
   function plain(s){
     s = String(s == null ? '' : s);
@@ -777,8 +824,12 @@
           out.push(j);
         });
         out.sort(function(a,b){
-          if(a.id === STORY_ID) return -1;
-          if(b.id === STORY_ID) return 1;
+          var ia = FIRST.indexOf(a.id), ib = FIRST.indexOf(b.id);
+          if(ia !== -1 || ib !== -1){
+            if(ia === -1) return 1;
+            if(ib === -1) return -1;
+            return ia - ib;
+          }
           return Number(b.created_at_ms) - Number(a.created_at_ms);
         });
         return out;
@@ -852,6 +903,38 @@
          + '<button class="retry" type="button" data-retry>다시 불러오기</button></div>';
   }
 
+  /* 사진이 딸린 기록만 blob id 를 돌려준다. 글만 있는 기록은 null 이라 이미지 칸을 아예 안 만든다. */
+  function afterShot(p){
+    var pv = p.preview;
+    if(!pv || pv.kind !== 'manifest') return null;
+    var m = pv.manifest.previews;
+    return (m && m.after) ? m.after : null;
+  }
+  /* 못 불러온 사진은 깨진 아이콘 대신 칸째로 지운다. */
+  function fillThumbs(root){
+    var els = root.querySelectorAll('.th[data-img]');
+    for(var i = 0; i < els.length; i++){
+      (function(el){
+        var id = el.getAttribute('data-img');
+        el.removeAttribute('data-img');
+        var img = new Image();
+        img.alt = '';
+        img.decoding = 'async';
+        img.onload = function(){ el.appendChild(img); };
+        img.onerror = function(){ if(el.parentNode) el.parentNode.removeChild(el); };
+        img.src = blobUrl(id);
+      })(els[i]);
+    }
+  }
+
+  function renderCount(){
+    var el = document.getElementById('packcount');
+    if(!el) return;
+    if(!state.packs || !state.packs.length){ el.hidden = true; el.textContent = ''; return; }
+    el.textContent = '지금 ' + koNum(state.packs.length) + ' 개 올라와 있어요. ';
+    el.hidden = false;
+  }
+
   function renderCards(){
     var box = document.getElementById('cards');
     var err = document.getElementById('cards-err');
@@ -861,6 +944,7 @@
       box.innerHTML = '';
       err.hidden = false;
       err.innerHTML = errBox('지금 목록을 못 불러왔어요. 잠깐 뒤에 다시 눌러주세요.');
+      renderCount();
       return;
     }
     if(!state.packs) return;
@@ -870,11 +954,14 @@
 
     if(!state.packs.length){
       box.innerHTML = '<div class="errbox"><p>지금 올라와 있는 기록이 없어요.</p></div>';
+      renderCount();
       return;
     }
 
     box.innerHTML = state.packs.map(function(p){
+      var shot = afterShot(p);
       return '<a class="card" href="#/pack/' + esc(p.id) + '">'
+        + (shot ? '<div class="th" data-img="' + esc(shot) + '"></div>' : '')
         + '<div class="nm">' + esc(plain(p.name)) + '</div>'
         + '<div class="ds">' + esc(plain(p.description)) + '</div>'
         + '<div class="mt">' + countText(p) + ' · ' + esc(sui(p.fee))
@@ -882,6 +969,20 @@
         + '<div class="go">안에 뭐가 들었는지 보기 →</div>'
         + '</a>';
     }).join('');
+    fillThumbs(box);
+    renderCount();
+  }
+
+  /* 위 비교 수치가 붙은 기록의 값·기간은 체인에서 읽은 값으로 덮어쓴다. */
+  function renderStoryPrice(){
+    if(!state.packs) return;
+    var p = null;
+    state.packs.forEach(function(x){ if(x.id === STORY_ID) p = x; });
+    if(!p) return;
+    var f = document.getElementById('story-fee');
+    var t = document.getElementById('story-ttl');
+    if(f) f.textContent = sui(p.fee);
+    if(t) t.textContent = ttlText(p.ttl_ms) + ' 동안 열려요';
   }
 
   function renderStory(){
@@ -965,21 +1066,23 @@
 
   function renderList(){
     renderStory();
+    renderStoryPrice();
     renderCards();
     renderFooterLinks();
   }
 
   /* ---------- render: detail ---------- */
   function resultsBlock(){
-    return '<div class="wrap block"><h2>이 기록을 산 AI 가 실제로 낸 결과</h2>'
-      + '<p class="lead">같은 문제가 있는 다른 페이지를 고치게 해봤어요. 기록 없이 한 세 번은 끝까지 제목 줄바꿈을 못 잡았어요.</p>'
+    return '<div class="wrap block"><h2>이 기록 하나를 두고 재본 것</h2>'
+      + '<p class="lead">같은 곳이 틀린 다른 페이지를 AI에게 고치게 했어요. 기록 없이도 시간을 더 쓰면 결국 다 잡아요. '
+      + '그래서 여기서 잰 건 얼마나 빨리 잡느냐예요. 다른 기록에는 이런 실험이 없어요.</p>'
       + '<div class="tbl"><div class="tablewrap"><table>'
       + '<thead><tr><th>누가 고쳤나</th><th>첫 수정에서 잡은 것</th><th>걸린 시간</th><th>주고받은 횟수</th><th>파일 수정</th><th>AI 사용료</th></tr></thead>'
       + '<tbody>'
-      + '<tr class="hi"><td>이 기록을 산 AI</td><td>5개 전부</td><td class="tnum">2분 0초</td><td class="tnum">15</td><td class="tnum">7</td><td class="tnum">$0.70</td></tr>'
-      + '<tr><td>기록 없이 1회차</td><td>5개 중 1개</td><td class="tnum">3분 30초</td><td class="tnum">16</td><td class="tnum">11</td><td class="tnum">$1.17</td></tr>'
-      + '<tr><td>기록 없이 2회차</td><td>5개 중 0개</td><td class="tnum">5분 50초</td><td class="tnum">26</td><td class="tnum">20</td><td class="tnum">$1.88</td></tr>'
-      + '<tr><td>기록 없이 3회차</td><td>5개 중 1개</td><td class="tnum">3분 38초</td><td class="tnum">17</td><td class="tnum">14</td><td class="tnum">$1.20</td></tr>'
+      + '<tr class="hi"><td>이 기록을 산 AI</td><td>다섯 군데 다</td><td class="tnum">2분 0초</td><td class="tnum">15</td><td class="tnum">7</td><td class="tnum">$0.70</td></tr>'
+      + '<tr><td>기록 없이 1회차</td><td>한 군데</td><td class="tnum">3분 30초</td><td class="tnum">16</td><td class="tnum">11</td><td class="tnum">$1.17</td></tr>'
+      + '<tr><td>기록 없이 2회차</td><td>없음</td><td class="tnum">5분 50초</td><td class="tnum">26</td><td class="tnum">20</td><td class="tnum">$1.88</td></tr>'
+      + '<tr><td>기록 없이 3회차</td><td>한 군데</td><td class="tnum">3분 38초</td><td class="tnum">17</td><td class="tnum">14</td><td class="tnum">$1.20</td></tr>'
       + '</tbody></table></div></div></div>';
   }
 
@@ -1000,8 +1103,8 @@
 
   function unlockBlock(p){
     return '<div class="wrap block unlockwrap" id="unlockwrap">'
-      + '<button class="unlock" type="button" data-goto="howto">잠금해제 · ' + esc(sui(p.fee)) + '</button>'
-      + '<p class="unote">' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요. SUI 는 값을 매기는 단위예요.</p>'
+      + '<button class="unlock" type="button" data-goto="howto">' + esc(sui(p.fee)) + ' 내고 열기</button>'
+      + '<p class="unote">값을 치르면 ' + esc(ttlText(p.ttl_ms)) + ' 동안 안에 든 게 다 보여요.</p>'
       + '</div>';
   }
 
@@ -1053,13 +1156,16 @@
     h.push('<a class="back" href="#/">← 목록으로</a>');
     h.push('<h1 class="dtitle">' + esc(plain(p.name)) + '</h1>');
     h.push('<p class="ddesc">' + esc(plain(p.description)) + '</p>');
+    h.push('<p class="dnote">이름이랑 설명은 판 사람이 쓴 그대로예요.</p>');
     h.push('<div class="dmeta">'
-      + '<button class="chip hi" type="button" data-goto="unlockwrap">' + esc(sui(p.fee)) + ' 내고 열기</button>'
+      + '<span class="chip">' + esc(sui(p.fee)) + '</span>'
       + '<span class="chip">' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요</span>'
       + '<span class="chip">' + countText(p) + '</span>'
       + '<span class="chip">' + esc(buyers(p.subscriber_count)) + '</span>'
       + (p.last_memory_at_ms ? '<span class="chip">마지막 기록 ' + esc(dateText(p.last_memory_at_ms)) + '</span>' : '')
+      + '<button class="chip hi" type="button" data-goto="unlockwrap">사는 법 보기</button>'
       + '</div>');
+    h.push('<p class="dnote" style="margin:18px 0 0">SUI 는 가상화폐 단위예요. 아직 연습용이라 진짜 돈은 안 들어요.</p>');
     h.push('</div>');
 
     /* 사기 전에 볼 수 있는 줄. 여기서 앞 두 줄을 뽑아 맨 위에 보여준다. */
@@ -1122,7 +1228,7 @@
       var total = Number(p.memory_count) || texts.length;
       var rest = Math.max(0, total - texts.length);
       h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
-        + '<p class="lead">' + total + '개 중 ' + texts.length + '개는 사기 전에도 볼 수 있어요.</p>'
+        + '<p class="lead">적어둔 것 ' + total + '개 중 ' + texts.length + '개는 사기 전에도 볼 수 있어요. 나머지는 사면 보여요.</p>'
         + '<div class="items">'
         + texts.map(function(t, i){
             return '<div class="item"><div class="in">' + (i + 1) + '</div><div class="ib">'
@@ -1138,6 +1244,18 @@
                   + '</div></div>';
               }).join('')
             : '')
+        + '</div></div>');
+    } else if(pv.kind === 'none'){
+      /* 판 사람이 사기 전에 볼 것을 하나도 안 걸어둔 기록. 빈 화면 대신 들어 있는 개수만 보여준다. */
+      h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
+        + '<p class="lead">이 기록은 사기 전에 볼 수 있게 열어둔 게 없어요. 값을 치르면 ' + esc(p.memory_count) + '개가 다 보여요.</p>'
+        + '<div class="items">'
+        + [0,1,2].map(function(k){
+            return '<div class="item"><div class="in">' + (k + 1) + '</div><div class="ib">'
+              + '<div class="ik">알게 된 것 · 사면 보여요</div>'
+              + '<div class="mgrp lk">' + maskRows(k + 2, 2, 90) + '</div>'
+              + '</div></div>';
+          }).join('')
         + '</div></div>');
     } else {
       h.push('<div class="wrap block">'
