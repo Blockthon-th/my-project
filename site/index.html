@@ -993,6 +993,17 @@
   }
 
   /* ---------- 상세 화면 ---------- */
+  /* 어떤 경험을 했냐면요 · 기록마다 두 문장 */
+  var STORY_TXT = {};
+  STORY_TXT[SLOP_ID]  = 'AI 한테 랜딩을 시켰더니 보라색 그라데이션에 영어 문구가 박힌 화면이 나왔어요. 열 번 고치면서 색을 몇 개까지 줄일지, 제목을 몇 자로 쓸지 기준이 생겼어요.';
+  STORY_TXT[STORY_ID] = '송금 앱 랜딩을 받았는데 버튼이 안 보이고 폰에서 옆으로 밀렸어요. 다섯 번 만에 다 잡았고, 어디부터 손대면 되돌아가지 않는지 알게 됐어요.';
+  STORY_TXT['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = '우리 서비스를 소개하는 문장이 저희끼리만 알아듣는 말투성이였어요. 여덟 번 고치면서 첫 화면에 쓰면 안 되는 말이 뭔지 정리됐어요.';
+  STORY_TXT['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = 'Sui 를 처음 붙이는데 문서대로 해도 막히는 데가 계속 나왔어요. 막힌 자리마다 원인과 해결을 적어 서른 개가 모였어요.';
+  function storyBlock(p){
+    var t = STORY_TXT[p.id];
+    if(!t) return '';
+    return '<div class="wrap block"><h2>어떤 경험을 했냐면요</h2><p class="body" style="max-width:720px">' + esc(t) + '</p></div>';
+  }
   /* 만든 것 · 글 대신 사진. 01 은 우리 전후, Paylane 은 체인의 전후, 나머지는 우리가 만든 한 장. */
   function madeBlock(p){
     var head = '<div class="wrap block"><h2>만든 것</h2>';
@@ -1146,6 +1157,7 @@
     h.push('<button class="btn sm" type="button" data-goto="howto">사는 법 보기</button>');
     h.push('</div>');
     h.push(madeBlock(p));
+    h.push(storyBlock(p));
     h.push(savingsBlock(p));
 
     /* 사기 전에 볼 수 있는 줄 */
@@ -1157,7 +1169,7 @@
     } else if(pv.kind === 'text'){
       var texts = pv.texts || [];
       var total = Number(p.memory_count) || texts.length;
-      h.push('<div class="wrap block"><h2>안에 든 것</h2>'
+      h.push('<div class="wrap block"><h2>안에 든 대화</h2>'
         + '<p class="bl">전부 ' + total + '개 중 ' + texts.length + '개예요. 나머지는 사면 열려요.</p>'
         + '<div class="chat lt">'
         + texts.map(function(t){ return '<div class="msg ai"><span class="ic">' + IC_AI + '</span><p>' + esc(plain(t.trim())) + '</p></div>'; }).join('')
