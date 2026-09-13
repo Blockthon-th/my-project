@@ -1,3 +1,4 @@
+import { realpathSync } from "node:fs";
 /**
  * check-copy.mjs — 한국어 랜딩 카피 검사 6항목.
  *
@@ -11,7 +12,8 @@
  * 실패로 뜬 항목은 사람이 한 번 보고 판단하라는 신호이지 자동 판정이 아니다.
  */
 import { existsSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
 export const COPY_CHECKS = [
   { id: 'first-screen-jargon', desc: '첫 화면(스크롤 없이 보이는 영역)에 자사 용어·기술명 0건' },
@@ -128,7 +130,13 @@ export async function runCopyChecks(target, opts = {}) {
 }
 
 const isMain = (u) => {
-  try { return process.argv[1] && pathToFileURL(process.argv[1]).href === u; } catch { return false; }
+  // 정션·심볼릭 링크로 실행하면 Node 가 메인 모듈 경로를 풀어버려 argv[1] 과 import.meta.url 이 어긋난다.
+  // 양쪽 다 realpath 로 맞춘 뒤 비교한다. 이게 없으면 출력도 에러도 없이 종료코드 0 으로 끝난다.
+  try {
+    if (!process.argv[1]) return false;
+    const real = (p) => { try { return realpathSync(p); } catch { return p; } };
+    return real(fileURLToPath(u)).toLowerCase() === real(resolve(process.argv[1])).toLowerCase();
+  } catch { return false; }
 };
 
 if (isMain(import.meta.url)) {
