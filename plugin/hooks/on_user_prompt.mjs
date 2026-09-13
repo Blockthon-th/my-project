@@ -25,7 +25,7 @@ const NUDGE =
   'Sui/Move/Walrus/Seal 문제는 코드를 뒤지기 전에 market_recall 을 먼저 확인할 것.';
 
 /** 관련 없는 대화에는 끼어들지 않는다 */
-const TOPIC = /sui|move|walrus|seal|memwal|ptb|gRPC|트랜잭션|컨트랙트|패키지|에러|오류|실패|안\s*되|왜/i;
+const TOPIC = /sui|move|walrus|seal|memwal|ptb|gRPC|트랜잭션|컨트랙트|패키지|에러|오류|실패|안\s*되|왜|랜딩|landing|디자인|design|카피|문구|버튼|제목|화면|페이지|고쳐|수정/i;
 
 function readStdin() {
   try {
