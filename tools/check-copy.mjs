@@ -37,7 +37,7 @@ export const COPY_CHECKS = [
   { id: 'first-screen-jargon', desc: '첫 화면(스크롤 없이 보이는 영역)에 자사 용어·기술명 0건' },
   { id: 'honorific-consistent', desc: '해요체와 합니다체를 섞지 않음' },
   { id: 'no-cleft', desc: '분열문(핵심은 ~다 / 필요한 것은 ~이다) 0건' },
-  { id: 'dash-restraint', desc: '대시(—) 부가설명 3회 이하' },
+  { id: 'dash-restraint', desc: '대시(—) 0회' },
   { id: 'quote-restraint', desc: '따옴표 강조 5회 미만' },
   { id: 'no-hscroll-375', desc: '375px 에서 가로 스크롤 없음' },
 ];
@@ -125,7 +125,7 @@ export async function runCopyChecks(target, opts = {}) {
 
     // 4. 대시 부가설명
     const dashes = (prose.match(/\s—\s/g) || []).length;
-    details['dash-restraint'] = { pass: dashes <= 3, count: dashes };
+    details['dash-restraint'] = { pass: dashes === 0, count: dashes };
 
     // 5. 따옴표 강조
     // 곧은 따옴표(")와 굽은 따옴표(\u201c \u201d)를 함께 본다. 한글 카피의 강조는 대개 굽은 쪽이다.
