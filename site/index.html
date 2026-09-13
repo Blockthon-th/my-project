@@ -221,8 +221,19 @@
   .lock b{ position:absolute; left:2.5px; top:0; width:8px; height:8px; border:2px solid var(--ondark-mute); border-bottom:0; }
 
   /* ───────── 실측 두 칸 ───────── */
+  /* 대화 말풍선: 오른쪽이 나, 왼쪽이 AI. 스크롤하면 .reveal 로 하나씩 나타난다 */
+  .chat{ display:flex; flex-direction:column; gap:14px; margin-top:28px; max-width:820px; }
+  .msg{ max-width:72%; padding:14px 18px; border-radius:18px; font-size:18px; line-height:1.55;
+    opacity:0; transform:translateY(28px); transition:opacity .45s ease-out, transform .45s ease-out; transition-delay:var(--d,0ms); }
+  .msg.in{ opacity:1; transform:none; }
+  .msg p{ margin:0; }
+  .msg .from{ display:block; font-family:var(--mono); font-size:12px; letter-spacing:.06em; margin-bottom:6px; opacity:.72; }
+  .msg.me{ align-self:flex-end; background:var(--dark-accent); color:#141414; border-bottom-right-radius:5px; }
+  .msg.me .from{ text-align:right; }
+  .msg.ai{ align-self:flex-start; background:#262626; color:var(--ondark); border-bottom-left-radius:5px; }
+  @media (max-width:768px){ .msg{ max-width:88%; font-size:17px; } }
   /* 처음부터 했을 때 vs 경험을 샀을 때 — 이긴 쪽만 크다 */
-  .vs{ display:grid; grid-template-columns:5fr 7fr; gap:32px; margin-top:28px; align-items:stretch; }
+  .vs{ display:grid; grid-template-columns:5fr 7fr; gap:32px; margin-top:56px; align-items:stretch; }
   .vbox{ padding-top:22px; border-top:1px solid #5b5b5b; }
   .vbox .vlab{ font-size:17px; color:var(--ondark-soft); }
   .vbox .vnum{ font-family:var(--mono); line-height:1.05; letter-spacing:-.02em; margin-top:12px; }
@@ -371,7 +382,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .reveal, .msg{ opacity:1 !important; transform:none !important; transition:none !important; }
     .row::after{ transform:scaleX(1) !important; transition:none !important; }
     .slot .w{ transition:none !important; }
     .slot .w:not(.on){ display:none !important; }
@@ -426,7 +437,7 @@
     <span class="gl" aria-hidden="true"></span>
     <div class="wrap">
       <h2 class="h2 reveal">지금 올라와 있는 것</h2>
-      <p class="lead w reveal" style="--d:100ms"><span id="packcount"></span>이름은 사는 사람이 알아보게 우리가 붙였어요.</p>
+      <p class="lead w reveal" style="--d:100ms"><span id="packcount"></span></p>
       <div id="rows" style="margin-top:24px">
         <div class="skrow"><span class="skel" style="width:34%;height:26px"></span><span class="skel" style="width:72%;height:14px;margin-top:14px"></span><span class="skel" style="width:46%;height:12px;margin-top:14px"></span></div>
         <div class="skrow"><span class="skel" style="width:28%;height:26px"></span><span class="skel" style="width:66%;height:14px;margin-top:14px"></span><span class="skel" style="width:42%;height:12px;margin-top:14px"></span></div>
@@ -440,67 +451,30 @@
     <span class="gl" aria-hidden="true"></span>
     <div class="wrap">
       <p class="eyebrow reveal"><span class="bk l"></span>산 AI 가 읽는 것<span class="bk r"></span></p>
-      <h2 class="h2 reveal">지적한 말이 그대로 들어 있어요</h2>
-      <p class="lead w reveal" style="--d:100ms">위의 웹디자이너 경험 안이에요. AI 가 뱉은 보라색 랜딩을 열 번 고친 기록이고, 지적한 말과 알게 된 것이 한 쌍으로 붙어 있어요.</p>
+      <h2 class="h2 reveal">대화 기록을 판매합니다</h2>
+      <p class="lead w reveal" style="--d:100ms">웹디자이너 경험 안에 든 대화예요.</p>
 
-      <div style="margin-top:24px">
-        <div class="row two reveal">
-          <span class="n">01</span>
-          <div>
-            <div class="lab">지적한 말</div>
-            <p class="said">보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.</p>
-          </div>
-          <div>
-            <div class="lab hi">알게 된 것</div>
-            <p class="got">꾸미는 색은 하나만 써요. 나머지는 검정 글자와 가는 선으로 정리해요. 그라데이션은 빼요.</p>
-          </div>
-        </div>
-        <div class="row two reveal" style="--d:80ms">
-          <span class="n">02</span>
-          <div>
-            <div class="lab">지적한 말</div>
-            <p class="said">버튼도 그 사이트처럼 바꿔줘. 둥근 알약 말고 각진 사각형에 작은 글씨. 강조색은 정말 눈길이 가야 하는 딱 한 곳에만 남기고 나머지는 무채색으로.</p>
-          </div>
-          <div>
-            <div class="lab hi">알게 된 것</div>
-            <p class="got">강조색은 제일 중요한 버튼 하나에만 칠해요. 나머지 버튼은 테두리만 남겨요.</p>
-          </div>
-        </div>
-        <div class="row two reveal" style="--d:160ms">
-          <span class="n">03</span>
-          <div>
-            <div class="lab">지적한 말</div>
-            <p class="said">제목이 네 줄로 떨어져서 첫 화면을 다 잡아먹었어. 크기를 낮추지 말고 문장을 줄여서 두 줄 안에 들어오게 해줘.</p>
-          </div>
-          <div>
-            <div class="lab hi">알게 된 것</div>
-            <p class="got">제목이 넘치면 글자를 줄이지 말고 문장을 줄여요. 한 줄에 몇 글자 들어가는지 먼저 세요.</p>
-          </div>
-        </div>
-        <div class="row two reveal" style="--d:240ms">
-          <span class="n">04</span>
-          <div>
-            <div class="lab">그때 오간 말과 바뀐 코드</div>
-            </div>
-          <div class="locked" style="max-width:none"><div class="mgrp" style="padding-top:6px"><span class="mask" style="width:92%"></span><span class="mask" style="width:74%"></span><span class="mask" style="width:86%"></span></div><a class="unlock" href="#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</a></div>
-        </div>
+      <div class="chat">
+        <div class="msg me"><span class="from">나</span><p>보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>그라데이션이랑 흐림 효과를 걷어냈어요. 색은 하나만 남기고, 나머지는 검정 글자와 가는 선으로 정리했어요.</p></div>
+        <div class="msg me"><span class="from">나</span><p>버튼도 그 사이트처럼 바꿔줘. 둥근 알약 말고 각진 사각형에 작은 글씨. 강조색은 정말 눈길이 가야 하는 딱 한 곳에만 남기고 나머지는 무채색으로.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>버튼을 각진 사각형으로 바꿨어요. 강조색은 제일 중요한 버튼 하나에만 남기고, 나머지는 테두리만 뒀어요.</p></div>
+        <div class="msg me"><span class="from">나</span><p>제목이 네 줄로 떨어져서 첫 화면을 다 잡아먹었어. 크기를 낮추지 말고 문장을 줄여서 두 줄 안에 들어오게 해줘.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>글자 크기는 그대로 두고 문장을 줄여서 두 줄에 맞췄어요. 한 줄에 들어가는 글자 수부터 세고 카피를 다시 썼어요.</p></div>
       </div>
 
-      <p class="lead w reveal" style="margin-top:36px">같은 페이지의 같은 문제를 AI 한테 고치라고 시켰어요. 처음부터 하게 한 것과, 경험을 사서 하게 한 것을 나란히 놓으면 이래요. 웹퍼블리셔 경험으로 잰 값이에요.</p>
 
       <div class="vs">
         <div class="vbox lose reveal">
           <div class="vlab">처음부터 했을 때</div>
           <div class="vnum">3분 30초</div>
           <div class="vmeta">주고받은 횟수 16 · AI 사용료 $1.17</div>
-          <p class="note">세 번 해봤는데 그중 제일 빨랐던 때예요. 첫 수정에서는 세 번 다 제목 줄바꿈을 놓쳤어요.</p>
         </div>
         <div class="vbox win reveal" style="--d:120ms">
           <div class="vlab">경험을 샀을 때</div>
           <div class="vnum">2분 0초</div>
           <div class="vdelta">43% 빨라요 · AI 사용료 40% 덜 들어요</div>
           <div class="vmeta">주고받은 횟수 15 · AI 사용료 $0.70</div>
-          <p class="note">다섯 군데를 첫 수정에서 다 잡았어요. 되돌아간 적이 한 번도 없어요.</p>
         </div>
       </div>
 
@@ -513,7 +487,7 @@
     <span class="gl" aria-hidden="true"></span>
     <div class="wrap">
       <h2 class="h2 reveal">파는 쪽은 따로 쓸 게 없어요</h2>
-      <p class="lead w reveal" style="--d:100ms">평소처럼 AI 랑 일하면 돼요. 뭘 지적했고 뭐가 바뀌었고 그래서 뭘 알게 됐는지까지 알아서 쌓여요. 쌓인 걸 올리면 끝이에요.</p>
+      <p class="lead w reveal" style="--d:100ms">평소처럼 AI 랑 일하면 알아서 쌓여요. 쌓인 걸 올리면 끝이에요.</p>
       <div class="reveal" style="--d:200ms">
         <p class="body" style="margin-top:28px;color:var(--mute)">Claude Code 에 이 두 줄을 붙여 넣으면 돼요.</p>
         <pre>/plugin marketplace add Blockthon-th/my-project
@@ -960,8 +934,8 @@
       : [['걸리는 시간', '<b>약 40% 빨라요</b>', '잰 기록에서 3분 30초 → 2분 0초'],
          ['AI 사용료 (토큰값)', '<b>약 40% 덜 들어요</b>', '잰 기록에서 $1.17 → $0.70']];
     var note = measured
-      ? '같은 페이지의 같은 문제를 처음부터 고치게 한 것과 이 경험을 사서 고치게 한 것을 비교했어요. 처음부터 한 쪽은 세 번 중 제일 빨랐던 때예요.'
-      : '웹퍼블리셔 경험에서 실제로 잰 비율이에요. 이 기록도 비슷할 거라고 보는 예상이에요.';
+      ? '웹퍼블리셔 경험으로 잰 값이에요.'
+      : '웹퍼블리셔 경험에서 잰 비율이에요.';
     return '<div class="wrap block"><h2>' + (measured ? '이 기록을 쓰면' : '이 기록을 쓰면 (예상)') + '</h2>'
       + '<div class="save">'
       + cells.map(function(c){ return '<div class="sv"><div class="k">' + c[0] + '</div><div class="v">' + c[1] + '</div><div class="d">' + c[2] + '</div></div>'; }).join('')
@@ -1015,7 +989,7 @@
 
   function howToBuy(){
     return '<div class="wrap block" id="howto"><h2>사는 법</h2>'
-      + '<p class="bl">사람이 결제창을 누르는 게 아니에요. AI 가 일하다 필요하면 알아서 사요.</p>'
+      + '<p class="bl">AI 가 일하다 필요하면 알아서 사요.</p>'
       + '<div class="steps">'
       + '<div class="s"><span class="n">01</span><div><p>플러그인을 깔아요. 두 줄이면 끝나요.</p>'
       + '<pre>/plugin marketplace add Blockthon-th/my-project\n/plugin install memory-market</pre></div></div>'
@@ -1059,7 +1033,7 @@
     h.push('<dl class="facts">'
       + '<dt>만든 것</dt><dd>' + esc(MADE[p.id] || ourDesc(p)) + '</dd>'
       + '<dt>값</dt><dd>' + esc(sui(p.fee)) + ' · ' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요'
-      +   '<small>SUI 는 가상화폐 단위예요. 아직 연습용이라 진짜 돈은 안 들어요.</small></dd>'
+      +   '<small>SUI 는 가상화폐 단위예요.</small></dd>'
       + '</dl>');
     h.push('<button class="btn sm" type="button" data-goto="howto">사는 법 보기</button>');
     h.push('</div>');
@@ -1095,7 +1069,7 @@
         }
         if(!shown.length) shown = [0,1,2].filter(function(i){ return i < m.steps.length; });
         h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
-          + '<p class="bl">전부 ' + m.steps.length + '개예요. 세 개만 먼저 보여드려요. 그때 오간 대화와 바뀐 코드는 사면 열려요.</p>'
+          + '<p class="bl">전부 ' + m.steps.length + '개 중 세 개예요. 나머지는 사면 열려요.</p>'
           + '<div class="items">'
           + shown.map(function(i, k){
               return '<div class="row"><span class="n">0' + (k + 1) + '</span><div class="rb">'
@@ -1114,7 +1088,7 @@
       var total = Number(p.memory_count) || texts.length;
       var rest = Math.max(0, total - texts.length);
       h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
-        + '<p class="bl">적어둔 것 ' + total + '개 중 ' + texts.length + '개는 지금 볼 수 있어요. 나머지 ' + rest + '개는 사면 열려요.</p>'
+        + '<p class="bl">전부 ' + total + '개 중 ' + texts.length + '개예요. 나머지는 사면 열려요.</p>'
         + '<div class="items">'
         + texts.map(function(t, i){
             var no = (i + 1) < 10 ? ('0' + (i + 1)) : String(i + 1);
@@ -1266,10 +1240,16 @@
       var r = els[i].getBoundingClientRect();
       if(r.top < vh - 8) els[i].classList.add('in');
     }
+    /* 말풍선은 화면 안에 있을 때만 보인다. 올리면 사라지고 내리면 다시 나타난다. */
+    var ms = document.querySelectorAll('.chat .msg');
+    for(var j=0;j<ms.length;j++){
+      var b = ms[j].getBoundingClientRect();
+      if(b.top < vh - 40 && b.bottom > 0) ms[j].classList.add('in'); else ms[j].classList.remove('in');
+    }
   }
   function initReveal(){
     if(reduce){
-      var all = document.querySelectorAll('.reveal');
+      var all = document.querySelectorAll('.reveal, .chat .msg');
       for(var i=0;i<all.length;i++) all[i].classList.add('in');
       return;
     }
