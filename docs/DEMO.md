@@ -111,7 +111,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
   - npm 설치본은 PATH 에 없다: `& "$env:APPDATA\npm\claude.cmd" auth login` (또는 사용자 PATH 에 `%APPDATA%\npm` 추가)
   - 각 데모 폴더(`C:\demo\seller`, `buyer`, `baseline-*`)에서 `claude` 를 한 번 열어 **신뢰 대화상자 수락**. 수락 전에는 `.claude/settings.json` 의 `permissions.allow` 가 무시되어 `market_find` 가 "haven't granted" 로 거부된다. 헤드리스(`claude -p`)로 돌릴 때는 `~/.claude.json` 의 `projects["C:/demo/buyer"].hasTrustDialogAccepted: true` 가 있어야 한다
 - [ ] **오늘 체인 상태를 다시 확인한다**, 위 "지금 체인에 올라와 있는 것" 표와 README 의 기록 표 가 같은 값인지.
-- [ ] **`0xef238e43…` 로 돌릴지 결정.** Paylane 팩으로 갈 거면 **예비 지갑 BUYER2 로 바꾼다**(맨 위 "예비 지갑으로 바꾸기").
+- [ ] **`0xa7591287…` 로 돌릴지 결정.** Paylane 팩으로 갈 거면 **예비 지갑 BUYER2 로 바꾼다**(맨 위 "예비 지갑으로 바꾸기").
       구독권 만료(2026-09-14 23:14:31 KST) 뒤라면 원래 구매자 지갑 그대로도 된다, 새 구독권이 발급되므로 영수증도 새로 남는다
 - [ ] `powershell -ExecutionPolicy Bypass -File C:\mm\demo\setup.ps1` → `C:\demo\{seller,buyer,baseline-1..3}`
 - [ ] **판매자 5턴**: `C:\demo\seller` 에서 `claude`, [SESSION-SCRIPT.md](../demo/seller/SESSION-SCRIPT.md) 의 프롬프트 순서대로. 턴마다 ```step-note``` 블록 확인
