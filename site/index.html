@@ -53,7 +53,7 @@
   /* 절마다 깔리는 1px 세로 격자 5칸 */
   .gl{
     position:absolute; top:0; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:1315px; z-index:0; pointer-events:none;
+    width:100%; max-width:1400px; z-index:0; pointer-events:none;
     background-image:repeating-linear-gradient(to right, var(--hair) 0 1px, transparent 1px calc(20% - 1px));
     -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%);
     mask-image:linear-gradient(to bottom, transparent 0, #000 90px, #000 calc(100% - 90px), transparent 100%);
@@ -151,9 +151,9 @@
   .row.two > div{ min-width:0; }
 
   /* ───────── 목록 카드: 제목 · 판 사람 · 사진 한 장 ───────── */
-  #rows{ display:grid; grid-template-columns:1fr 1fr; gap:44px 32px; align-items:stretch; }
+  #rows{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:40px 28px; align-items:stretch; }
   .card{ display:flex; flex-direction:column; text-decoration:none; color:inherit; min-width:0; }
-  .card .nm{ font-size:26px; line-height:1.3; font-weight:600; }
+  .card .nm{ font-size:22px; line-height:1.3; font-weight:600; }
   .who{ display:flex; align-items:center; gap:12px; margin-top:12px; }
   .ava{ flex:0 0 auto; width:40px; height:40px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
     font-family:var(--mono); font-size:12px; font-weight:700; color:#141414; letter-spacing:.06em; }
@@ -167,7 +167,8 @@
   .card .box{ display:block; margin-top:16px; border:1px solid #d8d8d8; background:#f3f2f0; aspect-ratio:16/10; overflow:hidden; }
   .card .box img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
   .card:hover .nm{ color:var(--accent-dark); }
-  @media (max-width:760px){ #rows{ grid-template-columns:1fr; gap:36px; } }
+  @media (max-width:1100px){ #rows{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width:560px){ #rows{ grid-template-columns:1fr; gap:36px; } }
 
   /* 기록 01 안에 실제로 들어 있는 화면 두 장 */
   .shots{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; max-width:380px; }
@@ -316,7 +317,7 @@
   }
   @media (max-width:768px){
     :root{ --pad:20px; }
-    .gl{ left:20px; transform:none; width:calc(100% - 38px); max-width:none;
+    .gl{ left:0; transform:none; width:100%; max-width:none;
       background-image:repeating-linear-gradient(to right, var(--hair) 0 1px, transparent 1px calc(33.3% - 1px)); }
     .on-dark .gl{ background-image:repeating-linear-gradient(to right, var(--dark-hair) 0 1px, transparent 1px calc(33.3% - 1px)); }
     .on-grey .gl{ background-image:repeating-linear-gradient(to right, rgba(0,0,0,.06) 0 1px, transparent 1px calc(33.3% - 1px)); }
@@ -457,7 +458,6 @@
           <div>
             <div class="lab">그때 오간 말과 바뀐 코드</div>
             </div>
-          </div>
           <div class="locked" style="max-width:none"><div class="mgrp" style="padding-top:6px"><span class="mask" style="width:92%"></span><span class="mask" style="width:74%"></span><span class="mask" style="width:86%"></span></div><a class="unlock" href="#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</a></div>
         </div>
       </div>
