@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const REPO = join(ROOT, '..');
 // 배포본에서 최상위로 올라오는 파일들. 왼쪽이 주소, 오른쪽이 저장소 안 실제 위치.
-const MOUNTED = { '/compare.html': join(REPO, 'demo', 'compare.html') };
+const MOUNTED = {};   // 발표용 compare.html 은 공개 배포에서 뺐다. 데모 때는 demo/serve.mjs 로 띄운다.
 const PORT = Number(process.env.PORT || 8788);
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml' };
 

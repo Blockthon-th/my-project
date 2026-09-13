@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - 'site/**'
-      - 'demo/compare.html'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -33,7 +32,6 @@ jobs:
           mkdir -p _site
           cp site/index.html _site/index.html
           if [ -d site/img ]; then cp -r site/img _site/img; fi
-          cp demo/compare.html _site/compare.html
           touch _site/.nojekyll
           ls -R _site
 
