@@ -212,10 +212,10 @@ scripts/                  공용 층(config·session·tx·market·records·evide
 tools/                    capture.mjs 포집 훅 · check.mjs 디자인 5항목 · check-copy.mjs 카피 6항목 · shot.mjs · first-edit.mjs · lib.mjs · selftest.mjs
 skills/                   landing-copy-ko 한국어 랜딩 카피 스킬 (카피 기록이 나온 작업 규칙, check-copy.mjs 사본 동봉 — 두 벌을 같이 고친다)
 plugin/                   Claude Code 플러그인 (MCP 번들 + 훅), .claude-plugin/marketplace.json 과 짝
-demo/                     seller · buyer · baseline 템플릿 · compare.html 발표 화면 · state/ · setup.ps1 · serve.mjs · freeze-live.mjs
+demo/                     seller · buyer · baseline 템플릿 (기록을 다시 만들고 실험을 재현할 때 쓴다) · setup.ps1
 site/                     랜딩 페이지 — index.html 단일 파일, 브라우저에서 체인과 Walrus 를 직접 읽는다
 docs/                     ground-truth.md 수치 기준값 · glossary.md 어휘 규칙 · DEMO.md 3분 대본 ·
-                          landing-copy.md 랜딩 원고 · dev-memories.md 개발 기억 30건(Sui 기록의 원천이자 그 자체로 상품)
+                          dev-memories.md 개발 기억 30건(Sui 기록의 원천이자 그 자체로 상품)
 ```
 
 층별 문서 [contracts](contracts/memory_market/README.md) · [tools](tools/README.md) · [plugin](plugin/README.md) ·

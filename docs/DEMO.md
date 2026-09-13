@@ -8,9 +8,8 @@
 
 숫자는 전부 [ground-truth.md](ground-truth.md) 값이다. 이 대본과 어긋나면 ground-truth 가 맞다.
 
-**`demo/compare.html` 조작법** — 탭 셋뿐이고 슬라이드는 없다.
-`1` 첫 화면(큰 수치 셋 + 실측 표 + 지금 올라와 있는 기록 넷) · `2` 판 사람이 남긴 것 · `3` 기록 없이 vs 이 기록을 산 AI ·
-`R` 라이브/사전 실행 전환 · `F` 상태 다시 읽기. 화살표 키는 안 먹는다.
+**발표 화면은 공개 랜딩(https://blockthon-th.github.io/my-project/)을 그대로 띄운다.** 별도 비교 화면(compare.html)은 저장소에서 뺐다.
+아래 대본의 D 탭1 / 탭2 / 탭3 은 각각 랜딩의 첫 화면 / 기록 상세(`#/pack/…`) / 상세의 "이 기록을 쓰면" 칸으로 읽는다. `R`·`F` 키는 없다.
 폴더 지도는 [demo/README.md](../demo/README.md), 판매자 5턴 대본은 [demo/seller/SESSION-SCRIPT.md](../demo/seller/SESSION-SCRIPT.md).
 
 **아래 명령의 `$PACK` · `$SUIMEM` 은 터미널 C 에서 미리 잡아 두는 변수다** (PowerShell, 준비 단계에서 한 번):
@@ -68,7 +67,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 | **A** 구매자 Claude Code | `C:\demo\buyer` 에서 `claude`. `/improve` 만 친다 | 왼쪽 큰 창 |
 | **B** 판매자 폴더 | 탐색기로 `C:\demo\seller\.mm\steps\` (step-1..5.jpg 미리보기 창) — 사전 실행 결과 | 오른쪽 위, 50초에 닫음 |
 | **C** 별도 터미널 | `C:\mm\scripts`. `mm recall --fresh`, `mm retract` 두 명령을 히스토리에 넣어 둠 | 오른쪽 아래 |
-| **D** 브라우저 | 탭 1 `http://localhost:8787/compare.html` (F11 전체화면), 탭 2 Suiscan 팩 객체, 탭 3 Suiscan tx (비워둠) | 전환용 |
+| **D** 브라우저 | 탭 1 https://blockthon-th.github.io/my-project/ (F11 전체화면), 탭 2 Suiscan 팩 객체, 탭 3 Suiscan tx (비워둠) | 전환용 |
 
 발표자 한 명이 A → D → B → A → C → D → A → C → D 순으로 오간다. 창 전환은 Alt+Tab 이 아니라 **작업표시줄 클릭** (녹화·프로젝터에서 덜 틀린다).
 
@@ -120,9 +119,8 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 - [ ] `npm run mm -- --project C:\demo\seller review` → 단계 5개, 스크린샷 5쌍, record_hash 체인 OK. lesson 이 빈 단계는 `--step N --lesson ".."` 로 보충
 - [ ] **publish 하기 전에** 만료 시연용 사본을 떠 둔다: `robocopy C:\demo\seller C:\demo\seller-expiry /E` (publish 는 `state.json` 에 발행 기록을 남겨 같은 폴더에서 두 번째 팩을 만들 수 없다)
 - [ ] (새 팩을 또 올릴 거면) `npm run mm -- --project C:\demo\seller publish --new --fee 0.05 --ttl 7d --label claude-code` → **pack id 를 여기 적는다**: `0x________` (팩 이름은 `.mm/config.json` 의 `name`). **올린 팩은 ground-truth.md 표에 바로 추가한다**
-- [ ] `npm run mm -- --project C:\demo\seller state --pack 0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` → compare.html 탭2 에 5장 뜨는지
+- [ ] `npm run mm -- --project C:\demo\seller state --pack 0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d` → 오류 없이 끝나는지
 - [ ] **기준선 3회** (템플릿은 **검사 도구 없이** 돌린다 — 검사 도구를 쥐여준 기준선은 실측 3/3 이 5/5 를 맞췄고 176 / 201 / 226초가 걸렸다. 비교는 **첫 수정 점수 / 최종 점수 / 턴 수 / 소요 / AI 사용료** 로 한다): `C:\demo\baseline-1..3` 각각 `claude` → `/improve` → `npm run mm -- --project C:\demo\seller baseline --dir C:\demo\baseline-N --label run-N` → 탭3 왼쪽에 3장. 첫 수정 직후 파일은 훅이 `.first-edit.html` 로 남긴다 (`node C:\mm\tools\check.mjs C:\demo\baseline-N\.first-edit.html`)
-- [ ] **리허설 1회 끝나면** `node C:\mm\demo\freeze-live.mjs` → live 를 fallback 으로 얼려 둔다 (본 데모에서 `R` 키가 보여줄 화면)
 - [ ] **만료 구독 준비** (사본 폴더에서, 6분 ttl — 5분 미만 팩은 목록에서 자동으로 숨겨져 구독 스크립트가 못 찾는다):
   1. `npm run mm -- --project C:\demo\seller-expiry publish --new --fee 0.01 --ttl 6m --name expiry-demo --label claude-code` → pack id `0x________`
   2. 구매자 지갑으로 구독: `$env:MARKET_PACK_ID='<그 id>'; npm run check -- --sub` → 출력의 구독권 id `0x________`
@@ -138,12 +136,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 
 - [ ] 구매자(또는 예비)·판매자 지갑 가스 각각 ≥ 1 SUI (`sui client gas --address <주소>`), 부족하면 faucet
 - [ ] 시계: `cd C:\mm\scripts; npm run check` 첫 줄의 skew 확인. `session.ts` 가 보정하지만 120초 넘으면 중단되므로 관리자 PowerShell 에서 `w32tm /resync /force`
-- [ ] `node C:\mm\demo\serve.mjs` → D 탭1 `http://localhost:8787/compare.html`, 상단 pill 이 **`state/compare-state.json · …갱신`** (샘플 데이터 아님) 인지. `F11`
-- [ ] **탭2·탭3 이 한 팩으로 맞는지.** `demo/state/compare-state.json` 의 `pack` 과 `baseline`/`live` 가 다른 팩이면 섞인 것이다.
-      (2026-09-13 에 섞여 있던 것을 Paylane 팩 `0x75b2…` 로 통일해 두었다. 다시 만들 때도 `--pack $PACK` 을 반드시 준다.)
-      Paylane 팩으로 발표하려면 `npm run mm -- --project C:\demo\seller state --pack $PACK` 를 돌려 헤더·필름스트립을 덮는다.
-      탭3 하단 검사 칩(`cta-contrast` · `h1-lines` · `no-hscroll` · `card-height` · `nav-overlap`)은 `compare.html` 에 하드코딩이라
-      **카피 팩으로는 맞지 않는다**
+- [ ] 랜딩 상세(`#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d`)가 체인 값을 제대로 읽어 오는지 (값 · 기간 · 산 사람 수)
 - [ ] D 탭2 Suiscan 팩 객체 미리 로드 (첫 로드가 느리다)
 - [ ] A: `C:\demo\buyer` 에서 `claude` → `/mcp` 에 memory-market **connected** → `market_find` 한 번 호출해 워밍(첫 Walrus 읽기가 느림) → `/clear`
 - [ ] 구매자 `index.html` 이 v1 인지: `node C:\mm\tools\check.mjs C:\demo\buyer\index.html` → failed 5

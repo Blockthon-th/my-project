@@ -7,7 +7,7 @@
 카피 규칙은 `docs/glossary.md`, 수치와 사실은 `docs/ground-truth.md` 가 유일한 기준이다.
 
 ## 화면 구성 (칸 넷)
-베낀 곳과 그때그때의 문장은 `docs/landing-copy.md` 가 정본이다. 여기는 구조만 적는다.
+문장 규칙은 `docs/glossary.md` 를 따른다. 여기는 구조만 적는다.
 
 1. **첫 화면** (`section.hero`) — 파는 쪽에게 말을 건다. 라벨 · 돌아가는 제목 · 한 문장 · 버튼 하나.
    상단 바가 이 칸 안에 있고 `position:relative` 라 스크롤을 안 따라온다(`nav-overlap` 이 구조로 통과한다).
@@ -68,7 +68,6 @@
 ## 경로 규칙 (배포본 기준)
 `https://blockthon-th.github.io/my-project/` 로 배포되고 `site/index.html` 이 `/index.html`, `site/img/` 가 `/img/` 로 펼쳐진다.
 - 사진은 `img/slop-before.jpg` 처럼 **맨 앞 `/` 없이** 건다. `/img/…` 는 저장소 이름이 경로에 끼어 404 가 난다.
-- 비교 화면으로 가는 링크는 `compare.html`(`demo/compare.html` 이 `/compare.html` 로 올라간다). `../demo/…` 는 배포본에서 깨진다.
 - 바깥으로 나가는 링크는 전체 주소로 쓴다. 저장소는 `https://github.com/Blockthon-th/my-project`.
 
 ## 로컬에서 열기

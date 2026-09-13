@@ -10,7 +10,7 @@
 - **`docs/ground-truth.md` — 수치와 사실의 유일한 기준.** 지금 팔리는 기록이 무엇인지, 개수·값·기간·산 사람이 얼마인지,
   실측 표가 어떤 값인지 전부 여기 있다. `README.md` · `PLANNING.md` · `docs/DEMO.md` · `site/` 어디든 이 파일과 어긋나는 문장은 잘못이다.
   체인 상태가 바뀌면 **ground-truth 를 먼저 고치고** 나머지를 거기에 맞춘다. 반대 방향은 없다.
-- **`docs/glossary.md` — 어휘 규칙.** 랜딩(`site/`)과 `docs/landing-copy.md` 에 적용된다. 새 명사를 만들지 않는다,
+- **`docs/glossary.md` — 어휘 규칙.** 랜딩(`site/`)에 적용된다. 새 명사를 만들지 않는다,
   파는 물건은 "기록", 개수는 "다섯 번 고친" 식 횟수로 센다. 저장소 문서(README 개발자 절 · PLANNING · DEMO)는 개발자가 읽으니
   기술 용어를 써도 되지만 **수치와 사실은 랜딩과 똑같아야 한다.**
 - 수치는 실측만. 과장된 비교("구독 전 2/5" 류) 금지 — `README.md` 의 "실측 — 직접 재본 결과" 절 해석을 따른다.
@@ -28,10 +28,9 @@
   기준선 훅 `first-edit.mjs`, 공용 `lib.mjs`, `selftest.mjs`
 - `skills/landing-copy-ko/` — 한국어 랜딩 카피 스킬 (`SKILL.md` + `check-copy.mjs` 사본, 두 벌을 같이 고친다)
 - `plugin/` — Claude Code 플러그인 (`server/index.mjs` MCP 번들 + `hooks/`), `.claude-plugin/marketplace.json` 과 짝
-- `demo/` — `seller` · `buyer` · `baseline` 템플릿, `compare.html` 발표 화면, `state/`(compare-state.json · tx-log.jsonl · 스크린샷),
-  `setup.ps1` · `serve.mjs` · `freeze-live.mjs`
+- `demo/` — `seller` · `buyer` · `baseline` 템플릿, `setup.ps1`. 발표용 비교 화면(compare.html)은 뺐다. 발표 때는 공개 랜딩을 그대로 띄운다.
 - `site/` — 랜딩 페이지 `index.html` 단일 파일 (+ `img/`, `serve.mjs`, `README.md`)
-- `docs/` — `ground-truth.md`(기준값) · `glossary.md`(어휘) · `DEMO.md`(3분 대본) · `landing-copy.md`(랜딩 원고) · `dev-memories.md`
+- `docs/` — `ground-truth.md`(기준값) · `glossary.md`(어휘) · `DEMO.md`(3분 대본) · `dev-memories.md`
 
 ## 명령어 (전부 `scripts/` 안에서. 루트에는 package.json 이 없다)
 `npm run typecheck` · `npm run check`(`-- --sub`) · `npm run e2e` · `npm run e2e:design` · `npm run mm -- <명령>` ·
