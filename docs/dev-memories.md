@@ -53,4 +53,6 @@ MemWal 플러그인을 붙이기 전까지 여기에 수동 기록. 붙인 뒤�
   - dotenv v17 은 `◇ injected env (N) from .env` 를 stdout 에 찍는다 → `config({ quiet: true })` 필수.
   로그는 전부 `console.error`(stderr)로 보낼 것. 디버깅은 `claude --debug`.
 - [2026-09-03] Windows 에서 `.mcp.json` 의 `command` 에 `npm`/`npx` 를 쓰면 `.cmd` 해석 문제로 실패할 수 있다. `node` + 스크립트 절대/상대 경로가 가장 안전하다.
-
+- [2026-09-13] 브라우저/스크립트에서 `sui_getObject` 가 `-32601 Method not found` → 공개 풀노드의 JSON-RPC 가 폐기됨(안내문이 gRPC/GraphQL 로 이관하라고 답한다) → 객체 조회를 GraphQL 로 바꾼다. `query($a:SuiAddress!){ object(address:$a){ asMoveObject{ contents{ json } } } }` 로 필드가 그대로 나온다.
+- [2026-09-13] GraphQL 로 읽은 MemoryPack 의 값 필드가 계속 0 → 필드 이름을 `price_mist` 로 넘겨짚었기 때문. 실제 이름은 `fee`(mist 단위) 이고 네임스페이스도 `namespace` 가 아니라 `source_namespace` 다. 추측하지 말고 `contents{ json }` 을 한 번 통째로 찍어보고 이름을 확인할 것.
+- [2026-09-13] 미리보기 블롭을 전부 `<img>` 로 그리면 안 된다 → 같은 `preview_blob_ids` 안에 JSON 설명, JPG 사진, 순수 텍스트 교훈이 섞여 들어간다. 앞 바이트로 종류를 갈라야 한다(`89 50`=PNG, `ff d8`=JPG, `{`=JSON, 나머지는 글). 텍스트 미리보기를 "없음" 으로 처리하면 팔 거리를 스스로 버리는 셈이다.

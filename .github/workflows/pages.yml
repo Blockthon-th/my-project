@@ -1,0 +1,44 @@
+name: 랜딩 페이지 배포
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 랜딩은 site/index.html 한 장과 그 옆 사진뿐이다. 빌드가 없다.
+      - name: 올릴 것만 추려낸다
+        run: |
+          mkdir -p _site
+          cp site/index.html _site/index.html
+          if [ -d site/img ]; then cp -r site/img _site/img; fi
+          cp demo/compare.html _site/compare.html
+          touch _site/.nojekyll
+          ls -R _site
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
