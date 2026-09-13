@@ -57,7 +57,7 @@ Paylane 기록(다섯 번 고친 것)에서 두 번째로 고친 대목입니다
 
 | 기록 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
 |---||---|---|---|---|---|---|
-| 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
+| 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
 | 웹디자이너 경험 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
 | 카피라이터 경험 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
 | 블록체인 개발자 경험 | 글 33건 | 0.01 SUI | 24시간 | 0 | 실제 교훈 글 2건 |
@@ -186,7 +186,7 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 
 | 기록 | 개수 | 값 | 기간 | 산 사람 | 객체 |
 |---||---|---|---|---|---|---|
-| 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 0 | [`0x8ac6510d…29cd3132`](https://suiscan.xyz/testnet/object/0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132) |
+| 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 1 | [`0x8ac6510d…29cd3132`](https://suiscan.xyz/testnet/object/0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132) |
 | 웹디자이너 경험 | 10 | 0.05 SUI | 7일 | 0 | [`0xef238e43…9f2a813d`](https://suiscan.xyz/testnet/object/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d) |
 | 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x0dcb9195…b23993e8`](https://suiscan.xyz/testnet/object/0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8) |
 | 블록체인 개발자 경험 | 33 (글) | 0.01 SUI | 24시간 | 0 | [`0x66c6eefe…8766fa7a`](https://suiscan.xyz/testnet/object/0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a) |
