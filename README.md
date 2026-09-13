@@ -161,7 +161,11 @@ cd ..\tools; npm install; npx playwright install chromium
 node selftest.mjs                                                # 포집 훅 자체 검증
 node check.mjs ..\demo\buyer\index.html                          # 디자인 5항목
 node check-copy.mjs ..\site\index.html                           # 한국어 카피 6항목
+cd ..; node tools\consistency.mjs                                # 랜딩·저장소·체인이 어긋나는지
 ```
+
+마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 여덟 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
+인터넷 연결이 필요합니다.
 
 `.env` 는 [.env.example](.env.example) 참고, 커밋 금지. 데모 실행은 [demo/README.md](demo/README.md).
 랜딩 페이지는 [site/index.html](site/index.html) 한 파일이고, 브라우저에서 체인과 Walrus 를 직접 읽습니다.
@@ -188,7 +192,9 @@ node check-copy.mjs ..\site\index.html                           # 한국어 카
   크기를 낮추는 대신 카피를 줄여서 잡았습니다. publish 트랜잭션
   [`7vZ9WXZz…`](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg) 한 건에 10단계 + 미리보기 3건.
 - `0x8e366e40…` 은 미리보기 블롭이 manifest 하나뿐이라 스크린샷이 없습니다. 검사 결과 칸도 비어 있습니다(위 "솔직한 한계" 참고).
-- `0xaa3b7edc…` 는 텍스트 기억이라 manifest 가 없고, 미리보기로 기억 샘플 자체가 올라가 있습니다.
+- `0xaa3b7edc…` 는 텍스트 기억이라 manifest 가 없고, 미리보기 자리에 기억 두 건이 그대로 올라가 있습니다.
+  사기 전에 이만큼이 보입니다 — *"한글이 포함된 `.ps1` 은 UTF-8 BOM 없이 저장하면 PowerShell 5.x 가 CP949 로 읽어 깨진다"* ·
+  *"`expected_failure(abort_code = ...)` 를 쓰는 Move 테스트는 마지막에 도달 불가 코드가 필요해서 `abort 0` 으로 끝내면 컴파일이 통과한다"*.
 - 라이브 트랜잭션 — [영수증](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP)(`0x75b2…` 에 남은 것) ·
   [폐기](https://suiscan.xyz/testnet/tx/GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz)(통합 검증용 팩에 남은 것, 지금은 목록에 없음)
 

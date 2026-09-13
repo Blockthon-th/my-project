@@ -15,6 +15,8 @@
  *   5. 랜딩 첫 화면에 우리끼리 쓰는 말이 섞여 있나
  *   6. 사기 전에는 안 보여야 할 글이 화면 코드에 새어나갔나
  *   7. 체인에 올라간 컨트랙트가 저장소 소스와 같나
+ *   8. 문서가 근거로 건 거래가 실제로 체인에 있고 성공했나
+ *   8. 문서가 근거로 건 거래가 실제로 체인에 있고 성공했나
  *
  * 하나라도 어긋나면 종료 코드 1 로 끝난다.
  */
@@ -225,6 +227,30 @@ console.log('\n=== 7. 체인의 컨트랙트가 저장소 소스와 같나 ===')
     if (onlySrc.length) bad('소스에만 있는 함수 (아직 안 올렸다): ' + onlySrc.join(', '));
     if (onlyChain.length) bad('체인에만 있는 함수 (소스가 옛것이다): ' + onlyChain.join(', '));
     if (!onlySrc.length && !onlyChain.length) ok('함수 ' + chainFns.size + '개가 정확히 일치');
+  }
+}
+
+
+console.log('\n=== 8. 문서에 적힌 거래가 실제로 체인에 있나 ===');
+{
+  const digests = new Map();
+  for (const f of targets.filter((p) => /\.(md|html)$/.test(p))) {
+    const txt = readFileSync(f, 'utf8');
+    for (const m of txt.matchAll(/suiscan\.xyz\/testnet\/tx\/([1-9A-HJ-NP-Za-km-z]{43,44})/g)) {
+      if (!digests.has(m[1])) digests.set(m[1], new Set());
+      digests.get(m[1]).add(relative(ROOT, f));
+    }
+  }
+  if (!digests.size) ok('문서에 인용된 거래 없음');
+  for (const [d, files] of digests) {
+    let t = null;
+    try {
+      const r = await gql('query{ transaction(digest:"' + d + '"){ effects{ status } } }');
+      t = r && r.transaction;
+    } catch { /* 아래에서 처리 */ }
+    if (!t) bad('체인에 없는 거래 ' + d.slice(0, 14) + '... -> ' + [...files].join(', '));
+    else if (t.effects.status !== 'SUCCESS') bad('실패한 거래를 근거로 걸었다 ' + d.slice(0, 14));
+    else ok(d.slice(0, 14) + '... 성공한 거래 (' + [...files].join(', ') + ')');
   }
 }
 
