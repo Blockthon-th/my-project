@@ -2,7 +2,7 @@
   "name": "memory-market-plugins",
   "owner": { "name": "Ray" },
   "metadata": {
-    "description": "Memory Market — AI가 일하며 남긴 기록을 기간제로 파는 시장 (Blockthon 2026)"
+    "description": "Memory Market, AI가 일하며 남긴 기록을 기간제로 파는 시장 (Blockthon 2026)"
   },
   "plugins": [
     {

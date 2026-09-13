@@ -20,10 +20,10 @@ const WITH_SUB = process.argv.includes('--sub');
 const step = (s: string) => console.log(`\n── ${s}`);
 
 async function main() {
-  step('1. market_list — 시장의 팩 목록');
+  step('1. market_list, 시장의 팩 목록');
   const ALL = process.argv.includes('--all');
   const packs = await listPacks(50, ALL);
-  console.log(`   ${packs.length}개${ALL ? ' (테스트 팩 포함)' : ' (테스트 팩 제외 — 전체를 보려면 --all)'}`);
+  console.log(`   ${packs.length}개${ALL ? ' (테스트 팩 포함)' : ' (테스트 팩 제외, 전체를 보려면 --all)'}`);
   for (const p of packs) {
     const span =
       p.firstMemoryAtMs && p.lastMemoryAtMs
@@ -45,10 +45,10 @@ async function main() {
   console.log(`   ${blobIds.length}건 (팩의 memory_count = ${pack.memoryCount})`);
   console.log(`   예: ${blobIds.slice(0, 3).join(', ')}`);
   if (blobIds.length !== pack.memoryCount) {
-    console.log('   ⚠ 개수 불일치 — listDynamicFields 페이징 확인 필요');
+    console.log('   ⚠ 개수 불일치, listDynamicFields 페이징 확인 필요');
   }
 
-  step('3. market_preview — 무료 미리보기');
+  step('3. market_preview, 무료 미리보기');
   const previews = await readPreviews(pack);
   previews.forEach((p, i) => console.log(`   ${i + 1}. ${p.slice(0, 110)}…`));
   if (previews.length === 0) console.log('   (없음)');
@@ -73,7 +73,7 @@ async function main() {
   }
   if (!sub) throw new Error('구독권을 찾지 못했습니다');
 
-  step('5. market_recall — 복호화');
+  step('5. market_recall, 복호화');
   const t0 = Date.now();
   const memories = await decryptMemories(
     buyer,

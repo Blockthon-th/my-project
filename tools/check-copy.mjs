@@ -1,10 +1,10 @@
 import { realpathSync } from "node:fs";
 /**
- * tools/check-copy.mjs — 한국어 랜딩 **카피** 검사 6항목. (짝: tools/check.mjs 는 **화면** 5항목)
+ * tools/check-copy.mjs, 한국어 랜딩 **카피** 검사 6항목. (짝: tools/check.mjs 는 **화면** 5항목)
  *
  *   node tools/check-copy.mjs <html|url> [--banned a,b,c] [--viewport 1440x900] [--mobile 375x812]
  *
- * 무엇을 재나 — 실제 브라우저(Playwright)로 페이지를 띄워 놓고 거기 보이는 글을 읽어서 잰다.
+ * 무엇을 재나, 실제 브라우저(Playwright)로 페이지를 띄워 놓고 거기 보이는 글을 읽어서 잰다.
  * 코드를 읽지 않아도 아래 여섯 줄이 이 도구가 재는 전부다.
  *
  *   first-screen-jargon   처음 보는 사람이 모르는 말로 첫 화면을 시작하는가
@@ -14,7 +14,7 @@ import { realpathSync } from "node:fs";
  *   no-cleft              AI 가 쓴 티가 나는 문장 구조인가
  *                         → "핵심은 ~다 / 필요한 것은 ~이다" 같은 분열문 0건
  *   dash-restraint        대시로 말을 덧붙이는 버릇
- *                         → 대시(—) 부가설명 3회 이하
+ *                         → 대시(·) 부가설명 3회 이하
  *   quote-restraint       따옴표로 강조하는 버릇
  *                         → 따옴표 강조 5회 미만
  *   no-hscroll-375        폰에서 옆으로 밀리는가
@@ -47,7 +47,7 @@ const DEFAULT_BANNED = [
   '복호화', '트랜잭션', '프로토콜', '에이전트', 'SDK', '스마트컨트랙트', '컨트랙트',
 ];
 
-/** AI 가 쓴 한글 티 — 문장 단위로 본다 */
+/** AI 가 쓴 한글 티, 문장 단위로 본다 */
 const CLEFT = /(핵심은|필요한\s*것은|문제는|관건은|중요한\s*것은|답은)[^.!?\n]{0,40}(이다|입니다|이에요|예요|랍니다)/g;
 
 function parseWH(s, fb) {
@@ -58,7 +58,7 @@ function parseWH(s, fb) {
 function countHonorific(text) {
   // 합쇼체 어미는 어간 + -(스)ㅂ니다 다. '습니다|입니다' 만 세면 '합니다·걸립니다·드립니다·채워집니다'
   // 를 통째로 놓친다(이름이 합니다체인데 정작 '합니다' 를 못 셌다). '니다' 앞 음절의 받침이
-  // ㅂ(종성 17)인지로 센다 — '다니다·지니다' 같은 기본형은 받침이 없어 걸리지 않는다.
+  // ㅂ(종성 17)인지로 센다, '다니다·지니다' 같은 기본형은 받침이 없어 걸리지 않는다.
   let formal = 0;
   for (const m of text.matchAll(/([\uac00-\ud7a3])니다(?=[.!?\u2026\u300d\u201d"'\s)]|$)/g)) {
     const i = m[1].charCodeAt(0) - 0xac00;
@@ -81,7 +81,7 @@ export async function runCopyChecks(target, opts = {}) {
     await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 }).catch(() => page.goto(url, { timeout: 30000 }));
     await page.waitForTimeout(700);
 
-    // 1. 첫 화면 금지어 — 스크롤 없이 보이는 영역의 텍스트만
+    // 1. 첫 화면 금지어, 스크롤 없이 보이는 영역의 텍스트만
     const firstScreen = await page.evaluate(() => {
       const vh = window.innerHeight;
       const out = [];
@@ -105,7 +105,7 @@ export async function runCopyChecks(target, opts = {}) {
     const hits = banned.filter((w) => low.includes(w.toLowerCase()));
     details['first-screen-jargon'] = { pass: hits.length === 0, hits, sample: firstScreen.slice(0, 240) };
 
-    // 산문 텍스트 — 코드 블록은 뺀다
+    // 산문 텍스트, 코드 블록은 뺀다
     const prose = await page.evaluate(() => {
       const clone = document.body.cloneNode(true);
       clone.querySelectorAll('script,style,noscript,code,pre,kbd,samp').forEach((e) => e.remove());
@@ -129,7 +129,7 @@ export async function runCopyChecks(target, opts = {}) {
 
     // 5. 따옴표 강조
     // 곧은 따옴표(")와 굽은 따옴표(\u201c \u201d)를 함께 본다. 한글 카피의 강조는 대개 굽은 쪽이다.
-    // \u 이스케이프로 적는다 — 굽은 따옴표를 글자 그대로 두면 파일이 ASCII 로 정규화될 때
+    // \u 이스케이프로 적는다, 굽은 따옴표를 글자 그대로 두면 파일이 ASCII 로 정규화될 때
     // 곧은 따옴표로 바뀌어 조용히 [""] 같은 중복 문자 클래스가 된다(실제로 그렇게 깨져 있었다).
     const quotes = (prose.match(/[\u201c\u201d"][^\u201c\u201d"\n]{1,40}[\u201c\u201d"]/g) || []).length + (prose.match(/\u300c[^\u300d\n]{1,40}\u300d/g) || []).length;
     details['quote-restraint'] = { pass: quotes < 5, count: quotes };

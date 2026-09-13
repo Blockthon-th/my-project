@@ -1,4 +1,4 @@
-# tools/ — 디자인 세션 포집 도구 (mm.step/1)
+# tools/: 디자인 세션 포집 도구 (mm.step/1)
 
 판매자가 Claude Code 로 `index.html` 을 고치는 동안, 훅이 턴마다 **(프롬프트, diff, 스크린샷, 왜 고쳤는지, 교훈)** 을
 한 "단계(step)" 로 자동 기록한다. 기록은 `.mm/steps/step-N.json` (스키마 `mm.step/1`) 이고,
@@ -47,7 +47,7 @@ JSON 안에서는 백슬래시를 두 번 쓴다 (`C:/mm/tools/capture.mjs` 처�
 }
 ```
 
-훅은 **세션 폴더에 `.mm/config.json` 이 있을 때만** 동작한다. 세션 폴더는 `CLAUDE_PROJECT_DIR`(Claude Code 가 세션을 시작한 프로젝트 루트) → 훅 입력의 `cwd` → 프로세스 cwd 순으로 `.mm/config.json` 이 있는 첫 폴더다 — 훅 입력 `cwd` 는 모델이 Bash 로 `cd` 하면 따라 바뀌므로(Claude Code 문서) 그것만 믿지 않는다. 어디에도 없으면 아무 일도 하지 않고 0 으로 끝난다.
+훅은 **세션 폴더에 `.mm/config.json` 이 있을 때만** 동작한다. 세션 폴더는 `CLAUDE_PROJECT_DIR`(Claude Code 가 세션을 시작한 프로젝트 루트) → 훅 입력의 `cwd` → 프로세스 cwd 순으로 `.mm/config.json` 이 있는 첫 폴더다, 훅 입력 `cwd` 는 모델이 Bash 로 `cd` 하면 따라 바뀌므로(Claude Code 문서) 그것만 믿지 않는다. 어디에도 없으면 아무 일도 하지 않고 0 으로 끝난다.
 그래서 전역(`~/.claude/settings.json`)에 등록해 두어도 mm 세션이 아닌 폴더에는 영향이 없다.
 
 `.mm/config.json` (`mm init` 이 만든다; 손으로 만들어도 된다):
@@ -125,7 +125,7 @@ stdout: {"desktop":{path,w,h,bytes,quality,oversize,sha256},"mobile":{…},"erro
 ```
 
 `file://` 로 열고 `load` 까지 기다린다(외부 폰트가 늦어도 12초 후 진행). 애니메이션·전환은 0초로 끝내고 캐럿을 숨긴다. 전체 20초 타임아웃.
-프로그램에서: `const { shoot } = await import('./shot.mjs'); await shoot(path, { outPrefix, browser })` — `browser` 를 넘기면 재사용한다.
+프로그램에서: `const { shoot } = await import('./shot.mjs'); await shoot(path, { outPrefix, browser })`, `browser` 를 넘기면 재사용한다.
 
 ## check.mjs
 
@@ -142,7 +142,7 @@ stdout: {"passed":[…],"failed":[…],"details":{…}}   종료코드 항상 0
 | `card-height` | 가격 패턴(`₩9` `$9` `9,900원` `/월` `/mo` …)이 든 텍스트에서 위로 올라가며 **형제 ≥2 가 모두 카드 같고(높이≥80, 폭≥120) 가로로 나란한** 첫 묶음. 높이 편차 `(max-min)/max ≤ 8%`. 없으면 같은 class 의 h2~h4 를 가진 형제 ≥3(기능 카드). 그것도 없으면 pass |
 | `nav-overlap` | `position: fixed/sticky` 인 nav/header(또는 그 부모)와, nav 밖의 **첫 텍스트 노드** bbox 가 1px 넘게 겹치면 실패 |
 
-`import { runChecks, shootAndCheck, CHECK_IDS, CHECK_DESCS } from './check.mjs'` — `CHECK_DESCS` 는 manifest 의 `checks:[{id,desc}]` 용.
+`import { runChecks, shootAndCheck, CHECK_IDS, CHECK_DESCS } from './check.mjs'`, `CHECK_DESCS` 는 manifest 의 `checks:[{id,desc}]` 용.
 `shootAndCheck(html, { outPrefix, viewport, mobile, maxBytes, mobileMaxBytes, only, browser, timeoutMs })` 는 스크린샷과 검사를 페이지 로드 2번으로 한 번에 돌려 `{ shot:{desktop,mobile,error}, check:{passed,failed,details} }` 를 돌려준다.
 
 ## check-copy.mjs
@@ -159,11 +159,11 @@ stdout: {"passed":[…],"failed":[…],"details":{…}}   종료코드 0 (파일
 | `first-screen-jargon` | 스크롤 없이 보이는 영역의 텍스트에 자사 용어·기술명 0건. 기본 목록은 `DEFAULT_BANNED`(Sui·Walrus·온체인·에이전트 …), `--banned` 로 통째로 교체 |
 | `honorific-consistent` | 합니다체와 해요체를 섞지 않음. 합쇼체는 어간 + -(스)ㅂ니다 라서 `니다` 앞 음절의 **받침이 ㅂ** 인지로 센다(`습니다\|입니다` 만 세면 `합니다·걸립니다·드립니다` 를 통째로 놓친다). 어미가 6개 미만이면 표본 부족으로 통과, 아니면 소수 쪽 비율 ≤ 15% |
 | `no-cleft` | 분열문(`핵심은 ~입니다` / `필요한 것은 ~이다`) 0건 |
-| `dash-restraint` | 앞뒤에 공백을 낀 대시(` — `) 3회 이하 |
+| `dash-restraint` | 앞뒤에 공백을 낀 대시(`, `) 3회 이하 |
 | `quote-restraint` | 따옴표 강조 5회 미만. 곧은 `" "` · 굽은 `“ ”` · 낫표 `「 」` 를 함께 센다 |
 | `no-hscroll-375` | 375px 에서 `scrollWidth ≤ clientWidth` |
 
-`import { runCopyChecks, COPY_CHECKS } from './check-copy.mjs'` — `COPY_CHECKS` 는 `{id, desc}` 배열이라 manifest 의 `checks` 에 그대로 실을 수 있다.
+`import { runCopyChecks, COPY_CHECKS } from './check-copy.mjs'`, `COPY_CHECKS` 는 `{id, desc}` 배열이라 manifest 의 `checks` 에 그대로 실을 수 있다.
 
 형태소 분석기를 쓰지 않는다. 코드 블록(`code/pre/kbd/samp`)은 빼고 보지만 인용문 안의 말투까지 가려내지는 못한다.
 실패는 자동 판정이 아니라 사람이 한 번 보라는 신호다.
@@ -198,13 +198,13 @@ node C:\mm\tools\check.mjs C:\demo\baseline-1\.first-edit.html
 ```
 
 등록은 기준선 템플릿 하나뿐이다 (`demo/baseline/.claude/settings.json`, matcher `Edit|Write|MultiEdit`).
-`capture.mjs` 와 달리 `.mm/config.json` 을 보지 않고 `index.html` 을 하드코딩한다 — 기준선 폴더에는 `.mm` 이 없는 것이 실험의 요점이기 때문이다.
+`capture.mjs` 와 달리 `.mm/config.json` 을 보지 않고 `index.html` 을 하드코딩한다, 기준선 폴더에는 `.mm` 이 없는 것이 실험의 요점이기 때문이다.
 그래서 **전역 `~/.claude/settings.json` 에는 넣지 말 것.** mm 과 무관한 폴더에도 `.first-edit.html` 이 생긴다.
 
 ## 알려진 제약
 
 - **Playwright chromium 필요.** 없으면 스크린샷/검사는 `null` 로 기록되고 단계 자체는 남는다(`shot fail · check n/a`).
-- `selftest.mjs` 는 `capture.mjs` / `check.mjs` / `shot.mjs` / `lib.mjs` 만 덮는다. **`check-copy.mjs` 와 `first-edit.mjs` 는 자동 검증이 없다** — 손으로 돌려 볼 것.
+- `selftest.mjs` 는 `capture.mjs` / `check.mjs` / `shot.mjs` / `lib.mjs` 만 덮는다. **`check-copy.mjs` 와 `first-edit.mjs` 는 자동 검증이 없다**, 손으로 돌려 볼 것.
 - Write 가 새 파일인지(`create`)는 Claude Code 의 `tool_response.type` 에 의존한다. 없으면 entry 의 첫 생성일 때만 create 로 본다.
 - 셸(`Bash`)로 파일을 고친 경우 `edit_mode` 는 알 수 없어 `null`. 훅 matcher 에 `Bash` 를 넣지 않으면 그 턴은 폐기될 수 있다.
 - `why`/`lesson`/`verdict` 는 Stop 의 `last_assistant_message` 에서 읽는다(없으면 transcript). `.mm/capture.log` 의 `text last_assistant_message|transcript|none` 으로 어느 쪽이 쓰였는지, `(no lesson)` 으로 step-note 누락을 확인할 수 있다.

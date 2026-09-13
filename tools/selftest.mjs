@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * tools/selftest.mjs — 네트워크·Claude 없이 포집 전 과정을 검증한다.
+ * tools/selftest.mjs, 네트워크·Claude 없이 포집 전 과정을 검증한다.
  *
  *   cd tools && node selftest.mjs [--keep]
  *
@@ -110,7 +110,7 @@ function assert(cond, msg, extra) {
     process.stdout.write(`  ok   ${msg}\n`);
   } else {
     failures++;
-    process.stdout.write(`  FAIL ${msg}${extra !== undefined ? ' — ' + JSON.stringify(extra).slice(0, 500) : ''}\n`);
+    process.stdout.write(`  FAIL ${msg}${extra !== undefined ? ', ' + JSON.stringify(extra).slice(0, 500) : ''}\n`);
   }
 }
 const section = (t) => process.stdout.write(`\n── ${t}\n`);
@@ -178,7 +178,7 @@ function gitInit(dir) {
     git(dir, ['config', 'commit.gpgsign', 'false']);
     return true;
   } catch (e) {
-    process.stdout.write(`  (git unavailable: ${String(e.message).slice(0, 80)} — git 검증 생략)\n`);
+    process.stdout.write(`  (git unavailable: ${String(e.message).slice(0, 80)}, git 검증 생략)\n`);
     return false;
   }
 }
@@ -260,9 +260,9 @@ async function scenarioA() {
   const pending = () => readJson(join(dir, '.mm', 'pending.json'), {});
   const timings = [];
 
-  // T1 — Write 로 생성
+  // T1, Write 로 생성
   tr.human(P1);
-  tr.meta('<system-reminder>hook context — 사람 프롬프트가 아니다</system-reminder>');
+  tr.meta('<system-reminder>hook context, 사람 프롬프트가 아니다</system-reminder>');
   hook(dir, 'prompt', { ...base, hook_event_name: 'UserPromptSubmit', prompt: P1 }, 'T1 prompt');
   assert(!existsSync(step(0, '.html')), 'T1: entry 가 없으면 step-0 기준선을 만들지 않는다');
   assert(JSON.stringify(pending().prompts) === JSON.stringify([P1]), 'T1: pending.prompts 누적', pending());
@@ -298,7 +298,7 @@ async function scenarioA() {
   assert(state().step === 1 && state().last_hash === sha256(V1) && state().prev_record_hash === r1?.record_hash, 'T1: state 갱신', state());
   assert(pending().prompts.length === 0 && pending().touched.length === 0, 'T1: pending 초기화', pending());
 
-  // T2 — Edit 이벤트는 있지만 내용이 같다 → sha 규칙으로 폐기
+  // T2, Edit 이벤트는 있지만 내용이 같다 → sha 규칙으로 폐기
   tr.human(P2);
   hook(dir, 'prompt', { ...base, hook_event_name: 'UserPromptSubmit', prompt: P2 }, 'T2 prompt');
   tr.assistant([{ type: 'text', text: '확인합니다.' }, { type: 'tool_use', id: 't2', name: 'Edit', input: { file_path: entry, old_string: 'x', new_string: 'x' } }]);
@@ -311,7 +311,7 @@ async function scenarioA() {
   assert(state().step === 1 && !existsSync(step(2, '.json')), 'T2: state.step 그대로 1');
   assert(pending().prompts.length === 0, 'T2: 폐기 후 pending 비움', pending());
 
-  // T2b — 도구 호출이 전혀 없는 턴
+  // T2b, 도구 호출이 전혀 없는 턴
   tr.human(P2B);
   hook(dir, 'prompt', { ...base, hook_event_name: 'UserPromptSubmit', prompt: P2B }, 'T2b prompt');
   tr.assistant([{ type: 'text', text: '천만에요.' }]);
@@ -319,7 +319,7 @@ async function scenarioA() {
   timings.push(['T2b stop', s2b.ms]);
   assert(!s2b.stdout.includes('captured') && state().step === 1, 'T2b: touched 비면 단계 없음');
 
-  // T3 — 실제 수정 + step-note
+  // T3, 실제 수정 + step-note
   tr.human(P3);
   hook(dir, 'prompt', { ...base, hook_event_name: 'UserPromptSubmit', prompt: P3 }, 'T3 prompt');
   tr.assistant([{ type: 'text', text: '고치겠습니다.' }, { type: 'tool_use', id: 't3', name: 'Edit', input: { file_path: entry, old_string: '#9bb8d9', new_string: '#1d4ed8' } }]);
@@ -354,7 +354,7 @@ async function scenarioA() {
   }
   // 시간은 머신 부하에 좌우되므로 실패 조건이 아니라 참고로만 찍는다(단계가 예산 안에 기록됐는지는 위에서 확인).
   for (const [k, ms] of timings) {
-    process.stdout.write(`  time ${k} ${ms}ms${ms > 8000 ? '  (목표 8초 초과 — 머신 부하 확인)' : ''}\n`);
+    process.stdout.write(`  time ${k} ${ms}ms${ms > 8000 ? '  (목표 8초 초과, 머신 부하 확인)' : ''}\n`);
   }
   return dir;
 }
@@ -362,7 +362,7 @@ async function scenarioA() {
 /* ───────────── 시나리오 B ───────────── */
 
 async function scenarioB() {
-  section('B. entry 가 이미 있는 폴더 — step-0 기준선');
+  section('B. entry 가 이미 있는 폴더, step-0 기준선');
   const dir = makeProject('B', { entryHtml: V1, seriesId: 'baseline-series' });
   const entry = join(dir, 'index.html');
   const tr = new Transcript(join(dir, 'transcript.jsonl'));
@@ -456,7 +456,7 @@ async function scenarioD() {
   validateRecord(r2, "D step-2");
   if (r2) assert(r2.why === "nav 높이 64px 만큼 밀었습니다." && r2.lesson === null && r2.prev_hash === r1?.record_hash, "D2: last_assistant_message 문단이 why, 옛 note 미사용, 체인 연결", { why: r2.why, lesson: r2.lesson });
 
-  // D3: 모델이 Bash 로 cd 해서 hook 의 cwd 가 다른 폴더 — CLAUDE_PROJECT_DIR 로 세션 폴더를 찾아야 한다
+  // D3: 모델이 Bash 로 cd 해서 hook 의 cwd 가 다른 폴더, CLAUDE_PROJECT_DIR 로 세션 폴더를 찾아야 한다
   const withEnv = (ev, input, label) => {
     const t = Date.now();
     const r = spawnSync(process.execPath, [CAPTURE, ev], { cwd: elsewhere, input: JSON.stringify(input), encoding: "utf8", timeout: 90000, windowsHide: true, env: { ...process.env, CLAUDE_PROJECT_DIR: dir } });

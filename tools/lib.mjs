@@ -1,5 +1,5 @@
 /**
- * tools/lib.mjs — 포집 도구 공용 헬퍼.
+ * tools/lib.mjs, 포집 도구 공용 헬퍼.
  *
  * 다른 에이전트(scripts/)가 record_hash 를 재계산할 때 같은 규칙을 쓰도록
  * sha256 / canonicalJson / recordHash / genesisHash 를 여기서 export 한다.

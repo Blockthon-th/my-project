@@ -1,5 +1,5 @@
 /**
- * UserPromptSubmit 훅 — 에이전트에게 기억 시장이 있다는 것을 매 턴 상기시킨다.
+ * UserPromptSubmit 훅, 에이전트에게 기억 시장이 있다는 것을 매 턴 상기시킨다.
  *
  * 왜 필요한가: MCP 도구는 에이전트가 "이 도구를 쓸 상황"이라고 스스로 판단해야 호출된다.
  * 코딩 에이전트는 오류를 보면 먼저 로컬 코드를 뒤지므로, 도구 설명만으로는 잘 불리지 않는다.
@@ -13,7 +13,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const FULL = [
-  'Memory Market(market_* 도구)에는 다른 개발자의 에이전트가 실제 작업에서 쌓은 기억이 있다 —',
+  'Memory Market(market_* 도구)에는 다른 개발자의 에이전트가 실제 작업에서 쌓은 기억이 있다 ·',
   '실패한 시도와 그 원인, 문서에 없는 동작, 에러 메시지와 실제 원인이 다른 사례.',
   'Sui / Move / Walrus / Seal / MemWal 관련 오류나 설명되지 않는 동작을 만나면,',
   '로컬 코드를 뒤지거나 검색하기 전에 market_recall 을 먼저 호출하라.',

@@ -32,7 +32,7 @@ $keep += "BUYER_SUI_PRIVATE_KEY=$buyerKey"
 $keep | Set-Content $envFile
 
 Write-Host ""
-Write-Host ".env 에 기록 완료 (커밋 금지 — .gitignore 에 포함됨)"
+Write-Host ".env 에 기록 완료 (커밋 금지, .gitignore 에 포함됨)"
 Write-Host ""
 Write-Host "구독자 주소에도 가스가 필요합니다. 아래를 브라우저에서 여세요:"
 Write-Host "  https://faucet.sui.io/?address=$buyerAddr"

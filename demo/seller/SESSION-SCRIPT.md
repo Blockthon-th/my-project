@@ -1,4 +1,4 @@
-# 판매자 세션 대본 — Paylane 랜딩 5턴
+# 판매자 세션 대본: Paylane 랜딩 5턴
 
 데모 **전날** 이 폴더(저장소 밖으로 복사한 사본, 예: `C:\demo\seller`)에서 Claude Code 를 열고
 아래 5개 프롬프트를 **순서대로, 한 턴에 하나씩** 던진다. 각 턴은 결함 하나를 고치게 하는 문장이고,
@@ -8,7 +8,7 @@
 ```
 node C:/mm/tools/check.mjs index.html      # failed 에 5개 전부 있어야 정상 (v1 은 일부러 결함 5개)
 cd C:\mm\scripts
-npm run mm -- --project C:\demo\seller init   # 선택 — 훅은 .mm/config.json(템플릿에 있음)만 있으면 동작한다. init 은 기존 config 를 보존한다
+npm run mm -- --project C:\demo\seller init   # 선택, 훅은 .mm/config.json(템플릿에 있음)만 있으면 동작한다. init 은 기존 config 를 보존한다
 ```
 `mm` 은 `.mm/` 이 있는 폴더를 `--project` 로 받는다 (없으면 `npm run` 을 실행한 폴더 = INIT_CWD). 아래 명령은 전부 `C:\mm\scripts` 에서 `--project C:\demo\seller` 를 붙인 형태다.
 
@@ -21,7 +21,7 @@ npm run mm -- --project C:\demo\seller init   # 선택 — 훅은 .mm/config.jso
 | 5 | `nav-overlap` | 상단 고정 메뉴가 첫 문장을 가려. 메뉴는 그대로 두고 **겹침만** 해결해. |
 
 각 턴이 끝나면 답변 끝에 ```step-note``` 블록이 있는지 확인한다. 없으면 "step-note 블록 남겨" 라고 한 번 더 말한다
-(그 턴은 파일을 안 고쳤으므로 새 단계로 기록되지 않고, 훅이 직전 단계의 note 를 보완한다 — 안 되면 `mm review` 에서 손으로 채운다).
+(그 턴은 파일을 안 고쳤으므로 새 단계로 기록되지 않고, 훅이 직전 단계의 note 를 보완한다, 안 되면 `mm review` 에서 손으로 채운다).
 
 ## 기대하는 단계 기록 (좋은 예)
 
@@ -45,7 +45,7 @@ npm run mm -- --project C:\demo\seller state         # demo/state/compare-state.
 ```
 
 `--label` 은 팩의 agent_label(출처 이력), 팩 이름은 `--name` 또는 config 의 `name`. `publish` 가 출력한 pack id 를 `docs/DEMO.md` 의 준비 체크리스트에 적어 둔다 (Suiscan 링크용).
-필름스트립 카드의 위 줄(결함)은 그 턴의 **첫 프롬프트**, 아래 줄(교정)은 **lesson** 이다 — lesson 이 없으면 why 가 대신 들어가므로 step-note 의 lesson 을 꼭 채운다.
+필름스트립 카드의 위 줄(결함)은 그 턴의 **첫 프롬프트**, 아래 줄(교정)은 **lesson** 이다, lesson 이 없으면 why 가 대신 들어가므로 step-note 의 lesson 을 꼭 채운다.
 
 ## 되돌림 턴을 넣고 싶으면 (선택)
 

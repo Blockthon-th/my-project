@@ -54,7 +54,7 @@ import {
 const TTL_MS = 3 * 60_000; // 목록에서 숨겨지는 짧은 테스트 팩 (5분 미만)
 const FEE_MIST = 10_000_000; // 0.01 SUI
 
-/** 1x1 흰색 JPEG (약 630B) — 스크린샷 자리 */
+/** 1x1 흰색 JPEG (약 630B), 스크린샷 자리 */
 const TINY_JPEG_B64 =
   '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q==';
 
@@ -142,7 +142,7 @@ async function main() {
       diff: '-<a class="btn" style="color:#999;background:#eee">\n+<a class="btn" style="color:#fff;background:#1a4d2e">',
       check: { passed: ['no-hscroll', 'card-height', 'nav-overlap', 'cta-contrast'], failed: ['h1-lines'] },
       why: 'CTA 전경 #999/배경 #eee 는 대비 2.3:1. 흰 글자 + 진녹색 배경으로 7.9:1.',
-      lesson: '연한 회색 CTA 는 항상 4.5:1 에 미달한다 — 배경을 브랜드 진색으로, 글자는 흰색으로 고정하는 편이 빠르다.',
+      lesson: '연한 회색 CTA 는 항상 4.5:1 에 미달한다, 배경을 브랜드 진색으로, 글자는 흰색으로 고정하는 편이 빠르다.',
     }),
     makeRecord(3, seriesId, html3, {
       intent: 'polish',
@@ -150,7 +150,7 @@ async function main() {
       diff: '-<h1>Ship faster with our very long headline that wraps</h1>\n+<h1>Ship faster</h1>',
       check: { passed: ['no-hscroll', 'card-height', 'nav-overlap', 'cta-contrast', 'h1-lines'], failed: [] },
       why: '1280px 에서 h1 이 3줄. 부제로 내릴 수 없는 문장은 줄이는 게 낫다.',
-      lesson: 'h1 은 40자 안쪽으로 — font-size 를 줄이면 모바일에서 더 나빠진다.',
+      lesson: 'h1 은 40자 안쪽으로, font-size 를 줄이면 모바일에서 더 나빠진다.',
     }),
   ];
   const records = finalizeChain(raw, packId, seriesId);

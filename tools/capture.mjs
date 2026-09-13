@@ -488,7 +488,7 @@ async function main() {
   const raw = readStdinJson();
   const input = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
   const cwd = pickSessionDir(input);
-  if (!cwd) return; // mm 세션이 아닌 폴더 — 조용히 종료
+  if (!cwd) return; // mm 세션이 아닌 폴더, 조용히 종료
   const ctx = loadCtx(cwd);
   if (!ctx) return;
   CTX = ctx;

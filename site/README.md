@@ -1,4 +1,4 @@
-# site/ — 랜딩 페이지
+# site/: 랜딩 페이지
 
 `index.html` 단일 파일 + `img/` 사진 두 장. 외부 CSS/JS/폰트 CDN 없음(system-ui 스택),
 인라인 `<style>`/`<script>`만 쓴다. 빌드가 없어서 파일을 그대로 정적 호스팅에 올리면 된다.
@@ -9,19 +9,19 @@
 ## 화면 구성 (칸 넷)
 문장 규칙은 `docs/glossary.md` 를 따른다. 여기는 구조만 적는다.
 
-1. **첫 화면** (`section.hero`) — 파는 쪽에게 말을 건다. 라벨 · 돌아가는 제목 · 한 문장 · 버튼 하나.
+1. **첫 화면** (`section.hero`), 파는 쪽에게 말을 건다. 라벨 · 돌아가는 제목 · 한 문장 · 버튼 하나.
    상단 바가 이 칸 안에 있고 `position:relative` 라 스크롤을 안 따라온다(`nav-overlap` 이 구조로 통과한다).
    **`min-height:100svh` 라 아래 칸이 접힘선 위로 못 올라온다.** 화면이 아무리 커도 `first-screen-jargon` 이 안 깨진다.
    여기에 숫자·값·사진을 넣지 않는다.
-2. `#sec-list` — 체인에서 읽어온 목록. 카드가 아니라 `64px + 1fr` 번호 줄 넷이다.
+2. `#sec-list`, 체인에서 읽어온 목록. 카드가 아니라 `64px + 1fr` 번호 줄 넷이다.
    이름과 한 줄 설명만 `OURNAME` 에서 오고 개수·값·기간·산 사람 수는 전부 응답에서 온다.
    01 줄 밑에만 `img/slop-before.jpg` / `img/clean-after.jpg` 두 장이 붙는다(`SLOP_ID` 기록의 내용이라서).
    칸 맨 아래에 SUI 를 처음 풀어 쓰는 한 줄이 있다. **이 문장을 위로 올리면 첫 화면 검사가 깨진다.**
-3. `#sec-inside` (어두운 칸) — `STORY_ID` 기록 안. 지적한 말과 알게 된 것 세 쌍, 가려진 줄 하나,
+3. `#sec-inside` (어두운 칸), `STORY_ID` 기록 안. 지적한 말과 알게 된 것 세 쌍, 가려진 줄 하나,
    실측 두 칸(시간 · 주고받은 횟수 · AI 사용료). 점수를 쓰지 않는다.
    실측 두 칸은 나란한 격자 자식이라 키가 저절로 같아진다. **한 칸만 따로 감싸면 `card-height` 가 깨진다.**
-4. `#sec-sell` (회색 칸) — 파는 쪽 진입로. 설치 두 줄이 여기뿐이다.
-5. 맨 아래 (`div.bottom`) — Sui · Walrus · Seal 을 각각 한 번 쓸 수 있는 유일한 칸(`docs/glossary.md`).
+4. `#sec-sell` (회색 칸), 파는 쪽 진입로. 설치 두 줄이 여기뿐이다.
+5. 맨 아래 (`div.bottom`), Sui · Walrus · Seal 을 각각 한 번 쓸 수 있는 유일한 칸(`docs/glossary.md`).
 
 돌아가는 제목은 `.slot` 폭을 제일 긴 말 기준 `10.1em` 으로 못 박고 `clip-path` 로 가로로 닦아 갈아끼운다.
 **세로로 밀면 안 된다.** `tools/check.mjs` 의 `h1-lines` 가 그 순간 세 줄로 세어 검사가 깨진다.
@@ -43,7 +43,7 @@
 그 표에 없는 기록이 새로 올라오면 판 사람이 적은 이름·설명을 그대로 쓴다.
 판 사람이 체인에 적어둔 이름과 설명은 **상세 화면에 고치지 않고 그대로** 나온다.
 
-- Sui GraphQL `https://graphql.testnet.sui.io/graphql` (CORS `*`). 공개 풀노드의 JSON-RPC 는 폐기됐다 — 브라우저에서는 GraphQL 만 쓴다.
+- Sui GraphQL `https://graphql.testnet.sui.io/graphql` (CORS `*`). 공개 풀노드의 JSON-RPC 는 폐기됐다, 브라우저에서는 GraphQL 만 쓴다.
   - 이벤트 한 번: `PackCreated` · `ReceiptLeft` · `Retracted` 를 alias 로 묶어 조회
   - 오브젝트 한 번: 위에서 얻은 `pack_id` 들을 alias 로 묶어 `object(address:…){asMoveObject{contents{json}}}`
   - 필드명은 `fee`(mist) · `ttl_ms` · `memory_count` · `subscriber_count` · `preview_blob_ids`. `fee / 1e9` 가 SUI.

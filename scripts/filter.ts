@@ -4,7 +4,7 @@
  * 해커톤 범위: **개인정보 제거만** 한다. 기밀·규제(미공개 정보 등) 판단은 향후 과제.
  * 판단 근거를 남기기 위해 "제거"가 아니라 "가림(redact)" 과 "제외(drop)" 를 구분한다.
  *  - redact: 값만 가리고 문장은 판다 (경로, 이메일, 주소 등)
- *  - drop  : 문장 전체를 팔지 않는다 (비밀키, 복구 문구 등 — 가려도 위험)
+ *  - drop  : 문장 전체를 팔지 않는다 (비밀키, 복구 문구 등, 가려도 위험)
  */
 import type { Memory } from './memories.js';
 
@@ -14,7 +14,7 @@ export interface FilterResult {
   redactions: number;
 }
 
-/** 가려도 팔면 안 되는 것 — 문장째 제외 */
+/** 가려도 팔면 안 되는 것, 문장째 제외 */
 const DROP_RULES: { re: RegExp; reason: string }[] = [
   { re: /suiprivkey1[a-z0-9]{10,}/i, reason: 'Sui 비밀키' },
   // 라벨 뒤에 값이 오는 형태

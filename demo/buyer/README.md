@@ -7,8 +7,8 @@
 |---|---|
 | `index.html` | 헬스케어 예약 앱 "케어핏" 랜딩 v1. 판매자 팩과 **같은 5가지 결함 유형**(저대비 CTA · 3줄 이상 h1 · 375px 가로 넘침 · 높이 제각각 가격 카드 · 고정 nav 겹침)을 다른 브랜드색·섹션 구성으로 갖고 있다 |
 | `CLAUDE.md` | 디자인 요청이면 `market_find → market_acquire → 교훈 선적용 → 적용표 → check.mjs → market_receipt` 순서로 진행하라는 규칙. 예산 0.5 SUI |
-| `.mcp.json` | Memory Market MCP 서버 (`C:\mm\scripts\mcp\server.ts` 를 tsx 로 직접 실행 — npm 을 거치면 stdout 배너 때문에 서버가 failed 로 뜬다) |
-| `.claude/settings.json` | `mcp__memory-market__*`, Edit, Write, `Bash(node *check.mjs*)` 자동 허용 — 데모 중 승인 창이 뜨지 않게 |
+| `.mcp.json` | Memory Market MCP 서버 (`C:\mm\scripts\mcp\server.ts` 를 tsx 로 직접 실행, npm 을 거치면 stdout 배너 때문에 서버가 failed 로 뜬다) |
+| `.claude/settings.json` | `mcp__memory-market__*`, Edit, Write, `Bash(node *check.mjs*)` 자동 허용, 데모 중 승인 창이 뜨지 않게 |
 | `.claude/commands/improve.md` | `/improve` 한 번으로 전 과정이 돌아가는 프롬프트 |
 
 ## 실행

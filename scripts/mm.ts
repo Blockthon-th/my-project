@@ -1,5 +1,5 @@
 /**
- * mm — Memory Market CLI (판매자·구매자 공용).
+ * mm, Memory Market CLI (판매자·구매자 공용).
  *
  *   mm init      [--series id] [--domain design.web] [--entry index.html] [--pack id --cap id] [--name ..] [--brief ..]
  *   mm review    [--json] [--step N --lesson ".." --verdict accepted|rejected|partial --why ".."]
@@ -78,7 +78,7 @@ import { appendTxLog, DEMO_STATE_DIR, REPO_ROOT } from './txlog.js';
 
 // ───────────────────────── 인자 ─────────────────────────
 
-const USAGE = `mm — Memory Market CLI
+const USAGE = `mm, Memory Market CLI
 
 판매자
   mm init      [--series id] [--domain design.web] [--entry index.html] [--pack id --cap id] [--name ..] [--brief ..]
@@ -169,7 +169,7 @@ function samePath(a: string, b: string): boolean {
 function guardProject() {
   if (samePath(PROJECT, HERE) || samePath(PROJECT, resolve(HERE, '..'))) {
     throw new Error(
-      `프로젝트 폴더가 ${PROJECT} 로 잡혔습니다 — 여기는 CLI 가 있는 곳입니다.\n` +
+      `프로젝트 폴더가 ${PROJECT} 로 잡혔습니다, 여기는 CLI 가 있는 곳입니다.\n` +
         `  판매자 프로젝트를 --project <dir> 로 주거나 MM_PROJECT 환경변수를 설정하세요. 예:\n` +
         `  npm run mm -- ${cmd} --project C:\\demo\\seller`,
     );
@@ -188,7 +188,7 @@ interface MmConfig {
   domain?: string;
   pack_id?: string;
   cap_id?: string;
-  /** 검사 id 목록. 데모 템플릿은 {id, desc} 객체로도 쓴다 — 둘 다 받는다. */
+  /** 검사 id 목록. 데모 템플릿은 {id, desc} 객체로도 쓴다, 둘 다 받는다. */
   checks: (string | { id: string; desc?: string })[];
   tool?: { name: string; version: string | null };
   name?: string;
@@ -327,7 +327,7 @@ async function refreshCompareState(packId?: string, mutate?: (s: CompareState) =
           };
         }
       } catch (e) {
-        console.log(`  (팩 정보 갱신 실패 — 이전 값 유지: ${String(e).slice(0, 80)})`);
+        console.log(`  (팩 정보 갱신 실패, 이전 값 유지: ${String(e).slice(0, 80)})`);
       }
     }
     const records = existsSync(STEPS_DIR) ? loadRecords() : [];
@@ -483,7 +483,7 @@ async function cmdReview() {
   console.log('');
   if (v.ok) console.log(`✅ 해시 사슬 정상 (마지막 ${records[records.length - 1].record_hash.slice(0, 16)}…)`);
   else {
-    console.log('⚠ 해시 사슬 문제 — publish 때 pack_id 를 채우며 다시 계산한다 (발행된 단계는 제외):');
+    console.log('⚠ 해시 사슬 문제, publish 때 pack_id 를 채우며 다시 계산한다 (발행된 단계는 제외):');
     v.errors.slice(0, 12).forEach((e) => console.log(`   - ${e}`));
   }
   v.warnings.forEach((w) => console.log(`   ! ${w}`));
@@ -506,7 +506,7 @@ async function cmdPublish() {
   let capId = opt.cap ?? config.cap_id;
   const feeMist = parseFeeMist(opt.fee ?? '0.05');
   const ttlMs = parseDuration(opt.ttl ?? '7d');
-  const name = opt.name ?? config.name ?? `${basename(PROJECT)} — 디자인 반복 ${records0.length}단계`;
+  const name = opt.name ?? config.name ?? `${basename(PROJECT)}, 디자인 반복 ${records0.length}단계`;
   const brief =
     opt.brief ??
     config.brief ??
@@ -553,9 +553,9 @@ async function cmdPublish() {
   // dry-run 은 파일을 건드리지 않는다 (--new 의 pack_id 자리표시자가 기록에 남으면 안 된다)
   const rewritten = dry ? 0 : writeRecordsBack(records0, records);
   state.prev_record_hash = records[records.length - 1].record_hash;
-  if (dry) console.log('2. 해시 사슬 확정 — [dry-run] 계산만 하고 파일에는 쓰지 않음');
-  else if (rewritten) console.log(`2. 해시 사슬 확정 — ${rewritten}개 기록에 pack_id/해시 반영`);
-  else console.log('2. 해시 사슬 확인 — 변경 없음');
+  if (dry) console.log('2. 해시 사슬 확정, [dry-run] 계산만 하고 파일에는 쓰지 않음');
+  else if (rewritten) console.log(`2. 해시 사슬 확정, ${rewritten}개 기록에 pack_id/해시 반영`);
+  else console.log('2. 해시 사슬 확인, 변경 없음');
   const v = verifyChain(records, packId, config.series_id);
   if (!v.ok) throw new Error(`기록 검증 실패:\n  ${v.errors.join('\n  ')}`);
   v.warnings.forEach((w) => console.log(`   ! ${w}`));
@@ -647,7 +647,7 @@ async function cmdPublish() {
     return;
   }
   if (toPublish.length === 0 && previewIds.length === 0) {
-    console.log('\n올릴 것이 없습니다 — 모두 발행돼 있습니다.');
+    console.log('\n올릴 것이 없습니다, 모두 발행돼 있습니다.');
     await refreshCompareState(packId);
     return;
   }
@@ -692,7 +692,7 @@ async function cmdRecall() {
   // 유효한 구독이 없으면 구독한다 (market_acquire 와 같은 동작). --sub 를 명시했으면 그대로 시도(만료 시연용).
   if (!opt.sub && (!sub || sub.expiresAtMs < Date.now())) {
     if (opt['no-subscribe']) throw new Error(`이 팩의 유효한 구독권이 없습니다 (${address}). --no-subscribe 를 빼면 구독합니다.`);
-    // MCP 의 세션 지출 상한과 같은 기준. 비싼 팩을 실수로 사지 않게 — 정말 사려면 --force.
+    // MCP 의 세션 지출 상한과 같은 기준. 비싼 팩을 실수로 사지 않게, 정말 사려면 --force.
     if (pack.feeMist > MARKET_SPEND_CAP_SUI * 1e9 && !opt.force) {
       throw new Error(
         `이 팩의 구독료 ${mist(pack.feeMist)} 가 지출 상한 ${MARKET_SPEND_CAP_SUI} SUI 를 넘습니다. 그래도 결제하려면 --force (또는 MARKET_SPEND_CAP_SUI 조정).`,
@@ -727,7 +727,7 @@ async function cmdRecall() {
         console.log(`   키 서버가 ${packId.slice(0, 10)}… 의 seal_approve 를 시뮬레이션했고 ENoAccess 로 abort → 키 발급 거부.`);
         console.log(`   (만료 ${when(sub.expiresAtMs)} · 지금 ${when(Date.now())})`);
       } else {
-        console.log(`\n❌ seal_approve aborted: NoAccessError — ${String(e).slice(0, 200)}`);
+        console.log(`\n❌ seal_approve aborted: NoAccessError, ${String(e).slice(0, 200)}`);
       }
       process.exit(1);
     }
@@ -781,7 +781,7 @@ function stripImages(r: StepRecord) {
 
 /** 기록의 이미지·HTML 을 파일로 (텍스트에는 b64 를 넣지 않는다) */
 function saveImages(dir: string, r: StepRecord): string | null {
-  // step 은 판매자 데이터다 — 파일명에 들어가므로 정수 범위를 다시 확인한다
+  // step 은 판매자 데이터다, 파일명에 들어가므로 정수 범위를 다시 확인한다
   if (!isSafeStep(r.step)) throw new Error(`step 값이 파일명으로 안전하지 않음: ${String(r.step).slice(0, 40)}`);
   let main: string | null = null;
   if (r.screenshot?.b64) {
@@ -814,7 +814,7 @@ async function cmdRetract() {
     const all = await listPackBlobIds(packId);
     if (step > all.length) throw new Error(`step ${step}: 팩에 블롭이 ${all.length}건뿐입니다`);
     blobId = all[step - 1];
-    console.log(`(.mm 에 step→blob 매핑이 없어 체인 등록 순서 ${step}번째 블롭을 씁니다 — mm recall 의 번호와 같은 순서)`);
+    console.log(`(.mm 에 step→blob 매핑이 없어 체인 등록 순서 ${step}번째 블롭을 씁니다, mm recall 의 번호와 같은 순서)`);
   }
 
   const seller = keypairFrom('SELLER_SUI_PRIVATE_KEY');
@@ -833,7 +833,7 @@ async function cmdReceipt() {
   const outcomeName = need(opt.outcome, '--outcome') as keyof typeof OUTCOME;
   const outcome = OUTCOME[outcomeName] ?? (Number.isInteger(Number(outcomeName)) ? Number(outcomeName) : undefined);
   if (outcome === undefined || outcome < 0 || outcome > 2) throw new Error('--outcome 은 resolved|partial|unresolved');
-  // 위치 제한은 두지 않는다(사람이 직접 준 경로) — 크기·텍스트·비밀키 패턴만 거른다. Walrus 는 공개 평문 저장소다.
+  // 위치 제한은 두지 않는다(사람이 직접 준 경로), 크기·텍스트·비밀키 패턴만 거른다. Walrus 는 공개 평문 저장소다.
   let ev: ReturnType<typeof readEvidenceFile>;
   try {
     ev = readEvidenceFile(need(opt.evidence, '--evidence'));
@@ -847,12 +847,12 @@ async function cmdReceipt() {
   const address = buyer.toSuiAddress();
   const sub = opt.sub ? { id: normalizeObjectId(opt.sub, 'subscription id') } : await findSubscription(address, packId);
   if (!sub) throw new Error(`이 팩의 구독권이 없습니다 (${address})`);
-  // 이미 영수증이 있으면 tx 가 EReceiptExists(abort 5)로 실패한다 — 증거를 공개 저장소에 올리기 전에 확인한다.
+  // 이미 영수증이 있으면 tx 가 EReceiptExists(abort 5)로 실패한다, 증거를 공개 저장소에 올리기 전에 확인한다.
   // (MCP market_receipt 는 같은 검사를 이미 하고 있다. CLI 만 빠져 있어 Walrus 업로드를 버렸다.)
   const already = (await listReceipts(packId).catch(() => [])).find((r) => r.subscriptionId === sub.id);
   if (already) {
     throw new Error(
-      `이 구독권(${sub.id})으로는 이미 영수증을 남겼습니다 (outcome ${already.outcome}). 구독권 1개당 1회 — 새 구독권으로 다시 사거나 다른 지갑을 쓰세요.`,
+      `이 구독권(${sub.id})으로는 이미 영수증을 남겼습니다 (outcome ${already.outcome}). 구독권 1개당 1회, 새 구독권으로 다시 사거나 다른 지갑을 쓰세요.`,
     );
   }
 

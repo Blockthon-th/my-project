@@ -54,7 +54,7 @@ entry  fun seal_approve_owner(id: vector<u8>, cap: &PackCap, pack: &MemoryPack)
 | `pack_id_of(sub)` / `expires_at_ms(sub)` | ID / u64 |
 | `fee(pack)` / `ttl_ms(pack)` / `owner(pack)` / `memory_count(pack)` / `subscriber_count(pack)` | u64 / u64 / address / u64 / u64 |
 | `has_blob(pack, blob_id)` | bool |
-| `namespace(pack)` | vector<u8> — Seal 열쇠 ID 접두사 |
+| `namespace(pack)` | vector<u8>, Seal 열쇠 ID 접두사 |
 | `has_receipt(pack, subscription_id)` | bool |
 | `receipt(pack, subscription_id)` | (address, u8, String, u64) = (subscriber, outcome, evidence_blob_id, at_ms). 없으면 abort |
 | `is_retracted(pack, blob_id)` | bool (등록되지 않은 블롭도 false) |
@@ -92,7 +92,7 @@ sui client publish --gas-budget 100000000
 # 이후 변경분 반영: 업그레이드 (UpgradeCap 은 Published.toml 의 upgrade-capability)
 sui client upgrade --upgrade-capability 0x671e4b87dae28ecdbf25a94bdd96f00b5889a6b473336c1b272b221d5a245cd2 --gas-budget 200000000
 ```
-현재 배포(2026-09-07, testnet): 패키지 `0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196` (v1 `0x9202…` 의 UpgradeCap 소유 키가 없어 판매자 지갑 `0xb31c…` 로 **새로 publish** 했다. 옛 패키지의 팩은 새 패키지에서 보이지 않으므로 Sui 기억 팩은 `npm run sync` 로 다시 만들었다). UpgradeCap `0x671e…` 은 판매자 지갑 소유 — 다음부터는 위 `upgrade` 명령으로 올릴 수 있다.
+현재 배포(2026-09-07, testnet): 패키지 `0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196` (v1 `0x9202…` 의 UpgradeCap 소유 키가 없어 판매자 지갑 `0xb31c…` 로 **새로 publish** 했다. 옛 패키지의 팩은 새 패키지에서 보이지 않으므로 Sui 기억 팩은 `npm run sync` 로 다시 만들었다). UpgradeCap `0x671e…` 은 판매자 지갑 소유, 다음부터는 위 `upgrade` 명령으로 올릴 수 있다.
 업그레이드 뒤 `Published.toml` 의 `published-at` 만 새 주소로 바뀌고 `original-id` 는 유지된다. 스크립트에서 두 주소를 구분해서 써야 한다:
 - **Seal identity / 객체 타입 문자열** (`…::market::MemoryPack`, `…::market::Subscription`): `original-id` 그대로. 키 서버는 항상 최신 버전의 `seal_approve` 를 실행한다.
 - **새 함수 호출** (`leave_receipt`, `retract`, `has_receipt`, `is_retracted` …): 반드시 새 `published-at` 주소로. 옛 주소로 부르면 함수가 없어 실패한다. 기존 함수도 새 주소로 부르는 편이 단순하다.

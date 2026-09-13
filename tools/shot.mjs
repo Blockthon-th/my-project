@@ -3,8 +3,8 @@
  * tools/shot.mjs <html 경로> [--out <경로 접두사>] [--max-kb 120] [--viewport 1280x800] [--mobile 375x812]
  *
  * Playwright chromium 으로 file:// 페이지를 열어
- *   <접두사>.jpg    — 데스크톱 뷰포트(기본 1280x800) JPEG, q80 에서 시작해 상한(기본 120KB)을 넘으면 q 를 낮춘다
- *   <접두사>.m.jpg  — 모바일(기본 375x812) 첫 화면 JPEG
+ *   <접두사>.jpg   , 데스크톱 뷰포트(기본 1280x800) JPEG, q80 에서 시작해 상한(기본 120KB)을 넘으면 q 를 낮춘다
+ *   <접두사>.m.jpg , 모바일(기본 375x812) 첫 화면 JPEG
  * 을 쓴다. 전체 20초 타임아웃. 결과 요약 JSON 을 stdout 에 출력.
  *
  * capture.mjs 는 shoot() 를 직접 import 해서(브라우저 공유) 쓴다.

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * tools/check.mjs — 랜딩 **화면** 검사 5항목. (짝: tools/check-copy.mjs 는 한국어 **카피** 6항목)
+ * tools/check.mjs, 랜딩 **화면** 검사 5항목. (짝: tools/check-copy.mjs 는 한국어 **카피** 6항목)
  *
  *   node tools/check.mjs <html 경로|url> [--viewport 1280x800] [--mobile 375x812] [--only id,id]
  *
- * 무엇을 재나 — 실제 브라우저(Playwright)로 페이지를 띄워 놓고 눈으로 보이는 것을 잰다.
+ * 무엇을 재나, 실제 브라우저(Playwright)로 페이지를 띄워 놓고 눈으로 보이는 것을 잰다.
  * 코드를 읽지 않아도 아래 다섯 줄이 이 도구가 재는 전부다.
  *
  *   cta-contrast  버튼이 배경에 묻히지 않는가
@@ -398,7 +398,7 @@ function normalizeOnly(only) {
 
 const DESKTOP_IDS = ['cta-contrast', 'h1-lines', 'card-height', 'nav-overlap'];
 
-/** 검사 결과 누적기 — runChecks 와 shootAndCheck 가 공유 */
+/** 검사 결과 누적기, runChecks 와 shootAndCheck 가 공유 */
 function collector(only) {
   const want = normalizeOnly(only);
   const enabled = (id) => !want || want.has(id);
@@ -561,7 +561,7 @@ if (isMain(import.meta.url)) {
     process.exit(2);
   }
   if (!existsSync(a.html)) {
-    // 없는 파일은 빈 페이지로 렌더되어 4/5 처럼 보인다 — 점수 대신 오류로 끝낸다.
+    // 없는 파일은 빈 페이지로 렌더되어 4/5 처럼 보인다, 점수 대신 오류로 끝낸다.
     process.stdout.write(JSON.stringify({ error: "file not found", html: a.html, passed: [], failed: [] }) + "\n");
     process.exit(3);
   }

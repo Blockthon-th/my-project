@@ -1,4 +1,4 @@
-/// Memory Market — 에이전트 기억 팩 구독 시장.
+/// Memory Market, 에이전트 기억 팩 구독 시장.
 ///
 /// 구조 (Seal 공식 subscription 패턴 기반):
 /// - `MemoryPack`   : 판매자가 공개한 기억 팩. 공유 객체. 블롭 ID를 dynamic field로 등록.
@@ -286,7 +286,7 @@ entry fun subscribe_entry(pack: &mut MemoryPack, fee: Coin<SUI>, c: &Clock, ctx:
 }
 
 /// 구독자가 팩 지식을 적용한 결과 영수증을 남긴다. 구독권 1개당 1회.
-/// 만료 여부는 검사하지 않는다 — 구독 중 받은 지식의 결과는 만료 뒤에 나올 수 있다.
+/// 만료 여부는 검사하지 않는다, 구독 중 받은 지식의 결과는 만료 뒤에 나올 수 있다.
 /// (구독권은 owned object 이고 이 함수는 `entry` 라 다른 모듈이 감싸서 부를 수 없다 →
 ///  PTB 입력으로 참조를 넘길 수 있는 건 현재 소유자뿐 → `Receipt.subscriber = ctx.sender()`.
 ///  구독권은 `store` 가 있어 양도될 수 있고, 그 경우 영수증의 subscriber 는 양수인이다.)

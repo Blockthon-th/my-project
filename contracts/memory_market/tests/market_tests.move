@@ -315,7 +315,7 @@ fun seller_retracts_blob() {
     market::retract(&mut pack, &cap, string::utf8(b"blob-A"), 3, &c);
     assert!(market::is_retracted(&pack, string::utf8(b"blob-A")));
     assert!(!market::is_retracted(&pack, string::utf8(b"blob-B")));
-    // 등록 자체와 카운트는 유지 (이력 보존) — 제외는 구매자 측에서 한다
+    // 등록 자체와 카운트는 유지 (이력 보존), 제외는 구매자 측에서 한다
     assert!(market::has_blob(&pack, string::utf8(b"blob-A")));
     assert!(market::memory_count(&pack) == 2);
     let (reason, at_ms) = market::retraction(&pack, string::utf8(b"blob-A"));
@@ -356,7 +356,7 @@ fun retracted_blob_key_still_approves_for_valid_subscriber() {
     scn.end();
 }
 
-/// 구독권이 양도되면 영수증의 subscriber 는 tx sender(양수인)다 — 원 구매자 이름으로 남길 수 없다.
+/// 구독권이 양도되면 영수증의 subscriber 는 tx sender(양수인)다, 원 구매자 이름으로 남길 수 없다.
 #[test]
 fun receipt_records_current_holder_after_transfer() {
     let mut scn = ts::begin(SELLER);

@@ -299,7 +299,7 @@ export async function findSubscriptions(address: string, packId: string): Promis
   return out.sort((a, b) => b.expiresAtMs - a.expiresAtMs);
 }
 
-/** 구독자가 가진 구독권 중 이 팩의 것 — 유효한 것을 우선, 없으면 가장 최근 만료분 */
+/** 구독자가 가진 구독권 중 이 팩의 것, 유효한 것을 우선, 없으면 가장 최근 만료분 */
 export async function findSubscription(address: string, packId: string) {
   const subs = await findSubscriptions(address, packId);
   const now = Date.now();
@@ -334,7 +334,7 @@ export async function approveTxBytes(ids: string[], subscriptionId: string, pack
   return tx.build({ client: suiClient, onlyTransactionKind: true });
 }
 
-/** 구독권으로 팩의 기억들을 복호화한다 (블롭당 요청 — 기존 호환) */
+/** 구독권으로 팩의 기억들을 복호화한다 (블롭당 요청, 기존 호환) */
 export async function decryptMemories(
   signer: Signer,
   address: string,
@@ -375,7 +375,7 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T) => Promise<R
  * 배치 복호화: 블롭 전부 내려받고 → identity 를 모아 seal_approve ×N 을 한 PTB 에 담아
  * `fetchKeys` 1회로 키를 받은 뒤 → 로컬 복호화. 키 서버 왕복이 블롭 수와 무관하게 1회.
  * 배치 요청이 (NoAccess 가 아닌 이유로) 실패하면 블롭당 요청으로 폴백한다.
- * NoAccess(만료·비구독)는 그대로 던진다 — 호출자가 만료 메시지로 바꾼다.
+ * NoAccess(만료·비구독)는 그대로 던진다, 호출자가 만료 메시지로 바꾼다.
  */
 export async function decryptAll(
   signer: Signer,
@@ -511,7 +511,7 @@ const hiddenPacks = new Set(
 
 const PACK_CREATED = () => `${PACKAGE_ID}::market::PackCreated`;
 
-/** 풀노드 gRPC 이벤트 색인 — 빠르지만 최근 체크포인트만 들고 있다. */
+/** 풀노드 gRPC 이벤트 색인, 빠르지만 최근 체크포인트만 들고 있다. */
 async function packIdsFromGrpc(limit: number): Promise<string[]> {
   const res = await suiClient.listEvents({ filter: { eventType: PACK_CREATED() }, limit });
   return res.events
@@ -520,7 +520,7 @@ async function packIdsFromGrpc(limit: number): Promise<string[]> {
 }
 
 /**
- * GraphQL 색인 — 전체 이력을 들고 있다. 오래된 팩이 gRPC 에서 사라지는 걸 메운다.
+ * GraphQL 색인, 전체 이력을 들고 있다. 오래된 팩이 gRPC 에서 사라지는 걸 메운다.
  * (config.ts 의 GRAPHQL_URL 주석 참고. 한 페이지 상한이 50 이다.)
  */
 async function packIdsFromGraphql(limit: number): Promise<string[]> {
@@ -640,7 +640,7 @@ export async function listPackFields(packId: string, limit = 500): Promise<PackF
             atMs: Number(r.at_ms),
           });
         }
-        // 그 밖의 필드는 우리 규약이 아니다 — 건너뛴다
+        // 그 밖의 필드는 우리 규약이 아니다, 건너뛴다
       } catch (e) {
         console.error(`[market] dynamic field 해석 실패 (${t}): ${String(e).slice(0, 100)}`);
       }
@@ -732,7 +732,7 @@ export async function readPreviews(pack: PackInfo): Promise<string[]> {
   return out;
 }
 
-/** 미리보기 중 mm.manifest/1 — 여러 번 발행됐으면 가장 최근 것 */
+/** 미리보기 중 mm.manifest/1, 여러 번 발행됐으면 가장 최근 것 */
 export async function readManifest(pack: PackInfo): Promise<Manifest | null> {
   for (const blobId of [...pack.previewBlobIds].reverse()) {
     try {

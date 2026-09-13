@@ -197,7 +197,7 @@ async function main() {
     }
   }
   if (!expiredBlocked) {
-    throw new Error('❌ 만료됐는데도 새 클라이언트가 복호화함 — seal_approve 정책이 동작하지 않음');
+    throw new Error('❌ 만료됐는데도 새 클라이언트가 복호화함, seal_approve 정책이 동작하지 않음');
   }
 
   step('완료');

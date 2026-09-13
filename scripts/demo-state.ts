@@ -9,7 +9,7 @@
  *   live:{shot, passed, total, ts, applied:[{step, selector}]}|null,
  *   tx_log:[{kind:"subscribe"|"leave_receipt"|"retract", digest, ts}] }
  *
- * 이미지 경로(thumb/shot)는 `demo/` 기준 상대경로("state/step-1.jpg") — compare.html 이 demo/ 에 있다고 본다.
+ * 이미지 경로(thumb/shot)는 `demo/` 기준 상대경로("state/step-1.jpg"), compare.html 이 demo/ 에 있다고 본다.
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -60,7 +60,7 @@ export function saveCompareState(s: CompareState): string {
 
 /**
  * tx-log.jsonl 에서 compare.html 이 보여줄 세 종류만, 오래된 순, 최근 30건.
- * packId 를 주면 **그 기록의 것만** 남긴다 — compare.html 은 한 기록만 다루므로
+ * packId 를 주면 **그 기록의 것만** 남긴다, compare.html 은 한 기록만 다루므로
  * 다른 기록(만료 실험용 팩 등)의 tx 가 섞여 나오면 안 된다. pack_id 가 없는 옛 줄은 남긴다.
  */
 export function txLogForCompare(packId?: string): CompareState['tx_log'] {
@@ -113,7 +113,7 @@ function parseLastJson(text: string): Record<string, unknown> | null {
   try {
     return JSON.parse(text);
   } catch {
-    /* 로그가 섞였을 수 있다 — 마지막 { 부터 시도 */
+    /* 로그가 섞였을 수 있다, 마지막 { 부터 시도 */
   }
   for (let i = text.lastIndexOf('\n{'); i >= 0; i = text.lastIndexOf('\n{', i - 1)) {
     try {
@@ -144,7 +144,7 @@ export async function screenshotHtml(
   try {
     const pwPath = resolve(REPO_ROOT, 'tools', 'node_modules', 'playwright', 'index.mjs');
     if (!existsSync(pwPath)) return false;
-    // playwright 는 tools/ 의 의존성이라 여기 타입이 없다 — 쓰는 부분만 적어둔다
+    // playwright 는 tools/ 의 의존성이라 여기 타입이 없다, 쓰는 부분만 적어둔다
     interface PwPage {
       goto(url: string, o?: { waitUntil?: string }): Promise<unknown>;
       screenshot(o: { path: string; type: 'jpeg' | 'png'; quality?: number }): Promise<unknown>;
@@ -220,7 +220,7 @@ export function evidenceToLive(
       shot: shot ?? prev?.shot ?? null,
       passed: passed.length,
       total: passed.length + failed.length,
-      ts: Date.now() /* 영수증 시각 — 에이전트가 쓴 evidence.ts 는 신뢰하지 않는다 */,
+      ts: Date.now() /* 영수증 시각, 에이전트가 쓴 evidence.ts 는 신뢰하지 않는다 */,
       applied: Array.isArray(j.applied) ? (j.applied as { step: number; selector: string }[]) : (prev?.applied ?? []),
       failed,
     };

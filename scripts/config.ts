@@ -13,11 +13,11 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
  *  2. 작업 중인 프로젝트의 `.env` (저장소 개발용)
  *  3. **사용자 단위 설정** `~/.memory-market/config.json` (플러그인 사용자의 정상 경로)
  *
- * 비밀키는 플러그인과 함께 배포되지 않는다 — 지갑은 사람마다 다르고, 플러그인은 모두가
+ * 비밀키는 플러그인과 함께 배포되지 않는다, 지갑은 사람마다 다르고, 플러그인은 모두가
  * 같은 코드를 받기 때문이다. MemWal 도 같은 구조로, 코드는 플러그인에 두고 자격 증명은
  * 로그인 절차로 `~/.memwal/credentials.json` 에 따로 만든다.
  *
- * quiet: true 필수 — dotenv 가 stdout 에 로그를 찍으면 MCP 의 stdio JSON-RPC 스트림이 깨진다.
+ * quiet: true 필수, dotenv 가 stdout 에 로그를 찍으면 MCP 의 stdio JSON-RPC 스트림이 깨진다.
  */
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -53,7 +53,7 @@ function setting(name: string): string | undefined {
 
 export const NETWORK = 'testnet' as const;
 /**
- * 배포된 시장 컨트랙트. 공개 정보이므로 기본값을 넣어둔다 —
+ * 배포된 시장 컨트랙트. 공개 정보이므로 기본값을 넣어둔다 ·
  * 구독자가 따로 설정해야 하는 건 자기 지갑 키뿐이다.
  */
 const DEFAULT_PACKAGE_ID =
@@ -87,7 +87,7 @@ function parseSpendCap(raw: string | undefined): number {
 
 /**
  * 공개 풀노드는 JSON-RPC를 중단했다(Method not found / JsonRpcError).
- * 이제 gRPC(gRPC-web)로 붙는다. SDK는 반드시 @mysten/sui 2.x 이상 —
+ * 이제 gRPC(gRPC-web)로 붙는다. SDK는 반드시 @mysten/sui 2.x 이상 ·
  * 1.x 의 gRPC 클라이언트는 transaction resolution 미지원 + read_mask 불일치로 현재 노드와 통신이 안 된다.
  */
 export const GRPC_URL = setting('SUI_GRPC_URL') ?? 'https://fullnode.testnet.sui.io:443';
@@ -139,7 +139,7 @@ export const WALRUS_PUBLISHER = 'https://publisher.walrus-testnet.walrus.space';
 export const WALRUS_AGGREGATOR = 'https://aggregator.walrus-testnet.walrus.space';
 /**
  * blob 보관 기간 (epoch). testnet 1 epoch ≈ 1일.
- * 1 로 두면 데모 전날 올린 팩이 당일 사라진다 — 30 으로 둔다. .env 의 WALRUS_EPOCHS 로 조정.
+ * 1 로 두면 데모 전날 올린 팩이 당일 사라진다, 30 으로 둔다. .env 의 WALRUS_EPOCHS 로 조정.
  */
 export const WALRUS_EPOCHS = Number(setting('WALRUS_EPOCHS') ?? 30);
 
@@ -192,7 +192,7 @@ export const explorerTx = (d: string) => `https://suiscan.xyz/${NETWORK}/tx/${d}
  * PC 시계와 서버 시계의 차이를 잰다.
  * Seal 세션 키에는 클라이언트가 찍은 생성 시각이 들어가고, 키 서버가 자기 시계와 비교해 검증한다.
  * 시계가 몇 분만 어긋나도 서버가 인증서를 거부하고, SDK는 이를 `ExpiredSessionKeyError`
- * ("Session key has expired") 로 보여준다 — 실제 원인은 만료가 아니라 시계 오차다.
+ * ("Session key has expired") 로 보여준다, 실제 원인은 만료가 아니라 시계 오차다.
  */
 export async function clockSkewMs(): Promise<number | null> {
   try {
@@ -214,14 +214,14 @@ export async function clockSkewMs(): Promise<number | null> {
 export async function assertClockOk() {
   const skew = await clockSkewMs();
   if (skew === null) {
-    console.log('  (시계 확인 실패 — 건너뜀)');
+    console.log('  (시계 확인 실패, 건너뜀)');
     return;
   }
   const sec = (skew / 1000).toFixed(1);
   if (skew > 0) {
     console.log(`  시계: PC가 서버보다 ${sec}초 빠름 → 세션 키 생성 시 보정함`);
   } else {
-    console.log(`  시계: PC가 서버보다 ${Math.abs(Number(sec))}초 느림 — 문제없음`);
+    console.log(`  시계: PC가 서버보다 ${Math.abs(Number(sec))}초 느림, 문제없음`);
   }
   if (Math.abs(skew) > 120_000) {
     throw new Error(

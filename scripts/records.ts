@@ -1,12 +1,12 @@
 /**
- * 기록 스키마 — 판매자 훅(tools/)이 쓰고, CLI(mm)·MCP 서버·구매자 에이전트가 읽는 공용 규약.
+ * 기록 스키마, 판매자 훅(tools/)이 쓰고, CLI(mm)·MCP 서버·구매자 에이전트가 읽는 공용 규약.
  *
  *  mm.step/1     : 디자인 반복 한 단계(프롬프트·diff·스크린샷·이유·교훈). Seal 로 잠가 Walrus 에 올린다.
  *                  단계 1개 = Seal 암호문 1개 = Walrus 블롭 1개 = publish 1회.
  *  mm.manifest/1 : 팩의 평문 목차. add_preview 로 등록되어 구매 전에 공개된다.
  *
  * 해시 규약 (tools/ 의 포집기와 반드시 같아야 한다):
- *  - canonical JSON = 키를 재귀적으로 정렬(Object.keys().sort() — UTF-16 코드 단위 순), 공백 없음,
+ *  - canonical JSON = 키를 재귀적으로 정렬(Object.keys().sort(), UTF-16 코드 단위 순), 공백 없음,
  *    undefined 값 키는 버림, 배열은 순서 유지.
  *  - record_hash = sha256( canonical(record without record_hash) ) 의 hex.
  *  - step 1 의 prev_hash = sha256(pack_id + series_id). step N 의 prev_hash = step N-1 의 record_hash.
@@ -42,7 +42,7 @@ export interface CheckResult {
 
 export interface StepRecord {
   schema: 'mm.step/1';
-  /** 포집 시점에 팩이 없으면 null — mm publish 의 finalizeChain 이 채운다 */
+  /** 포집 시점에 팩이 없으면 null, mm publish 의 finalizeChain 이 채운다 */
   pack_id: string | null;
   series_id: string;
   step: number;
@@ -90,7 +90,7 @@ export interface Manifest {
   checks: { id: string; desc: string }[];
   /** 평문 스크린샷 블롭 (구매 전 공개) */
   previews: { before: string | null; after: string | null };
-  /** after 스크린샷 바이트의 sha256 — 미리보기가 바꿔치기되지 않았는지 대조 */
+  /** after 스크린샷 바이트의 sha256, 미리보기가 바꿔치기되지 않았는지 대조 */
   after_sha256: string | null;
 }
 
@@ -250,7 +250,7 @@ export function verifyChain(records: StepRecord[], packId: string, seriesId: str
 /**
  * pack_id 를 채우고 prev_hash → record_hash 사슬을 처음부터 다시 계산한다.
  * 팩이 publish 시점에 만들어지므로(mm publish --new) 포집 당시 기록의 pack_id 는 비어 있을 수 있다.
- * 이미 발행된 단계는 바꾸면 안 되므로 호출자가 `frozenUpTo` 로 막는다 — 그 단계들의 해시가 계산과 다르면 throw.
+ * 이미 발행된 단계는 바꾸면 안 되므로 호출자가 `frozenUpTo` 로 막는다, 그 단계들의 해시가 계산과 다르면 throw.
  */
 export function finalizeChain(
   records: StepRecord[],
@@ -285,7 +285,7 @@ const isShot = (v: unknown): boolean =>
 
 /**
  * 복호화한 평문이 mm.step/1 로 **다룰 수 있는 모양**인지 확인하고 파싱한다.
- * 기록은 판매자가 쓴 데이터다 — 구매자 쪽에서 `step` 이 파일명·경로에, `prompts`/`diff` 가 그대로 출력에 쓰이므로
+ * 기록은 판매자가 쓴 데이터다, 구매자 쪽에서 `step` 이 파일명·경로에, `prompts`/`diff` 가 그대로 출력에 쓰이므로
  * 모양이 어긋나면 null (건너뜀). 해시·사슬의 진위는 verifyRecord / manifest 대조가 본다.
  */
 export function parseStepRecord(text: string): StepRecord | null {
@@ -358,7 +358,7 @@ export function diffHead(diff: string, n = 3): string[] {
 
 /**
  * 플레이북 한 단계. 형식: "step N · intent · edit_mode · lesson(없으면 why 요약) · 증거(check 변화, diff 첫 3줄)"
- * 이미지 b64 는 넣지 않는다 — 호출자가 파일로 저장하고 경로만 넘긴다.
+ * 이미지 b64 는 넣지 않는다, 호출자가 파일로 저장하고 경로만 넘긴다.
  */
 export function renderStepPlaybook(
   r: StepRecord,
@@ -388,6 +388,6 @@ export function recordToText(r: StepRecord): string {
       r.why,
       r.lesson ?? '',
       r.check ? `passed: ${r.check.passed.join(',')} failed: ${r.check.failed.join(',')}` : '',
-    ].join(' — '),
+    ].join(', '),
   );
 }
