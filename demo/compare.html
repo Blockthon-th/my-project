@@ -3,294 +3,335 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Memory Market — 디자인 과정 팩</title>
+<title>Memory Market — 실측 근거</title>
 <link rel="icon" href="data:,">
 <style>
   :root{
     --bg:#0a0e17; --panel:#111827; --panel-2:#171f33; --line:#273049;
     --text:#eef2ff; --muted:#9aa4c2; --dim:#66708c;
     --brand:#7c8cff; --brand-2:#b58cff; --ok:#3ddc97; --warn:#ffc857; --bad:#ff6b6b; --info:#5fd0ff;
-    --seller:#8f9cf6; --buyer:#5fc3b3;
   }
   *{box-sizing:border-box}
-  html{font-size:22px}
+  html{font-size:20px}
   body{
-    margin:0; min-height:100vh; display:flex; flex-direction:column;
-    background:var(--bg); color:var(--text); line-height:1.45;
+    margin:0; min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden;
+    background:var(--bg); color:var(--text); line-height:1.5;
     font-family:"Pretendard",system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
   a{color:var(--info);text-decoration:none}
   a:hover{text-decoration:underline}
   button{font:inherit}
   code,.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,"D2Coding",monospace}
+  .tnum{font-variant-numeric:tabular-nums}
 
   /* ── 상단 ── */
   .top{
-    display:flex; align-items:center; gap:28px; padding:16px 36px;
+    display:flex; align-items:center; gap:20px; padding:14px 28px; flex-wrap:wrap;
     border-bottom:1px solid var(--line); background:linear-gradient(180deg,#0f1524,var(--bg));
   }
   .brand{font-weight:800;font-size:1.05rem;letter-spacing:-.01em;white-space:nowrap}
-  .brand span{color:var(--muted);font-weight:600;margin-left:10px;font-size:.85rem}
-  .tabs{display:flex;gap:8px;margin-left:8px}
+  .brand span{color:var(--muted);font-weight:600;margin-left:10px;font-size:.8rem}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
   .tabs button{
     background:transparent;color:var(--muted);border:1px solid transparent;border-radius:12px;
-    padding:10px 18px;font-size:.9rem;font-weight:700;cursor:pointer;
+    padding:9px 16px;font-size:.85rem;font-weight:700;cursor:pointer;
   }
   .tabs button kbd{
-    display:inline-grid;place-items:center;width:1.4em;height:1.4em;margin-right:10px;border-radius:6px;
+    display:inline-grid;place-items:center;width:1.4em;height:1.4em;margin-right:8px;border-radius:6px;
     background:var(--panel-2);color:var(--text);font-size:.8em;font-family:inherit;
   }
   .tabs button.active{color:var(--text);background:var(--panel);border-color:var(--line)}
-  .status{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .status{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .pill{
-    font-size:.72rem;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
-    color:var(--muted);background:var(--panel);white-space:nowrap;
+    font-size:.7rem;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    color:var(--muted);background:var(--panel);
   }
   .pill.live{color:#062a1c;background:var(--ok);border-color:var(--ok)}
   .pill.fallback{color:#3a2a00;background:var(--warn);border-color:var(--warn)}
-  .pill.sample{color:#001a2a;background:var(--info);border-color:var(--info)}
+  .pill.none{color:var(--dim)}
 
-  main{flex:1;padding:28px 36px 20px;max-width:1800px;width:100%;margin:0 auto}
+  main{flex:1;padding:26px 28px 24px;max-width:1500px;width:100%;margin:0 auto}
   .tab[hidden]{display:none}
-  h1{font-size:2.4rem;line-height:1.15;margin:0 0 .5em;letter-spacing:-.02em;font-weight:800}
-  h2{font-size:1.5rem;margin:0 0 .5em;letter-spacing:-.01em;font-weight:800}
-  h3{font-size:1rem;margin:0 0 .4em;font-weight:700}
+  h1{font-size:2rem;line-height:1.25;margin:0 0 .45em;letter-spacing:-.02em;font-weight:800}
+  h2{font-size:1.3rem;margin:0 0 .5em;letter-spacing:-.01em;font-weight:800}
+  h3{font-size:.95rem;margin:0 0 .4em;font-weight:700}
   .muted{color:var(--muted)}
   .dim{color:var(--dim)}
-  .small{font-size:.8rem}
+  .eyebrow{color:var(--brand);font-weight:800;letter-spacing:.06em;font-size:.75rem;margin:0 0 .7em}
+  .lead{color:var(--muted);font-size:1rem;margin:0 0 1.2em;max-width:52em}
+  .lead b{color:var(--text)}
 
-  /* ── 소개 슬라이드 ── */
-  .slides{position:relative;min-height:calc(100vh - 180px)}
-  .slide{display:none;animation:fade .25s ease}
-  .slide.on{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .eyebrow{color:var(--brand);font-weight:800;letter-spacing:.06em;font-size:.8rem;text-transform:uppercase;margin:0 0 .6em}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:32px 0}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px 30px}
-  .stat b{display:block;font-size:2.9rem;line-height:1;font-weight:800;letter-spacing:-.03em;background:linear-gradient(90deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .stat span{display:block;margin-top:12px;color:var(--muted);font-size:.9rem}
-  .stat small{display:block;margin-top:6px;color:var(--dim);font-size:.7rem}
-  .complaints{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
-  .complaint{background:var(--panel-2);border-radius:18px;padding:22px 24px;border-left:6px solid var(--bad)}
-  .complaint b{display:block;font-size:1.05rem;margin-bottom:8px}
-  .complaint p{margin:0;color:var(--muted);font-size:.9rem}
-  .complaint .q{display:block;font-size:.85rem;color:var(--text);opacity:.85;margin-bottom:10px;font-style:italic}
+  /* ── 큰 수치 세 칸 ── */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:0 0 28px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px}
+  .stat .k{color:var(--muted);font-size:.85rem;font-weight:700;margin:0 0 14px}
+  .stat b{
+    display:block;font-size:3.1rem;line-height:1;font-weight:800;letter-spacing:-.03em;
+    background:linear-gradient(90deg,var(--brand),var(--brand-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat .who{display:block;margin-top:10px;color:var(--text);font-size:.9rem;font-weight:700}
+  .stat .vs{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+  .stat .vs .n{color:var(--text);font-weight:700;margin-left:.35em}
 
-  table.cmp{width:100%;border-collapse:separate;border-spacing:0;margin-top:26px;font-size:.95rem}
-  table.cmp th,table.cmp td{padding:18px 20px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-  table.cmp th{color:var(--muted);font-weight:700;font-size:.8rem;letter-spacing:.04em}
-  table.cmp tr.mm td{background:linear-gradient(90deg,rgba(124,140,255,.16),rgba(181,140,255,.06));}
-  table.cmp tr.mm td:first-child{border-radius:14px 0 0 14px;font-weight:800;color:var(--text)}
-  table.cmp tr.mm td:last-child{border-radius:0 14px 14px 0}
-  table.cmp td.no{color:var(--dim)}
-  table.cmp td.yes{color:var(--ok);font-weight:700}
-  .timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:30px}
-  .tl{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
-  .tl i{font-style:normal;display:block;color:var(--brand);font-weight:800;font-size:.75rem;letter-spacing:.06em}
-  .tl b{display:block;font-size:1rem;margin:8px 0 6px}
-  .tl span{color:var(--muted);font-size:.8rem}
-  .slide-nav{position:absolute;right:0;bottom:0;color:var(--dim);font-size:.75rem}
+  /* ── 표 ── */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:640px}
+  table th,table td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  table th{color:var(--muted);font-weight:700;font-size:.78rem;letter-spacing:.03em}
+  table tr:last-child td{border-bottom:0}
+  table tr.hi td{background:rgba(124,140,255,.14);color:var(--text);font-weight:700}
+  table td.wrap,table th.wrap{white-space:normal;min-width:14em}
+  .tblnote{margin:12px 0 0;color:var(--dim);font-size:.82rem}
 
-  /* ── 필름스트립 ── */
-  .strip{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:8px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-  .thumb{aspect-ratio:16/10;background:#0e1322;position:relative;border-bottom:1px solid var(--line)}
+  /* ── 정직하게 짚는 칸 ── */
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:30px 0 0}
+  .note{background:var(--panel-2);border-radius:16px;padding:20px 22px;border-left:5px solid var(--warn)}
+  .note b{display:block;font-size:1rem;margin-bottom:8px;color:var(--text)}
+  .note p{margin:0;color:var(--muted);font-size:.9rem}
+  .note.src{border-left-color:var(--brand)}
+
+  .section{margin-top:38px}
+
+  /* ── 기록 목록 ── */
+  table.packs td.name{white-space:normal;min-width:16em}
+  .tag{font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;border:1px solid var(--line);color:var(--muted);background:var(--panel-2)}
+  .tag.on{color:#062a1c;background:var(--ok);border-color:var(--ok)}
+
+  /* ── 기록 카드(탭 2) ── */
+  .strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .thumb{aspect-ratio:16/10;background:#0e1322;border-bottom:1px solid var(--line);overflow:hidden}
   .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-  .thumb .no-img{position:absolute;inset:0;display:grid;place-items:center;color:var(--dim);font-size:.8rem}
-  .card .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
   .card .head{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .stepno{font-weight:800;font-size:1rem}
-  .badge{font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap}
-  .badge.targeted{background:rgba(61,220,151,.16);color:var(--ok);border:1px solid rgba(61,220,151,.4)}
-  .badge.rewrite{background:rgba(255,200,87,.16);color:var(--warn);border:1px solid rgba(255,200,87,.4)}
-  .badge.none{background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
-  .line{display:flex;gap:10px;font-size:.82rem;line-height:1.4}
-  .line i{flex:0 0 auto;width:.6em;height:.6em;border-radius:50%;margin-top:.45em}
-  .line.defect i{background:var(--bad)}
-  .line.fix i{background:var(--ok)}
-  .line.fix{color:var(--text)}
-  .line.defect{color:var(--muted)}
+  .stepno{font-weight:800;font-size:.95rem}
+  .badge{font-size:.66rem;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
+  .badge.targeted{background:rgba(61,220,151,.16);color:var(--ok);border-color:rgba(61,220,151,.4)}
+  .badge.rewrite{background:rgba(255,200,87,.16);color:var(--warn);border-color:rgba(255,200,87,.4)}
+  .line{display:flex;gap:9px;font-size:.8rem;line-height:1.45}
+  .line i{flex:0 0 auto;width:.55em;height:.55em;border-radius:50%;margin-top:.5em}
+  .line.ask i{background:var(--info)}
+  .line.got i{background:var(--ok)}
+  .line.got{color:var(--text)}
+  .line.ask{color:var(--muted)}
   .ts{margin-top:auto;color:var(--dim);font-size:.7rem}
   .packbar{
-    margin-top:26px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;
-    background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 26px;
+    margin-top:22px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 22px;
   }
-  .packbar .name{font-weight:800;font-size:1.1rem}
-  .packbar .id{color:var(--muted);font-size:.8rem}
-  .counters{display:flex;gap:26px;margin-left:auto}
+  .packbar .name{font-weight:800;font-size:1rem}
+  .packbar .id{color:var(--muted);font-size:.78rem;word-break:break-all}
+  .counters{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap}
   .counter{text-align:center}
-  .counter b{display:block;font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-.02em}
-  .counter span{color:var(--muted);font-size:.75rem}
+  .counter b{display:block;font-size:1.6rem;font-weight:800;line-height:1.1}
+  .counter span{color:var(--muted);font-size:.72rem}
 
-  /* ── 비교 ── */
-  .cmpgrid{display:grid;grid-template-columns:5fr 7fr;gap:26px;align-items:start}
-  .col h2{display:flex;align-items:center;gap:14px}
+  /* ── 사기 전 · 산 뒤(탭 3) ── */
+  .cmpgrid{display:grid;grid-template-columns:5fr 7fr;gap:24px;align-items:start}
+  .cmpgrid>.col{min-width:0}            /* grid 칸은 기본이 min-width:auto 라 표가 칸을 밀어낸다 */
+  .bottom .box,.livebox{min-width:0;overflow:hidden}
+  .col h2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .col h2 .pill{font-size:.65rem}
-  .baseline-grid{display:grid;grid-template-columns:1fr;gap:12px}
-  .bl{display:grid;grid-template-columns:176px 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px}
-  .bl .thumb{aspect-ratio:16/10;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
-  .bl .meta{display:flex;flex-direction:column;gap:6px}
-  .bl .meta .who{font-weight:700;font-size:.9rem}
-  .bl .meta .when{color:var(--dim);font-size:.72rem}
-  .score{display:inline-grid;place-items:center;font-weight:800;border-radius:14px;letter-spacing:-.02em}
-  .score.sm{font-size:1.25rem;padding:6px 14px;width:max-content}
-  .score.lg{font-size:3rem;padding:8px 26px;width:max-content;border-radius:22px;line-height:1.1}
-  .score.bad{background:rgba(255,107,107,.16);color:var(--bad);border:2px solid rgba(255,107,107,.5)}
-  .score.mid{background:rgba(255,200,87,.16);color:var(--warn);border:2px solid rgba(255,200,87,.5)}
-  .score.ok{background:rgba(61,220,151,.16);color:var(--ok);border:2px solid rgba(61,220,151,.55);box-shadow:0 0 40px rgba(61,220,151,.2)}
-  /* 큰 배지는 실제 스크린샷(밝은 배경) 위에 얹히므로 불투명한 어두운 바탕으로 */
-  .score.lg.bad,.score.lg.mid,.score.lg.ok{background:rgba(10,14,23,.94)}
-  .score.lg.ok{box-shadow:0 0 0 6px rgba(61,220,151,.18),0 18px 50px rgba(0,0,0,.5)}
-  .livebox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;position:relative}
-  .livebox .thumb{border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;max-height:39vh}
-  .livebox .overlay{position:absolute;right:30px;top:30px}
-  .livebox .waiting{position:absolute;inset:14px;display:grid;place-items:center;text-align:center;color:var(--muted);background:rgba(10,14,23,.6);border-radius:12px;font-size:.95rem}
-  .caption{margin:14px 0 0;color:var(--muted);font-size:.85rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .baseline-grid{display:grid;gap:10px}
+  .bl{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
+  .bl .thumb{aspect-ratio:16/10;border-radius:10px;border:1px solid var(--line)}
+  .bl .meta{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .bl .meta .who{font-weight:700;font-size:.85rem}
+  .bl .meta .when{color:var(--dim);font-size:.7rem}
+  .verdict{font-size:.8rem;font-weight:700}
+  .verdict.ok{color:var(--ok)}
+  .verdict.bad{color:var(--warn)}
+  .livebox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px}
+  .livebox .thumb{border-radius:12px;border:1px solid var(--line);aspect-ratio:16/10;max-height:44vh}
+  .caption{margin:12px 0 0;color:var(--muted);font-size:.85rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .caption b{color:var(--text)}
   .chip{font-size:.68rem;padding:3px 10px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);color:var(--muted)}
-  table.applied{width:100%;border-collapse:collapse;margin-top:16px;font-size:.85rem;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  table.applied th,table.applied td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line)}
-  table.applied th{color:var(--muted);font-size:.72rem;letter-spacing:.04em;font-weight:700;white-space:nowrap}
-  table.applied td:first-child,table.applied th:first-child{white-space:nowrap;width:1%}
-  table.applied tr:last-child td{border-bottom:0}
-  table.applied td.sel{color:var(--info)}
-  .bottom{margin-top:16px;display:grid;grid-template-columns:1fr;gap:12px}
-  .bottom .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 20px}
-  .bottom .box h3{margin-bottom:6px}
-  .bottom .counter b{font-size:1.5rem}
-  .bottom .txs li{padding:6px 0;font-size:.78rem}
-  .txs{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
-  .txs li{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;font-size:.85rem;padding:8px 0;border-bottom:1px solid var(--line)}
+  .bottom{margin-top:14px;display:grid;gap:12px}
+  .bottom .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 18px}
+  .txs{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+  .txs li{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.82rem;padding:7px 0;border-bottom:1px solid var(--line)}
   .txs li:last-child{border-bottom:0}
   .kind{font-weight:800;padding:3px 10px;border-radius:8px;font-size:.7rem;white-space:nowrap}
   .kind.subscribe{background:rgba(124,140,255,.18);color:var(--brand)}
   .kind.leave_receipt{background:rgba(61,220,151,.18);color:var(--ok)}
   .kind.retract{background:rgba(255,107,107,.18);color:var(--bad)}
-  .empty{color:var(--dim);font-size:.85rem;padding:12px 0}
+  .empty{color:var(--muted);font-size:.88rem;padding:18px 20px;background:var(--panel);border:1px dashed var(--line);border-radius:14px}
+  .empty code{color:var(--info)}
 
   footer.keys{
-    padding:10px 36px 14px;color:var(--dim);font-size:.68rem;border-top:1px solid var(--line);
-    display:flex;gap:26px;flex-wrap:wrap;
+    padding:12px 28px 16px;color:var(--dim);font-size:.72rem;border-top:1px solid var(--line);
+    display:flex;gap:22px;flex-wrap:wrap;
   }
   footer.keys kbd{background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 7px;color:var(--text);font-family:inherit;margin-right:4px}
 
-  @media (max-height:960px){ /* 노트북 화면: 프로젝터(1080p)보다 조금 줄인다 */
+  @media (max-width:1180px){
     html{font-size:18px}
-    .livebox .thumb{max-height:33vh}
-    main{padding-top:16px}
-    .bl{grid-template-columns:128px 1fr;padding:8px}
-    .baseline-grid{gap:8px}
-    .score.sm{font-size:1.05rem;padding:3px 10px}
-    .bottom{margin-top:10px;gap:8px}
-    .bottom .box{padding:8px 16px}
-    .bottom .counter b{font-size:1.25rem}
-    .bottom .txs li{padding:4px 0}
-    .col h2{font-size:1.3rem;margin-bottom:.35em}
-  }
-  @media (max-width:1280px){
-    html{font-size:18px}
-    .strip{grid-template-columns:repeat(3,1fr)}
     .cmpgrid{grid-template-columns:1fr}
-    .timeline{grid-template-columns:repeat(3,1fr)}
+    .stats{grid-template-columns:1fr}
+    .stat b{font-size:2.6rem}
+  }
+  @media (max-width:700px){
+    html{font-size:16px}
+    main{padding:20px 16px}
+    .top{padding:12px 16px;gap:12px}
+    .status{margin-left:0;width:100%}
+    footer.keys{padding:12px 16px}
+    h1{font-size:1.6rem}
+    .bl{grid-template-columns:1fr}
+    .bl .thumb{max-width:100%}
+    .packbar .counters{margin-left:0}
   }
 </style>
 </head>
 <body>
 
 <header class="top">
-  <div class="brand">Memory Market <span>디자인 과정 팩</span></div>
+  <div class="brand">Memory Market <span>실측 근거</span></div>
   <nav class="tabs" id="tabs">
-    <button data-tab="intro" class="active"><kbd>1</kbd>소개</button>
-    <button data-tab="filmstrip"><kbd>2</kbd>판매자 필름스트립</button>
-    <button data-tab="compare"><kbd>3</kbd>구독 전 · 후</button>
+    <button data-tab="intro" class="active"><kbd>1</kbd>실측</button>
+    <button data-tab="filmstrip"><kbd>2</kbd>판 사람이 남긴 것</button>
+    <button data-tab="compare"><kbd>3</kbd>사기 전 · 산 뒤</button>
   </nav>
   <div class="status">
     <span class="pill" id="src-pill">상태 읽는 중…</span>
-    <span class="pill live" id="mode-pill">LIVE</span>
+    <span class="pill none" id="mode-pill">—</span>
   </div>
 </header>
 
 <main>
-  <!-- ───────── 1. 소개 ───────── -->
+  <!-- ───────── 1. 실측 (고정 값 — 아래 표는 docs/ground-truth.md 와 한 글자도 다르면 안 된다) ───────── -->
   <section class="tab" id="tab-intro">
-    <div class="slides" id="slides">
+    <p class="eyebrow">2026-09-07 실측</p>
+    <h1>같은 결함이 있는 랜딩을 AI 에게 고치게 했어요.</h1>
+    <p class="lead">
+      잰 것은 세 가지예요 — <b>걸린 시간</b>, <b>주고받은 횟수</b>, <b>AI 사용료</b>.
+      한쪽은 이 기록을 사서 읽고 시작했고, 다른 쪽은 아무것도 없이 세 번 돌렸어요.
+      이 수치는 <b>Paylane 기록 하나</b>를 두고 잰 거예요.
+    </p>
 
-      <article class="slide on">
-        <p class="eyebrow">문제</p>
-        <h1>프롬프트는 팔린다.<br>고친 <em>과정</em>은 안 팔린다.</h1>
-        <div class="stats">
-          <div class="stat"><b>$3M<small style="display:inline;font-size:.4em;color:var(--dim)"> / 월</small></b><span>PromptBase 월 거래액</span><small>프롬프트 한 장짜리 마켓의 규모</small></div>
-          <div class="stat"><b>50만 건</b><span>누적 판매</span><small>사람들은 "남이 이미 한 시도" 에 돈을 낸다</small></div>
-          <div class="stat"><b>20 / 1000</b><span>1000개 중 20개만 팔림</span><small>나머지 98% 는 결과를 믿을 근거가 없다</small></div>
-        </div>
-        <div class="complaints">
-          <div class="complaint"><span class="q">"사놓고 돌려보니 결과가 달라요"</span><b>재현이 안 된다</b><p>모델·버전·컨텍스트가 다르면 같은 프롬프트도 다른 결과. 스냅샷 한 장에는 조건이 없다.</p></div>
-          <div class="complaint"><span class="q">"왜 이렇게 썼는지는 안 알려주네요"</span><b>이유와 실패가 없다</b><p>최종 프롬프트만 있고, 무엇을 시도했다 버렸는지 · 왜 그 선택자였는지가 없다. 내 프로젝트에 옮길 수가 없다.</p></div>
-          <div class="complaint"><span class="q">"모델 바뀌었는데 그대로 팔리던데요"</span><b>낡아도 그대로 팔린다</b><p>SDK·모델이 바뀌면 틀린 답이 되는데 폐기·만료 개념이 없다. 구매자가 산 뒤에야 안다.</p></div>
-        </div>
-      </article>
+    <div class="stats">
+      <div class="stat">
+        <p class="k">걸린 시간</p>
+        <b class="tnum">2분 0초</b>
+        <span class="who">이 기록을 산 AI</span>
+        <div class="vs">기록 없이 세 번<span class="n tnum">3분 30초 · 5분 50초 · 3분 38초</span></div>
+      </div>
+      <div class="stat">
+        <p class="k">주고받은 횟수</p>
+        <b class="tnum">15</b>
+        <span class="who">이 기록을 산 AI</span>
+        <div class="vs">기록 없이 세 번<span class="n tnum">16 · 26 · 17</span></div>
+      </div>
+      <div class="stat">
+        <p class="k">AI 사용료</p>
+        <b class="tnum">$0.70</b>
+        <span class="who">이 기록을 산 AI</span>
+        <div class="vs">기록 없이 세 번<span class="n tnum">$1.17 · $1.88 · $1.20</span></div>
+      </div>
+    </div>
 
-      <article class="slide">
-        <p class="eyebrow">해결</p>
-        <h1>결과 스냅샷이 아니라, <em>고친 과정</em>을 기간제로 판다.</h1>
-        <p class="muted" style="font-size:1.05rem;margin:0 0 .4em">판매자가 Claude Code 로 랜딩을 5턴 고치면, 훅이 턴마다 <b style="color:var(--text)">프롬프트 · diff · 스크린샷 · 왜 고쳤는지 · 교훈</b> 을 한 단계로 자동 기록한다. 단계는 Seal 로 잠겨 Walrus 에 올라가고, 구매자 에이전트는 구독 기간 동안만 풀어서 자기 파일에 적용한다.</p>
-        <table class="cmp">
-          <thead><tr><th></th><th>파는 것</th><th>과정 (왜 · 무엇을 버렸나)</th><th>검증</th><th>만료 · 폐기</th><th>정산</th></tr></thead>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>누가 고쳤나</th><th>첫 수정에서 잡은 것</th><th>걸린 시간</th><th>주고받은 횟수</th><th>파일 수정</th><th>AI 사용료</th>
+        </tr></thead>
+        <tbody>
+          <tr class="hi"><td>이 기록을 산 AI</td><td>5개 전부</td><td class="tnum">2분 0초</td><td class="tnum">15</td><td class="tnum">7</td><td class="tnum">$0.70</td></tr>
+          <tr><td>기록 없이 1회차</td><td>5개 중 1개</td><td class="tnum">3분 30초</td><td class="tnum">16</td><td class="tnum">11</td><td class="tnum">$1.17</td></tr>
+          <tr><td>기록 없이 2회차</td><td>5개 중 0개</td><td class="tnum">5분 50초</td><td class="tnum">26</td><td class="tnum">20</td><td class="tnum">$1.88</td></tr>
+          <tr><td>기록 없이 3회차</td><td>5개 중 1개</td><td class="tnum">3분 38초</td><td class="tnum">17</td><td class="tnum">14</td><td class="tnum">$1.20</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notes">
+      <div class="note">
+        <b>기록 없이 한 세 번은 끝까지 한 군데를 못 잡았어요.</b>
+        <p>제목 줄바꿈이에요. 그게 이 기록의 두 번째 내용과 같은 문제예요.</p>
+      </div>
+      <div class="note">
+        <b>검사 도구만 쥐여주면 기록 없이도 세 번 다 결국 다 잡아요.</b>
+        <p>176초 · 201초 · 226초가 걸렸어요. 그러니까 기록이 바꾸는 건 “결국 다 잡느냐”가 아니라 얼마나 빨리, 몇 번 만에, 얼마에 잡느냐예요.</p>
+      </div>
+      <div class="note">
+        <b>이 실험은 Paylane 기록 하나에 대한 것이에요.</b>
+        <p>지금 올라와 있는 나머지 세 기록에는 이런 실험이 없어요. 아래 표에서 어느 기록인지 볼 수 있어요.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>지금 올라와 있는 기록 넷</h2>
+      <p class="lead">
+        이름과 설명은 판 사람이 쓴 그대로예요. 값에 붙은 SUI 는 가상화폐 단위예요.
+        아직 연습용이라 진짜 돈은 안 들어요. (2026-09-13 16:50 기준)
+      </p>
+      <div class="tablewrap">
+        <table class="packs">
+          <thead><tr>
+            <th class="wrap">이름 (판 사람이 쓴 그대로)</th><th>몇 번 고친 것</th><th>값</th><th>볼 수 있는 기간</th><th>산 사람</th><th>위 실험</th>
+          </tr></thead>
           <tbody>
-            <tr><td><b>v0 · ChatGPT 공유 링크</b></td><td>결과 스냅샷 한 장</td><td class="no">없음</td><td class="no">없음 — 좋아요 수</td><td class="no">없음 — 링크는 영구</td><td class="no">없음</td></tr>
-            <tr class="mm"><td>Memory Market 과정 팩</td><td>단계별 프롬프트 · diff · 스크린샷 · 교훈</td><td class="yes">단계마다 why / lesson / verdict</td><td class="yes">검사 5항목 + 구매자 영수증 온체인</td><td class="yes">Seal 만료 자동 · 판매자 retract</td><td class="yes">SUI 결제, 판매자에게 즉시</td></tr>
+            <tr class="hi">
+              <td class="name">Paylane 랜딩 5턴 교정 과정<br><a class="mono dim" href="https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d" target="_blank" rel="noopener">0x75b25d24…22cfcb1d ↗</a></td>
+              <td class="tnum">5번</td><td class="tnum">0.05 SUI</td><td>7일</td><td class="tnum">1</td><td><span class="tag on">있음</span></td>
+            </tr>
+            <tr>
+              <td class="name">AI가 뱉은 랜딩을 고쳐나간 기록<br><a class="mono dim" href="https://suiscan.xyz/testnet/object/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e" target="_blank" rel="noopener">0x02524aa2…cd27387e ↗</a></td>
+              <td class="tnum">10번</td><td class="tnum">0.05 SUI</td><td>7일</td><td class="tnum">0</td><td><span class="tag">없음</span></td>
+            </tr>
+            <tr>
+              <td class="name">한국어 랜딩 카피 8번 고친 과정<br><a class="mono dim" href="https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683" target="_blank" rel="noopener">0x8e366e40…1ecde683 ↗</a></td>
+              <td class="tnum">8번</td><td class="tnum">0.03 SUI</td><td>7일</td><td class="tnum">0</td><td><span class="tag">없음</span></td>
+            </tr>
+            <tr>
+              <td class="name">Sui 온보딩 실전 기억<br><a class="mono dim" href="https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40" target="_blank" rel="noopener">0xaa3b7edc…36b52a40 ↗</a></td>
+              <td class="tnum">글 30개</td><td class="tnum">0.01 SUI</td><td>24시간</td><td class="tnum">0</td><td><span class="tag">없음</span></td>
+            </tr>
           </tbody>
         </table>
-      </article>
-
-      <article class="slide">
-        <p class="eyebrow">오늘 3분</p>
-        <h1>구매자 창에서 <code>/improve</code> 한 번.<br>나머지는 에이전트와 체인이 한다.</h1>
-        <div class="timeline">
-          <div class="tl"><i>0:25</i><b>판매자 필름스트립</b><span>5턴 · 단계마다 결함→교정 · 팩 객체 (Suiscan)</span></div>
-          <div class="tl"><i>0:50</i><b>구매 · 복호화</b><span>market_find → market_acquire: subscribe tx + Seal 일괄 복호화</span></div>
-          <div class="tl"><i>1:15</i><b>만료된 구독</b><span>mm recall --fresh → Seal 거부 (seal_approve abort)</span></div>
-          <div class="tl"><i>1:50</i><b>구독 전 · 후</b><span>팩 없이 3회 2/5 · 3/5 · 2/5 vs 라이브 5/5 + 적용표</span></div>
-          <div class="tl"><i>2:15</i><b>영수증</b><span>검사 결과 → Walrus → leave_receipt tx</span></div>
-          <div class="tl"><i>2:30</i><b>폐기</b><span>mm retract (Sui 팩 단계 하나) → recall 에서 제외</span></div>
+      </div>
+      <div class="notes">
+        <div class="note src">
+          <b>이 탭의 수치는 전부 <code>docs/ground-truth.md</code> 에서 왔어요.</b>
+          <p>아래 두 탭은 같은 Paylane 기록 하나를 지금 이 컴퓨터에서 읽은 값이에요. 이 페이지는 다른 기록을 섞어 보여주지 않아요.</p>
         </div>
-        <p class="muted" style="margin-top:28px;font-size:.95rem">Sui 객체 · Clock · Seal 접근 정책(seal_approve) · Walrus 블롭 — 프로토콜 수정 없이 앱 층만.</p>
-      </article>
-
-      <div class="slide-nav" id="slide-nav">1 / 3 · ← →</div>
+      </div>
     </div>
   </section>
 
-  <!-- ───────── 2. 필름스트립 ───────── -->
+  <!-- ───────── 2. 판 사람이 남긴 것 (실행 중인 값) ───────── -->
   <section class="tab" id="tab-filmstrip" hidden>
-    <p class="eyebrow">판매자 · 사전 실행</p>
-    <h2 id="fs-title">5턴, 결함 하나씩 — 훅이 자동 기록한 단계들</h2>
+    <p class="eyebrow">지금 이 컴퓨터에서 읽은 값 · Paylane 기록</p>
+    <h2 id="fs-title">판 사람이 남긴 것</h2>
+    <p class="lead">고칠 때마다 시킨 말 · 바뀐 코드 · 화면 2장 · 왜 · 알게 된 것 · 검사 결과가 한 덩어리로 자동으로 남아요.</p>
     <div class="strip" id="strip"></div>
     <div class="packbar" id="packbar"></div>
   </section>
 
-  <!-- ───────── 3. 비교 ───────── -->
+  <!-- ───────── 3. 사기 전 · 산 뒤 (실행 중인 값) ───────── -->
   <section class="tab" id="tab-compare" hidden>
+    <p class="eyebrow">지금 이 컴퓨터에서 읽은 값 · Paylane 기록</p>
     <div class="cmpgrid">
       <div class="col">
-        <h2>구독 전 <span class="pill" id="bl-count">사전 실행 0회</span></h2>
+        <h2>기록 없이 <span class="pill" id="bl-count">0회</span></h2>
         <div class="baseline-grid" id="baseline"></div>
         <div class="bottom">
           <div class="box">
-            <h3 class="muted small">팩 온체인 수치</h3>
+            <h3 class="muted">이 기록에 남아 있는 수</h3>
             <div class="counters" id="counters" style="margin-left:0;justify-content:space-around"></div>
           </div>
           <div class="box">
-            <h3 class="muted small">트랜잭션 <span class="dim">(Suiscan)</span></h3>
+            <h3 class="muted">기록이 남은 자리</h3>
             <ul class="txs" id="txs"></ul>
           </div>
         </div>
       </div>
       <div class="col">
-        <h2>구독 후 <span class="pill live" id="live-pill">LIVE</span></h2>
+        <h2>이 기록을 산 AI <span class="pill" id="live-pill">—</span></h2>
         <div class="livebox" id="livebox"></div>
         <p class="caption" id="caption"></p>
-        <table class="applied" id="applied"></table>
+        <div class="tablewrap" id="applied-wrap" hidden><table id="applied"></table></div>
       </div>
     </div>
   </section>
@@ -298,89 +339,17 @@
 
 <footer class="keys">
   <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 탭</span>
-  <span><kbd>←</kbd><kbd>→</kbd> 소개 슬라이드</span>
-  <span><kbd>R</kbd> 라이브 ↔ 사전 실행 (fallback)</span>
-  <span><kbd>F</kbd> 상태 다시 읽기</span>
+  <span><kbd>R</kbd> 지금 값 ↔ 미리 돌려둔 값</span>
+  <span><kbd>F</kbd> 다시 읽기</span>
   <span id="foot-note" class="dim"></span>
 </footer>
 
 <script>
-/* ───────────────────────── 샘플 데이터 (state 파일이 없을 때) ─────────────────────────
-   형식은 scripts/demo-state.ts 의 CompareState 인터페이스와 같다. thumb/shot 이 없으면 페이지가 와이어프레임을 그린다.
-   아래 숫자는 화면 배치를 확인하기 위한 자리표시자다 — 실측값이 아니므로 발표에 인용하지 않는다. */
-const ORDER = ['cta-contrast', 'h1-lines', 'no-hscroll', 'card-height', 'nav-overlap'];
-const CHECKS = [
-  ['cta-contrast', 'CTA 대비 ≥ 4.5:1'],
-  ['h1-lines', 'h1 ≤ 2줄 @1280'],
-  ['no-hscroll', '375px 가로 스크롤 없음'],
-  ['card-height', '카드 높이 편차 ≤ 8%'],
-  ['nav-overlap', '고정 nav 겹침 없음'],
-];
-const T0 = Date.parse('2026-09-12T20:10:00+09:00');
-const LIVE_TS = Date.parse('2026-09-13T14:02:40+09:00');
-const APPLIED = [
-  { step: 1, selector: '.hero .btn-book' },
-  { step: 2, selector: '.hero h1' },
-  { step: 3, selector: '.partners' },
-  { step: 4, selector: '.plan-grid, .plan, .plan .go' },
-  { step: 5, selector: '.hero' },
-];
-const SAMPLE = {
-  pack: { id: '0x3c9e5f2a7b1d48e6c0a9f3b2d7e14c5a8b6f0d2e9a1c7b3f5d8e2a4c6b0f1e3d', name: 'Paylane 랜딩 5턴 교정 과정', memory_count: 5, subscriber_count: 1, receipts: 1 },
-  filmstrip: [
-    { defect: '그라데이션 위 반투명 CTA — 흰 글자 대비 2.5:1', fix: '.hero .btn-primary 배경을 불투명 #0b1020 으로 → 대비 15.2:1' },
-    { defect: 'h1 이 1280px 에서 3줄 (56px · 640px 컨테이너 · 37자)', fix: '카피 37자→22자, .hero .copy max-width 640→720px' },
-    { defect: '375px 에서 지원 국가 줄이 1040px 로 넘침 (min-width)', fix: '.countries min-width 제거 + flex-wrap:wrap' },
-    { defect: '요금제 카드 높이 381 / 534 / 419px (편차 28.7%)', fix: '.plans align-items:stretch, .plan flex-column, .plan .cta margin-top:auto' },
-    { defect: '고정 nav(72px) 가 첫 문장(y=24px) 을 덮음', fix: '.hero padding-top 24→112px (nav 72 + 40)' },
-  ].map((x, i) => ({ step: i + 1, thumb: null, ...x, edit_mode: 'targeted', ts: T0 + i * 4 * 60000 + i * 17000, _fixed: ORDER.slice(0, i + 1) })),
-  baseline: [
-    { shot: null, passed: 2, total: 5, ts: Date.parse('2026-09-12T21:30:00+09:00'), _fixed: ['cta-contrast', 'h1-lines'] },
-    { shot: null, passed: 3, total: 5, ts: Date.parse('2026-09-12T21:41:00+09:00'), _fixed: ['cta-contrast', 'h1-lines', 'nav-overlap'] },
-    { shot: null, passed: 2, total: 5, ts: Date.parse('2026-09-12T21:52:00+09:00'), _fixed: ['cta-contrast', 'card-height'] },
-  ],
-  live: { shot: null, passed: 5, total: 5, ts: LIVE_TS, applied: APPLIED, _fixed: ORDER },
-  fallback: { shot: null, passed: 5, total: 5, ts: Date.parse('2026-09-12T22:41:05+09:00'), applied: APPLIED, _fixed: ORDER },
-  tx_log: [
-    { kind: 'subscribe', digest: '7Kq2mXp9vRt4sLw8nBc3dFg6hJk1yZa5eUo0iPq7wEr2', ts: LIVE_TS - 95000 },
-    { kind: 'leave_receipt', digest: 'Bn4vCx8zLm2kJh6gFd1sAp9oIu3yTr7eWq5tYu0iOp3a', ts: LIVE_TS + 38000 },
-    { kind: 'retract', digest: 'Xz3cVb7nMa1sDf5gHj9kLq2wEr4tYu6iOp8aSd0fGh2j', ts: LIVE_TS + 61000 },
-  ],
-};
-
-/* ───────────────────────── 와이어프레임 (썸네일 대체) ───────────────────────── */
-function wire({ tint, label, fixed = [] }) {
-  const f = new Set(fixed);
-  const W = 320, H = 200;
-  const navH = f.has('nav-overlap') ? 22 : 26, heroTop = f.has('nav-overlap') ? 34 : 18;
-  const h1Lines = f.has('h1-lines') ? 2 : 3;
-  const ctaFill = f.has('cta-contrast') ? '#0b1020' : 'rgba(255,255,255,.35)';
-  const ctaStroke = f.has('cta-contrast') ? 'none' : 'rgba(255,255,255,.7)';
-  const cardHs = f.has('card-height') ? [46, 46, 46] : [34, 52, 40];
-  const chipW = f.has('no-hscroll') ? 26 : 40, chips = f.has('no-hscroll') ? 8 : 9;
-  let s = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'>`;
-  s += `<rect width='${W}' height='${H}' fill='#f4f5fa'/><rect width='${W}' height='118' fill='${tint}'/>`;
-  s += `<rect width='${W}' height='${navH}' fill='rgba(255,255,255,.75)'/><rect x='14' y='${navH / 2 - 3}' width='34' height='6' rx='3' fill='#222'/>`;
-  for (let i = 0; i < 4; i++) s += `<rect x='${190 + i * 30}' y='${navH / 2 - 2}' width='20' height='4' rx='2' fill='#556'/>`;
-  let y = heroTop;
-  for (let i = 0; i < h1Lines; i++) { s += `<rect x='14' y='${y}' width='${i === h1Lines - 1 ? 120 : 175}' height='11' rx='3' fill='#fff'/>`; y += 15; }
-  s += `<rect x='14' y='${y + 4}' width='150' height='5' rx='2' fill='rgba(255,255,255,.75)'/>`;
-  s += `<rect x='14' y='${y + 16}' width='64' height='18' rx='6' fill='${ctaFill}' stroke='${ctaStroke}'/><rect x='26' y='${y + 23}' width='40' height='4' rx='2' fill='#fff'/>`;
-  for (let i = 0; i < chips; i++) s += `<rect x='${14 + i * (chipW + 6)}' y='128' width='${chipW}' height='14' rx='4' fill='#fff' stroke='#dfe2ee'/>`;
-  [14, 118, 222].forEach((x, i) => {
-    const h = cardHs[i];
-    s += `<rect x='${x}' y='150' width='84' height='${h}' rx='6' fill='#fff' stroke='#dfe2ee'/><rect x='${x + 10}' y='158' width='40' height='6' rx='2' fill='#333'/><rect x='${x + 10}' y='${150 + h - 14}' width='64' height='8' rx='3' fill='${tint}'/>`;
-  });
-  if (label) {
-    s += `<rect y='${H - 22}' width='${W}' height='22' fill='rgba(10,14,23,.78)'/><text x='10' y='${H - 7}' font-family='system-ui,sans-serif' font-size='11' fill='#fff'>${label}</text>`;
-  }
-  s += `</svg>`;
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
-}
-
-/* ───────────────────────── 상태 ───────────────────────── */
+/* 탭 2·3 은 demo/state/compare-state.json 을 4초마다 다시 읽는다 (형식: scripts/demo-state.ts 의 CompareState).
+   파일이 없으면 비어 있다고 그대로 말한다 — 자리를 채우려고 지어낸 값을 두지 않는다.
+   탭 1 의 수치는 이 파일과 무관한 고정 실측값이다 (docs/ground-truth.md). */
 const STATE_URL = './state/compare-state.json';
-let state = null, source = 'sample', mode = 'live', tab = 'intro', slide = 0, lastText = '', loadedAt = null;
+let state = null, source = 'none', mode = 'live', tab = 'intro', lastText = '', loadedAt = null, note = '';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const hhmmss = (ts) => { if (!ts) return ''; const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleTimeString('ko-KR', { hour12: false }); };
@@ -388,20 +357,34 @@ const short = (s, n = 8) => (s && s.length > n * 2 + 2 ? `${s.slice(0, n)}…${s
 const suiTx = (d) => `https://suiscan.xyz/testnet/tx/${d}`;
 const suiObj = (id) => `https://suiscan.xyz/testnet/object/${id}`;
 
-function imgSrc(p, fallbackOpts) {
-  if (!p) return wire(fallbackOpts);
+/** 사진이 없을 때 자리에 두는 그림. 페이지 모양을 흉내 내지 않는다 — 없다고만 말한다. */
+function noShot(label) {
+  const s = `<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'>` +
+    `<rect width='320' height='200' fill='#0e1322'/>` +
+    `<rect x='.5' y='.5' width='319' height='199' fill='none' stroke='#273049' stroke-dasharray='6 6'/>` +
+    `<text x='160' y='96' text-anchor='middle' font-family='system-ui,sans-serif' font-size='15' fill='#66708c'>사진 없음</text>` +
+    `<text x='160' y='120' text-anchor='middle' font-family='system-ui,sans-serif' font-size='12' fill='#4c5573'>${label || ''}</text>` +
+    `</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+}
+function imgSrc(p) {
+  if (!p) return null;
   if (/^(data:|https?:|blob:)/.test(p)) return p;
   if (/^\.?\/?state\//.test(p)) return p.replace(/^\.?\//, '');
   return 'state/' + p.replace(/^\.?\//, '');
 }
-function img(src, alt, fallbackOpts) {
-  const fb = wire(fallbackOpts);
+function img(p, alt, label) {
+  const fb = noShot(label);
+  const src = imgSrc(p) ?? fb;
   return `<img src="${esc(src)}" alt="${esc(alt)}" loading="eager" onerror="this.onerror=null;this.src=this.dataset.fb" data-fb="${esc(fb)}">`;
 }
-function scoreClass(p, t) { if (!t) return 'bad'; if (p >= t) return 'ok'; if (p / t >= 0.6) return 'mid'; return 'bad'; }
 
+/* ───────── 상태 읽기 ───────── */
 async function load(force = false) {
-  if (location.protocol === 'file:') { useSample('file:// 로 열림 — 샘플 데이터 (node demo/serve.mjs 로 여세요)'); return; }
+  if (location.protocol === 'file:') {
+    setNoState('파일을 직접 열어서 지금 값은 못 읽어요 — node demo/serve.mjs 로 여세요');
+    return;
+  }
   try {
     const res = await fetch(STATE_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status);
@@ -409,127 +392,127 @@ async function load(force = false) {
     if (!force && text === lastText) return;
     lastText = text;
     const parsed = JSON.parse(text);
-    if (!parsed || typeof parsed !== 'object') { // serve.mjs 는 파일이 없으면 null 을 준다
-      if (source === 'live') { state = null; source = 'sample'; }
-      useSample('샘플 데이터 (state/compare-state.json 없음)');
-      return;
-    }
-    state = parsed;
-    source = 'live';
-    loadedAt = Date.now();
+    if (!parsed || typeof parsed !== 'object') { setNoState('아직 기록된 값이 없어요 (state/compare-state.json)'); return; }
+    state = parsed; source = 'live'; note = ''; loadedAt = Date.now();
     render();
   } catch (e) {
-    if (source !== 'live') useSample('샘플 데이터 (state/compare-state.json 없음)');
+    if (source !== 'live') setNoState('아직 기록된 값이 없어요 (state/compare-state.json)');
   }
 }
-function useSample(note) {
-  if (state && source === 'sample') { $('src-pill').textContent = note; return; }
-  state = SAMPLE; source = 'sample'; $('src-pill').textContent = note; render();
+function setNoState(msg) {
+  if (source === 'none' && note === msg) return;
+  state = null; source = 'none'; note = msg; render();
 }
 
-/* ───────────────────────── 렌더 ───────────────────────── */
-function render() {
-  renderStatus(); renderFilmstrip(); renderCompare();
-}
-function renderStatus() {
-  const sp = $('src-pill');
-  if (source === 'live') { sp.className = 'pill'; sp.textContent = `state/compare-state.json · ${hhmmss(loadedAt)} 갱신`; }
-  else sp.className = 'pill sample';
-  const showFallback = usingFallback();
-  const mp = $('mode-pill');
-  mp.className = 'pill ' + (showFallback ? 'fallback' : 'live');
-  mp.textContent = showFallback ? '사전 실행' : 'LIVE';
-  const lp = $('live-pill');
-  lp.className = mp.className; lp.textContent = mp.textContent;
-  $('foot-note').textContent = source === 'sample' ? '샘플 데이터 렌더 중' : '';
-}
+/* ───────── 그리기 ───────── */
+function render() { renderStatus(); renderFilmstrip(); renderCompare(); }
+
 function usingFallback() {
+  if (!state) return false;
   if (mode === 'fallback') return true;
   return !state.live && !!state.fallback;
 }
+function renderStatus() {
+  const sp = $('src-pill'), mp = $('mode-pill'), lp = $('live-pill');
+  if (source === 'live') { sp.className = 'pill'; sp.textContent = `state/compare-state.json · ${hhmmss(loadedAt)} 읽음`; }
+  else { sp.className = 'pill none'; sp.textContent = note; }
+  if (source !== 'live') { mp.className = 'pill none'; mp.textContent = '지금 값 없음'; }
+  else if (usingFallback()) { mp.className = 'pill fallback'; mp.textContent = '미리 돌려둔 값'; }
+  else { mp.className = 'pill live'; mp.textContent = '지금 값'; }
+  lp.className = mp.className; lp.textContent = mp.textContent;
+  $('foot-note').textContent = source === 'live' ? '' : '탭 1 의 실측 수치는 이 상태와 상관없이 그대로예요';
+}
+
 function renderFilmstrip() {
-  const fs = state.filmstrip ?? [];
-  $('fs-title').textContent = `${fs.length}턴, 결함 하나씩 — 훅이 자동 기록한 단계들`;
+  const fs = state?.filmstrip ?? [];
+  $('fs-title').textContent = fs.length ? `${fs.length}번 고친 기록` : '판 사람이 남긴 것';
   $('strip').innerHTML = fs.length ? fs.map((s) => {
     const em = s.edit_mode || 'none';
-    const emLabel = em === 'targeted' ? '선택자만 수정' : em === 'rewrite' ? '재작성' : em;
-    const fb = { tint: '#8f9cf6', label: `step ${s.step}`, fixed: s._fixed ?? ORDER.slice(0, s.step) };
+    const emLabel = em === 'targeted' ? '그 부분만 고침' : em === 'rewrite' ? '다시 씀' : '방식 안 적힘';
     return `<article class="card">
-      <div class="thumb">${img(imgSrc(s.thumb, fb), `step ${s.step}`, fb)}</div>
+      <div class="thumb">${img(s.thumb, `${s.step}번째 화면`, `${s.step}번째`)}</div>
       <div class="body">
-        <div class="head"><span class="stepno">step ${esc(s.step)}</span><span class="badge ${esc(em)}">${esc(emLabel)}</span></div>
-        <div class="line defect"><i></i><span>${esc(s.defect)}</span></div>
-        <div class="line fix"><i></i><span>${esc(s.fix)}</span></div>
+        <div class="head"><span class="stepno">${esc(s.step)}번째</span><span class="badge ${esc(em)}">${esc(emLabel)}</span></div>
+        <div class="line ask"><i></i><span>${esc(s.defect)}</span></div>
+        <div class="line got"><i></i><span>${esc(s.fix)}</span></div>
         <div class="ts">${hhmmss(s.ts)}</div>
       </div></article>`;
-  }).join('') : `<div class="empty">단계 기록이 없습니다 — 판매자 세션 5턴 뒤 <code>mm state</code></div>`;
-  const p = state.pack ?? {};
-  $('packbar').innerHTML = `
-    <div><div class="name">${esc(p.name ?? '팩')}</div>
-      <div class="id mono">${p.id ? `<a href="${suiObj(p.id)}" target="_blank" rel="noopener">${esc(short(p.id, 10))} ↗ Suiscan</a>` : '—'}</div></div>
+  }).join('') : `<div class="empty">${esc(note || '아직 남은 것이 없어요')} — 판 사람 쪽에서 몇 번 고친 뒤 <code>mm state</code> 를 돌리면 여기 채워져요.</div>`;
+
+  const p = state?.pack ?? {};
+  $('packbar').innerHTML = p.id || p.name ? `
+    <div><div class="name">${esc(p.name || '이름 없음')}</div>
+      <div class="id mono">${p.id ? `<a href="${suiObj(p.id)}" target="_blank" rel="noopener">${esc(short(p.id, 10))} ↗ Suiscan</a>` : '주소 없음'}</div></div>
     <div class="counters">
-      <div class="counter"><b>${esc(p.memory_count ?? 0)}</b><span>memories (단계)</span></div>
-      <div class="counter"><b>${esc(p.subscriber_count ?? 0)}</b><span>subscribers</span></div>
-      <div class="counter"><b>${esc(p.receipts ?? 0)}</b><span>receipts</span></div>
-    </div>`;
+      <div class="counter"><b class="tnum">${esc(p.memory_count ?? 0)}</b><span>남긴 횟수</span></div>
+      <div class="counter"><b class="tnum">${esc(p.subscriber_count ?? 0)}</b><span>산 사람</span></div>
+      <div class="counter"><b class="tnum">${esc(p.receipts ?? 0)}</b><span>써보고 남긴 말</span></div>
+    </div>` : `<div class="muted">어느 기록인지 아직 안 적혔어요</div>`;
 }
+
+/** passed/total 을 말로. 점수는 보조 지표라 크게 쓰지 않는다. */
+function verdict(b) {
+  const total = b?.total ?? 0, passed = b?.passed ?? 0;
+  if (!total) return `<span class="verdict bad">검사 결과 없음</span>`;
+  const missed = total - passed;
+  if (missed <= 0) return `<span class="verdict ok">다 잡았어요</span>`;
+  const which = (b.failed ?? []).length ? ` (${(b.failed ?? []).join(', ')})` : '';
+  return `<span class="verdict bad">${missed}군데 못 잡았어요${esc(which)}</span>`;
+}
+
 function renderCompare() {
-  const bl = state.baseline ?? [];
-  $('bl-count').textContent = `사전 실행 ${bl.length}회 · 팩 없이`;
+  const bl = state?.baseline ?? [];
+  $('bl-count').textContent = `${bl.length}회`;
   $('baseline').innerHTML = bl.length ? bl.map((b, i) => {
-    const fb = { tint: '#5fc3b3', label: `사전 실행 ${i + 1}`, fixed: b._fixed ?? [] };
+    const tool = /^oracle/.test(b.label || '') ? ' · 검사 도구 있음' : /^noq/.test(b.label || '') ? ' · 검사 도구 없음' : '';
     return `<div class="bl">
-      <div class="thumb">${img(imgSrc(b.shot, fb), `baseline ${i + 1}`, fb)}</div>
-      <div class="meta"><span class="who">${i + 1}회차 · 팩 없음${/^oracle/.test(b.label || "") ? " · 검사 도구 있음" : /^noq/.test(b.label || "") ? " · 검사 도구 없음" : ""}</span>
-        <span class="score sm ${scoreClass(b.passed, b.total)}">${esc(b.passed)} / ${esc(b.total)}</span>
+      <div class="thumb">${img(b.shot, `기록 없이 ${i + 1}회차`, `${i + 1}회차`)}</div>
+      <div class="meta"><span class="who">${i + 1}회차 · 기록 없이${esc(tool)}</span>
+        ${verdict(b)}
         <span class="when">${hhmmss(b.ts)}</span></div></div>`;
-  }).join('') : `<div class="empty">기준선이 없습니다 — <code>mm baseline --dir …</code> 를 3회</div>`;
+  }).join('') : `<div class="empty">${esc(note || '아직 돌린 것이 없어요')} — <code>mm baseline --dir …</code> 를 돌리면 여기 채워져요.</div>`;
 
   const fallback = usingFallback();
-  const live = fallback ? state.fallback : state.live;
+  const live = state ? (fallback ? state.fallback : state.live) : null;
   const box = $('livebox');
   if (!live) {
-    box.innerHTML = `<div class="thumb">${img(wire({ tint: '#5fc3b3', fixed: [] }), '', { tint: '#5fc3b3', fixed: [] })}</div>
-      <div class="waiting">대기 중 — 구매자 창에서 <code>/improve</code> 뒤 <code>mm state</code><br><span class="small dim">fallback 이 있으면 R 키</span></div>`;
+    box.innerHTML = `<div class="empty">${esc(note || '아직 산 AI 의 결과가 없어요')} — 사는 쪽에서 고치고 써본 말을 남기면 여기 채워져요.</div>`;
     $('caption').innerHTML = '';
+    $('applied-wrap').hidden = true;
     $('applied').innerHTML = '';
   } else {
-    const fb = { tint: '#5fc3b3', label: fallback ? '사전 실행 · 구독 후' : 'LIVE · 구독 후', fixed: live._fixed ?? ORDER };
-    box.innerHTML = `<div class="thumb">${img(imgSrc(live.shot, fb), 'live', fb)}</div>
-      <div class="overlay"><span class="score lg ${scoreClass(live.passed, live.total)}">${esc(live.passed)} / ${esc(live.total)}</span></div>`;
-    $('caption').innerHTML = `<b>검사 ${esc(live.total ?? 5)}항목 = 이 팩이 선언한 보증</b> ${CHECKS.map(([id, d]) => `<span class="chip" title="${esc(d)}">${esc(id)}</span>`).join('')} <span class="dim">${hhmmss(live.ts)}${fallback ? ' · 사전 실행 기록' : ''}</span>`;
+    box.innerHTML = `<div class="thumb">${img(live.shot, '산 AI 가 고친 화면', '산 AI')}</div>`;
+    $('caption').innerHTML = `${verdict(live)} <span class="chip">${esc(live.passed ?? 0)} / ${esc(live.total ?? 0)} 항목</span> <span class="dim">${hhmmss(live.ts)}${fallback ? ' · 미리 돌려둔 값' : ''}</span>`;
     const ap = live.applied ?? [];
     const fsMap = new Map((state.filmstrip ?? []).map((s) => [s.step, s]));
-    $('applied').innerHTML = ap.length ? `<thead><tr><th>적용한 교훈</th><th>팩의 교정 (요지)</th><th>구매자 파일의 선택자</th></tr></thead><tbody>` +
-      ap.map((a) => `<tr><td><b>step ${esc(a.step)}</b></td><td class="muted">${esc(fsMap.get(a.step)?.fix ?? '')}</td><td class="sel mono">${esc(a.selector)}</td></tr>`).join('') + `</tbody>` : '';
+    $('applied-wrap').hidden = !ap.length;
+    $('applied').innerHTML = ap.length
+      ? `<thead><tr><th>이 기록의 몇 번째</th><th class="wrap">거기서 알게 된 것</th><th>산 쪽 파일의 어디에</th></tr></thead><tbody>` +
+        ap.map((a) => `<tr><td><b>${esc(a.step)}번째</b></td><td class="wrap muted">${esc(fsMap.get(a.step)?.fix ?? '이 기록에 안 적혀 있어요')}</td><td class="mono">${esc(a.selector)}</td></tr>`).join('') +
+        `</tbody>`
+      : '';
   }
 
-  const p = state.pack ?? {};
+  const p = state?.pack ?? {};
   $('counters').innerHTML = `
-    <div class="counter"><b>${esc(p.memory_count ?? 0)}</b><span>memories</span></div>
-    <div class="counter"><b>${esc(p.subscriber_count ?? 0)}</b><span>subscribers</span></div>
-    <div class="counter"><b>${esc(p.receipts ?? 0)}</b><span>receipts</span></div>`;
-  const KIND = { subscribe: '구독', leave_receipt: '영수증', retract: '폐기' };
-  const tx = state.tx_log ?? [];
+    <div class="counter"><b class="tnum">${esc(p.memory_count ?? 0)}</b><span>남긴 횟수</span></div>
+    <div class="counter"><b class="tnum">${esc(p.subscriber_count ?? 0)}</b><span>산 사람</span></div>
+    <div class="counter"><b class="tnum">${esc(p.receipts ?? 0)}</b><span>써보고 남긴 말</span></div>`;
+  const KIND = { subscribe: '샀어요', leave_receipt: '써보고 남긴 말', retract: '내렸어요' };
+  const tx = state?.tx_log ?? [];
   $('txs').innerHTML = tx.length ? tx.map((t) => `<li>
       <span class="kind ${esc(t.kind)}">${esc(KIND[t.kind] ?? t.kind)}</span>
-      <span class="mono muted">${esc(short(t.digest, 10))}</span>
-      <span class="dim small">${hhmmss(t.ts)}</span>
+      <span class="mono muted">${esc(short(t.digest, 8))}</span>
+      <span class="dim">${hhmmss(t.ts)}</span>
       <a href="${suiTx(t.digest)}" target="_blank" rel="noopener">Suiscan ↗</a></li>`).join('')
-    : `<li class="empty">아직 트랜잭션이 없습니다</li>`;
+    : `<li class="muted">아직 남은 자리가 없어요</li>`;
 }
 
-/* ───────────────────────── 탭 · 키보드 ───────────────────────── */
+/* ───────── 탭 · 키 ───────── */
 function showTab(name) {
   tab = name;
   document.querySelectorAll('.tab').forEach((el) => { el.hidden = el.id !== `tab-${name}`; });
   document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === name));
-}
-function showSlide(i) {
-  const slides = document.querySelectorAll('.slide');
-  slide = (i + slides.length) % slides.length;
-  slides.forEach((s, k) => s.classList.toggle('on', k === slide));
-  $('slide-nav').textContent = `${slide + 1} / ${slides.length} · ← →`;
 }
 $('tabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) showTab(b.dataset.tab); });
 document.addEventListener('keydown', (e) => {
@@ -540,13 +523,10 @@ document.addEventListener('keydown', (e) => {
   else if (k === '3') showTab('compare');
   else if (k === 'r' || k === 'R') { mode = mode === 'live' ? 'fallback' : 'live'; renderStatus(); renderCompare(); }
   else if (k === 'f' || k === 'F') load(true);
-  else if (k === 'ArrowRight' || k === ' ') { if (tab === 'intro') { showSlide(slide + 1); e.preventDefault(); } }
-  else if (k === 'ArrowLeft') { if (tab === 'intro') showSlide(slide - 1); }
 });
 
-/* ───────────────────────── 시작 ───────────────────────── */
 showTab('intro');
-showSlide(0);
+render();
 load(true);
 setInterval(() => load(false), 4000);
 </script>

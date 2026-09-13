@@ -631,6 +631,7 @@
   var PKG  = '0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196';
   var AGG  = 'https://aggregator.walrus-testnet.walrus.space/v1/blobs/';
   var SCAN = 'https://suiscan.xyz/testnet/';
+  var REPO = 'https://github.com/Blockthon-th/my-project';
   var MIN_TTL = 300000;
 
   /* 이 페이지 대화가 다루는 기록. 비교 수치도 이것으로 잰 것이라 여기에만 붙인다. */
@@ -1060,6 +1061,7 @@
     if(ret){
       links.push('<a href="' + SCAN + 'tx/' + esc(ret.digest) + '" target="_blank" rel="noopener">올렸다가 내린 기록</a>');
     }
+    links.push('<a href="' + REPO + '" target="_blank" rel="noopener">만든 과정과 코드 전부</a>');
     if(links.length) parts.push('<span>' + links.join(' · ') + '</span>');
     el.innerHTML = parts.join('');
   }

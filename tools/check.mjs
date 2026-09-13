@@ -1,15 +1,27 @@
 #!/usr/bin/env node
 /**
- * tools/check.mjs <html 경로> [--viewport 1280x800] [--mobile 375x812] [--only id,id]
+ * tools/check.mjs — 랜딩 **화면** 검사 5항목. (짝: tools/check-copy.mjs 는 한국어 **카피** 6항목)
  *
- * 공유 계약의 5항목을 Playwright 로 계산해 { passed:[], failed:[], details:{} } 를 stdout 에 쓴다. 종료코드 0.
- * 선택자에 의존하지 않고 휴리스틱으로 대상을 찾는다.
+ *   node tools/check.mjs <html 경로|url> [--viewport 1280x800] [--mobile 375x812] [--only id,id]
  *
- *   cta-contrast  첫 <section> 안 가장 큰 a/button 의 전경/배경 대비 ≥ 4.5:1 (배경 = 조상 중 첫 불투명 배경, 그라디언트는 첫 색으로 근사)
- *   h1-lines      1280px 에서 h1 이 2줄 이하 (텍스트 노드 line box 의 top 을 묶어 셈)
- *   no-hscroll    375px 에서 scrollWidth ≤ clientWidth
- *   card-height   가격 패턴(₩|$|원|/월 …)이 든 형제 카드들의 높이 편차 ≤ 8% (없으면 같은 class 의 기능 카드 ≥3, 그것도 없으면 pass)
- *   nav-overlap   position fixed/sticky 인 nav/header 가 첫 텍스트의 bbox 와 겹치지 않음
+ * 무엇을 재나 — 실제 브라우저(Playwright)로 페이지를 띄워 놓고 눈으로 보이는 것을 잰다.
+ * 코드를 읽지 않아도 아래 다섯 줄이 이 도구가 재는 전부다.
+ *
+ *   cta-contrast  버튼이 배경에 묻히지 않는가
+ *                 → 첫 <section> 안 가장 큰 a/button 의 글자색 대 배경색 대비가 4.5:1 이상
+ *                   (배경 = 조상 중 첫 불투명 배경, 그라디언트는 첫 색으로 근사)
+ *   h1-lines      큰 제목이 몇 줄로 떨어지는가
+ *                 → 1280px 폭에서 h1 이 2줄 이하 (텍스트 노드 line box 의 top 을 묶어 센다)
+ *   no-hscroll    폰에서 옆으로 밀리는가
+ *                 → 375px 폭에서 scrollWidth ≤ clientWidth
+ *   card-height   나란히 놓인 카드의 키가 들쭉날쭉한가
+ *                 → 가격 패턴(₩|$|원|/월 …)이 든 형제 카드들의 높이 편차 8% 이하
+ *                   (그런 카드가 없으면 같은 class 의 기능 카드 3개 이상, 그것도 없으면 통과)
+ *   nav-overlap   고정 메뉴가 첫 문장을 가리는가
+ *                 → position fixed/sticky 인 nav/header 가 첫 텍스트의 bbox 와 겹치지 않음
+ *
+ * 출력: { passed:[id…], failed:[id…], details:{…} } 를 stdout 에 JSON 으로. 종료코드 0.
+ * 선택자를 미리 정해두지 않고 휴리스틱으로 대상을 찾으므로, 어느 페이지에나 그대로 돌릴 수 있다.
  *
  * capture.mjs 는 runChecks() 를 직접 import 해서(브라우저 공유) 쓴다.
  */

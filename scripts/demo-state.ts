@@ -53,16 +53,21 @@ export function loadCompareState(): CompareState {
 
 export function saveCompareState(s: CompareState): string {
   mkdirSync(DEMO_STATE_DIR, { recursive: true });
-  s.tx_log = txLogForCompare();
+  s.tx_log = txLogForCompare(s.pack.id);
   writeFileSync(COMPARE_STATE_PATH, JSON.stringify(s, null, 2));
   return COMPARE_STATE_PATH;
 }
 
-/** tx-log.jsonl 에서 compare.html 이 보여줄 세 종류만, 오래된 순, 최근 30건 */
-export function txLogForCompare(): CompareState['tx_log'] {
+/**
+ * tx-log.jsonl 에서 compare.html 이 보여줄 세 종류만, 오래된 순, 최근 30건.
+ * packId 를 주면 **그 기록의 것만** 남긴다 — compare.html 은 한 기록만 다루므로
+ * 다른 기록(만료 실험용 팩 등)의 tx 가 섞여 나오면 안 된다. pack_id 가 없는 옛 줄은 남긴다.
+ */
+export function txLogForCompare(packId?: string): CompareState['tx_log'] {
   const kinds = new Set(['subscribe', 'leave_receipt', 'retract']);
   return readTxLog()
     .filter((e) => kinds.has(e.kind) && typeof e.digest === 'string')
+    .filter((e) => !packId || !e.pack_id || e.pack_id === packId)
     .slice(-30)
     .map((e) => ({ kind: e.kind as CompareState['tx_log'][number]['kind'], digest: e.digest, ts: e.ts }));
 }

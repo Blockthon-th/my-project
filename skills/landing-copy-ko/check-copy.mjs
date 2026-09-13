@@ -1,17 +1,37 @@
+import { realpathSync } from "node:fs";
 /**
- * check-copy.mjs — 한국어 랜딩 카피 검사 6항목.
+ * tools/check-copy.mjs — 한국어 랜딩 **카피** 검사 6항목. (짝: tools/check.mjs 는 **화면** 5항목)
  *
- *   node check-copy.mjs <html|url> [--banned a,b,c] [--viewport 1440x900] [--mobile 375x812]
+ *   node tools/check-copy.mjs <html|url> [--banned a,b,c] [--viewport 1440x900] [--mobile 375x812]
  *
- * 출력: {"passed":[...],"failed":[...],"details":{...}} 를 stdout 으로, 종료코드 0.
+ * 무엇을 재나 — 실제 브라우저(Playwright)로 페이지를 띄워 놓고 거기 보이는 글을 읽어서 잰다.
+ * 코드를 읽지 않아도 아래 여섯 줄이 이 도구가 재는 전부다.
+ *
+ *   first-screen-jargon   처음 보는 사람이 모르는 말로 첫 화면을 시작하는가
+ *                         → 스크롤 없이 보이는 영역에 자사 용어·기술명(기본 목록은 아래 DEFAULT_BANNED) 0건
+ *   honorific-consistent  말투가 오락가락하는가
+ *                         → 해요체와 합니다체를 섞지 않음 (적은 쪽이 전체의 일정 비율을 넘으면 실패)
+ *   no-cleft              AI 가 쓴 티가 나는 문장 구조인가
+ *                         → "핵심은 ~다 / 필요한 것은 ~이다" 같은 분열문 0건
+ *   dash-restraint        대시로 말을 덧붙이는 버릇
+ *                         → 대시(—) 부가설명 3회 이하
+ *   quote-restraint       따옴표로 강조하는 버릇
+ *                         → 따옴표 강조 5회 미만
+ *   no-hscroll-375        폰에서 옆으로 밀리는가
+ *                         → 375px 폭에서 가로 스크롤 없음 (check.mjs 의 no-hscroll 과 같은 잣대)
+ *
+ * 출력: {"passed":[id…],"failed":[id…],"details":{…}} 를 stdout 으로, 종료코드 0.
  * 파일이 없으면 종료코드 3 과 {"error":"file not found"}.
  *
  * 한계(정직하게): 형태소 분석기를 쓰지 않는다. 정규식과 빈도로 본다.
  * 인용문 안의 말투나 코드 블록 안의 문장은 걸러내지만 완벽하지 않다.
  * 실패로 뜬 항목은 사람이 한 번 보고 판단하라는 신호이지 자동 판정이 아니다.
+ *
+ * 이 파일은 skills/landing-copy-ko/check-copy.mjs 와 **같은 내용이어야 한다**. 여기가 정본이다.
  */
 import { existsSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
 export const COPY_CHECKS = [
   { id: 'first-screen-jargon', desc: '첫 화면(스크롤 없이 보이는 영역)에 자사 용어·기술명 0건' },
@@ -128,7 +148,13 @@ export async function runCopyChecks(target, opts = {}) {
 }
 
 const isMain = (u) => {
-  try { return process.argv[1] && pathToFileURL(process.argv[1]).href === u; } catch { return false; }
+  // 정션·심볼릭 링크로 실행하면 Node 가 메인 모듈 경로를 풀어버려 argv[1] 과 import.meta.url 이 어긋난다.
+  // 양쪽 다 realpath 로 맞춘 뒤 비교한다. 이게 없으면 출력도 에러도 없이 종료코드 0 으로 끝난다.
+  try {
+    if (!process.argv[1]) return false;
+    const real = (p) => { try { return realpathSync(p); } catch { return p; } };
+    return real(fileURLToPath(u)).toLowerCase() === real(resolve(process.argv[1])).toLowerCase();
+  } catch { return false; }
 };
 
 if (isMain(import.meta.url)) {
