@@ -2,13 +2,13 @@
   "name": "memory-market-plugins",
   "owner": { "name": "Ray" },
   "metadata": {
-    "description": "Memory Market — 에이전트 기억 팩 구독 시장 (Blockthon 2026)"
+    "description": "Memory Market — AI가 일하며 남긴 기록을 기간제로 파는 시장 (Blockthon 2026)"
   },
   "plugins": [
     {
       "name": "memory-market",
       "source": "./plugin",
-      "description": "다른 개발자의 에이전트가 쌓은 기억을 기간제로 구독한다. Sui·Walrus·Seal 기반.",
+      "description": "다른 사람의 AI가 일하며 남긴 기록을 정해진 기간 동안만 읽는다. Sui·Walrus·Seal 기반.",
       "version": "0.1.0"
     }
   ]
