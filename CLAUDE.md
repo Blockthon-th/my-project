@@ -8,7 +8,8 @@
 - `scripts/` — 공용 층(config·session·tx·market·records·evidence), `mm.ts` CLI, `sync.ts`, `e2e*.ts`, `*.ps1`
 - `scripts/mcp/server.ts` — 구매자 에이전트용 MCP 서버, 도구 7개
   (`market_find`·`market_acquire`·`market_receipt` + `market_list`·`market_preview`·`market_subscribe`·`market_recall`)
-- `tools/` — 포집 훅 `capture.mjs`, 검사 `check.mjs`(5항목), `shot.mjs`, 공용 `lib.mjs`, `selftest.mjs`
+- `tools/` — 포집 훅 `capture.mjs`, 검사 `check.mjs`(디자인 5항목) · `check-copy.mjs`(한국어 카피 6항목), `shot.mjs`, 기준선 훅 `first-edit.mjs`, 공용 `lib.mjs`, `selftest.mjs`
+- `skills/landing-copy-ko/` — 한국어 랜딩 카피 스킬 (`SKILL.md` + `check-copy.mjs` 사본, 두 벌을 같이 고친다)
 - `plugin/` — Claude Code 플러그인 (MCP 번들 + 훅), `.claude-plugin/marketplace.json` 과 짝
 - `demo/` — 판매자·구매자·기준선 템플릿, `compare.html` · `site/` — 랜딩 페이지
 

@@ -847,6 +847,14 @@ async function cmdReceipt() {
   const address = buyer.toSuiAddress();
   const sub = opt.sub ? { id: normalizeObjectId(opt.sub, 'subscription id') } : await findSubscription(address, packId);
   if (!sub) throw new Error(`이 팩의 구독권이 없습니다 (${address})`);
+  // 이미 영수증이 있으면 tx 가 EReceiptExists(abort 5)로 실패한다 — 증거를 공개 저장소에 올리기 전에 확인한다.
+  // (MCP market_receipt 는 같은 검사를 이미 하고 있다. CLI 만 빠져 있어 Walrus 업로드를 버렸다.)
+  const already = (await listReceipts(packId).catch(() => [])).find((r) => r.subscriptionId === sub.id);
+  if (already) {
+    throw new Error(
+      `이 구독권(${sub.id})으로는 이미 영수증을 남겼습니다 (outcome ${already.outcome}). 구독권 1개당 1회 — 새 구독권으로 다시 사거나 다른 지갑을 쓰세요.`,
+    );
+  }
 
   const bytes = ev.bytes;
   console.log(`증거 업로드: ${basename(evidencePath)} (${bytes.length}B) → Walrus 평문`);
