@@ -271,7 +271,7 @@
   #sec-inside .vbox.win .vnum{ color:var(--accent-dark); }
   #sec-inside .vdelta{ background:var(--accent); color:#141414; }
   #sec-inside .vmeta{ color:var(--mute); }
-  /* 처음부터 했을 때 vs 경험을 샀을 때 — 이긴 쪽만 크다 */
+  /* 처음부터 했을 때 vs 경험을 샀을 때 · 이긴 쪽만 크다 */
   .vs{ display:grid; grid-template-columns:5fr 7fr; gap:32px; margin-top:56px; align-items:stretch; }
   .vbox{ padding-top:22px; border-top:1px solid #5b5b5b; }
   .vbox .vlab{ font-size:17px; color:var(--ondark-soft); }
@@ -338,7 +338,7 @@
   .dlockline{ color:var(--mute); }
   .items .row{ grid-template-columns:40px minmax(0,1fr); gap:20px; }
   .items .row::after{ background:#d8d8d8; transform:scaleX(1); }
-  /* 이 기록을 쓰면 — 시간·사용료·횟수 세 칸 */
+  /* 이 기록을 쓰면 · 시간·사용료·횟수 세 칸 */
   .save{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 32px; }
   .sv{ padding:18px 0 20px; border-top:1px solid #d8d8d8; }
   .sv .k{ font-size:17px; font-weight:700; color:var(--ink); }
@@ -487,9 +487,9 @@
       <p class="lead w reveal" style="--d:100ms">웹디자이너 경험 안에 든 대화 열 개 중 세 개예요.</p>
 
       <div class="ba reveal">
-        <figure class="baf"><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 처음 만든 것" aria-label="AI 가 처음 만든 것 — 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="AI 가 처음 만든 것"></button><figcaption>AI 가 처음 만든 것</figcaption></figure>
+        <figure class="baf"><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 처음 만든 것" aria-label="AI 가 처음 만든 것. 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="AI 가 처음 만든 것"></button><figcaption>AI 가 처음 만든 것</figcaption></figure>
         <div class="baarrow" aria-hidden="true">→</div>
-        <figure class="baf"><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="열 번 대화한 뒤" aria-label="열 번 대화한 뒤 — 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="열 번 대화한 뒤"></button><figcaption>열 번 대화한 뒤</figcaption></figure>
+        <figure class="baf"><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="열 번 대화한 뒤" aria-label="열 번 대화한 뒤. 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="열 번 대화한 뒤"></button><figcaption>열 번 대화한 뒤</figcaption></figure>
       </div>
       <ul class="bachg">
         <li class="reveal" style="--d:0ms"><s>보라색 그라데이션</s><span class="ar" aria-hidden="true">→</span><b>흰 바탕에 색 하나</b></li>
@@ -596,7 +596,7 @@
   SELLER['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = ['4년차 카피라이터', 'CW', '#e6f2d9'];
   SELLER['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = ['3년차 블록체인 개발자', 'DEV', '#efe6ff'];
 
-  /* 뭘 만들었나 — 상세 머리에 쓰는 한 줄 */
+  /* 뭘 만들었나 · 상세 머리에 쓰는 한 줄 */
   var MADE = {};
   MADE[SLOP_ID]  = 'AI 가 뱉은 보라색 랜딩을 열 번 고쳐서 제품이 보이는 페이지로 만들었어요.';
   MADE[STORY_ID] = '송금 앱 랜딩에서 틀린 다섯 군데를 하나씩 잡았어요.';
@@ -892,10 +892,10 @@
 
   var SHOTS = '<div class="shots">'
     + '<div><div class="cap">AI 가 만든 것</div>'
-    + '<button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 만든 것" aria-label="AI 가 만든 것 — 눌러서 크게 보기">'
+    + '<button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 만든 것" aria-label="AI 가 만든 것. 눌러서 크게 보기">'
     + '<img src="img/slop-before.jpg" width="1280" height="800" alt="보라색 배경에 영어 문구가 박힌 랜딩 화면"></button></div>'
     + '<div><div class="cap">이 기록대로 고친 것</div>'
-    + '<button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="이 기록대로 고친 것" aria-label="이 기록대로 고친 것 — 눌러서 크게 보기">'
+    + '<button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="이 기록대로 고친 것" aria-label="이 기록대로 고친 것. 눌러서 크게 보기">'
     + '<img src="img/clean-after.jpg" width="1280" height="800" alt="지금 보고 있는 이 랜딩의 첫 화면"></button></div>'
     + '</div>';
 
@@ -912,7 +912,7 @@
     var im = OURIMG[p.id];
     if(!im) return '';
     return '<div class="shots"><div><div class="cap">안에 든 것</div>'
-      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + ' — 눌러서 크게 보기">'
+      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + '. 눌러서 크게 보기">'
       + '<img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '" loading="lazy"></button></div></div>';
   }
   function cardShot(p){
@@ -993,13 +993,13 @@
   }
 
   /* ---------- 상세 화면 ---------- */
-  /* 만든 것 — 글 대신 사진. 01 은 우리 전후, Paylane 은 체인의 전후, 나머지는 우리가 만든 한 장. */
+  /* 만든 것 · 글 대신 사진. 01 은 우리 전후, Paylane 은 체인의 전후, 나머지는 우리가 만든 한 장. */
   function madeBlock(p){
     var head = '<div class="wrap block"><h2>만든 것</h2>';
     if(p.id === SLOP_ID){
       return head + '<div class="shots" style="max-width:900px">'
-        + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="고치기 전" aria-label="고치기 전 — 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="고치기 전"></button></div>'
-        + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="고친 뒤" aria-label="고친 뒤 — 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="고친 뒤"></button></div>'
+        + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="고치기 전" aria-label="고치기 전. 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="고치기 전"></button></div>'
+        + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="고친 뒤" aria-label="고친 뒤. 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="고친 뒤"></button></div>'
         + '</div></div>';
     }
     if(isSheet(p) && p.preview.sheet.previews && p.preview.sheet.previews.before && p.preview.sheet.previews.after){
@@ -1012,10 +1012,10 @@
     var im = OURIMG[p.id];
     if(!im) return '';
     return head + '<div class="shots" style="max-width:900px"><div>'
-      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + ' — 눌러서 크게 보기"><img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '"></button>'
+      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + '. 눌러서 크게 보기"><img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '"></button>'
       + '</div></div></div>';
   }
-  /* 안에 든 대화 — 세 쌍은 열어 보여주고 나머지는 흐리게. 나(오른쪽)와 AI(왼쪽). */
+  /* 안에 든 대화 · 세 쌍은 열어 보여주고 나머지는 흐리게. 나(오른쪽)와 AI(왼쪽). */
   function chatBlock(p, steps, open){
     var pick = SHOW3[p.id] || [];
     var idx = [];
@@ -1037,7 +1037,7 @@
   }
   /* 이 기록을 쓰면 얼마나 줄어드나. 실제로 잰 건 웹퍼블리셔 경험 하나라, 나머지는 그 비율을 예상으로 보여준다.
      숫자는 docs/ground-truth.md 실측 표의 것만 쓴다. 기록 없이 세 번 평균 4분 20초 · $1.42 · 약 20번. */
-  /* 이 기록을 쓰면 — 웹퍼블리셔(STORY_ID)만 실측, 나머지 셋은 데모용 가상 값이다. README 솔직한 한계에 적혀 있다. */
+  /* 이 기록을 쓰면 · 웹퍼블리셔(STORY_ID)만 실측, 나머지 셋은 데모용 가상 값이다. README 솔직한 한계에 적혀 있다. */
   var SAVE = {};
   SAVE[STORY_ID] = ['3분 30초', '2분 0초', '43% 빨라요', '$1.17', '$0.70', '40% 덜 들어요'];
   SAVE[SLOP_ID]  = ['6분 10초', '2분 40초', '57% 빨라요', '$2.05', '$0.85', '59% 덜 들어요'];
@@ -1276,7 +1276,7 @@
       detailEl.hidden = false;
       renderDetail(r.id);
       if(!sameDetail) window.scrollTo(0, 0);
-      document.title = '기록 상세 — 당신의 경험을 사겠습니다';
+      document.title = '기록 상세 · 당신의 경험을 사겠습니다';
       currentView = 'detail';
       return;
     }
