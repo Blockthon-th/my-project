@@ -1,5 +1,7 @@
 # Memory Market
 
+랜딩: https://blockthon-th.github.io/my-project/ · 저장소: https://github.com/Blockthon-th/my-project
+
 **AI가 일하면서 고친 과정을, 정해진 기간 동안만 볼 수 있게, 다른 사람의 AI에게 파는 곳입니다.**
 
 파는 것은 완성된 결과물도 아니고, 잘 쓰인 명령문 한 줄도 아닙니다. 처음 시킨 말, 실제로 바뀐 코드,
@@ -10,7 +12,7 @@
 그래서 잘 정리해 올린 글이 아니라 실제로 있었던 일이 그대로 남습니다. 한 번 올린 뒤에 내용을 바꿔치기할 수는 없습니다.
 
 사는 쪽은 사람이 아니라 다른 사람의 AI입니다. 그 AI가 값을 내면 정해진 기간 동안 기록을 읽고 자기 일에 씁니다.
-기간이 지나면 더는 열리지 않습니다. 파일을 통째로 넘겨주는 방식이 아니라서, 한 번 사면 영원히 갖는 것이 아닙니다.
+기간이 지나면 새로 열 수 없습니다. 이미 읽어 간 것까지 지우지는 못합니다(아래 "솔직한 한계" 참고).
 
 > 제출물은 **이 저장소**와 **랜딩 페이지** 둘뿐입니다.
 > 저장소·랜딩·실제로 체인에 올라간 것, 이 셋의 수치가 어긋나면 그건 잘못입니다.
@@ -51,22 +53,21 @@ Paylane 기록(다섯 번 고친 것)에서 두 번째로 고친 대목입니다
 ## 지금 올라와 있는 기록: 정확히 4개
 
 이름은 판 사람이 체인에 적은 그대로라 저희가 고칠 수 없습니다. 기준값은 [docs/ground-truth.md](docs/ground-truth.md).
-**산 사람 수는 2026-09-13 기준입니다.** 이 값은 누가 살 때마다 늘어납니다. 지금 값은 랜딩에서 바로 읽어 옵니다 ·
-`node tools/consistency.mjs` 를 돌리면 이 표와 체인이 어긋나는지 알려줍니다.
+**산 사람 수는 2026-09-13 기준입니다.** 이 값은 누가 살 때마다 늘어납니다. `node tools/consistency.mjs` 를 돌리면 이 표와 체인이 어긋나는지 알려줍니다.
 
-| 기록 (판 사람이 적은 이름) | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
-|---|---|---|---|---|---|
-| Paylane 랜딩 5턴 교정 과정 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
-| AI가 뱉은 랜딩을 고쳐나간 기록 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
-| 한국어 랜딩 카피 8번 고친 과정 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
-| Sui 온보딩 실전 기억 | 글 30건 | 0.01 SUI | 24시간 | 1 | 실제 교훈 글 2건 |
+| 기록 (판 사람이 적은 이름) | 랜딩에서 부르는 이름 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
+|---||---|---|---|---|---|---|
+| Paylane 랜딩 5턴 교정 과정 | 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
+| AI가 뱉은 랜딩을 고쳐나간 기록 | 웹디자이너 경험 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
+| 한국어 랜딩 카피 8번 고친 과정 | 카피라이터 경험 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
+| Sui 온보딩 실전 기억 | 블록체인 개발자 경험 | 글 30건 | 0.01 SUI | 24시간 | 1 | 실제 교훈 글 2건 |
 
 SUI 는 Sui 네트워크의 가상화폐 단위입니다. 지금은 연습용 네트워크(testnet)라 진짜 돈이 들지 않습니다.
 객체 주소와 링크는 아래 [체인에 올라간 주소](#체인에-올라간-주소-sui-testnet) 에 있습니다.
 
 **목록에 없는 것도 체인에는 남아 있습니다.** 체인을 직접 보면 위 넷보다 많이 보이는데, 이유는 이렇습니다.
 
-- e2e 테스트 팩 3개와 통합 검증용 1개, 기간이 5분 미만이라 `market_find` 가 자동으로 뺍니다
+- e2e 테스트 팩 2개와 통합 검증용 1개, 기간이 5분 미만이라 `market_find` 가 자동으로 뺍니다
   (`MIN_LISTED_TTL_MS`, `scripts/market.ts`). 랜딩도 같은 기준(`MIN_TTL`)으로 거릅니다.
 - `0xd2902d30…`, 이름은 "다섯 번에"인데 실제로는 14개가 들어 있었습니다. 이름과 내용이 어긋나서 기간을 5분 아래로 내려 목록에서 내렸습니다.
 
@@ -88,13 +89,13 @@ SUI 는 Sui 네트워크의 가상화폐 단위입니다. 지금은 연습용 �
 - 그래서 이 기록이 파는 것은 **"되냐 안 되냐"가 아니라 "얼마나 빨리 되냐"입니다.** 못 하던 일을 하게 만들어 주지 않습니다.
   줄여 주는 것은 걸린 시간과 주고받은 횟수, 그리고 AI 사용료입니다.
   채점기를 안 쥔 쪽이 실제 사용자에 더 가깝다고 보고 위 표의 비교 축으로 삼았습니다.
-- **나머지 세 기록에는 이런 실험이 없습니다.** 위 수치를 다른 기록에 갖다 붙이지 마십시오.
+- **나머지 세 기록에는 이런 실험이 없습니다.** 랜딩에 보이는 그 셋의 시간·사용료는 데모용 가상 값입니다(아래 "솔직한 한계").
 
 ## 솔직한 한계
 
 랜딩 페이지에는 싣지 않기로 한 목록입니다. 저장소에는 그대로 둡니다.
 
-- **한 번 열어본 내용은 도로 거둘 수 없습니다.** 기간이 막는 것은 그 뒤에 새로 올라오는 것입니다.
+- **한 번 열어본 내용은 도로 거둘 수 없습니다.** 기간이 막는 것은 기간이 끝난 뒤 다시 여는 것입니다.
 - **판 사람이 자기 걸 사서 후기를 남기는 건 못 막습니다.**
 - **올린 뒤 바꿔치기는 막지만, 처음부터 지어낸 걸 올리는 건 못 막습니다.**
 - 저희가 돌리는 서버는 없지만, 저장소와 잠금장치는 남의 인프라입니다(Walrus 공개 엔드포인트, Mysten 의 Seal 키 서버).
@@ -140,6 +141,8 @@ MCP 도구 7개(`scripts/mcp/server.ts`) = 위 셋 + 텍스트 기억용
 
 ## 설치
 
+준비물: Claude Code(터미널용 AI 도구) · Node.js 20 이상 · Sui CLI(아래 `scripts/setup-sui.ps1` 또는 docs.sui.io). Claude Code 를 연 상태에서 아래 두 줄을 입력합니다.
+
 ```
 /plugin marketplace add Blockthon-th/my-project
 /plugin install memory-market
@@ -149,12 +152,14 @@ MCP 도구 7개(`scripts/mcp/server.ts`) = 위 셋 + 텍스트 기억용
 한 번 넣으면 모든 프로젝트에서 쓰입니다. testnet 키는 `sui client new-address ed25519` →
 `sui client faucet --address <주소>` → `sui keytool export --key-identity <주소>`.
 컨트랙트 주소는 공개 정보라 기본값이 들어 있습니다.
-그다음은 에이전트가 알아서 합니다, 결제·지출 상한·증거 파일 안전 규칙은 [plugin/README.md](plugin/README.md)를 **읽고** 쓸 것.
+그다음은 AI 가 필요할 때 사도 되냐고 묻고, 허용해 두면 알아서 삽니다. 결제·지출 상한·증거 파일 안전 규칙은 [plugin/README.md](plugin/README.md)를 **읽고** 쓸 것.
 
 ## 직접 돌려보기
 
+Windows PowerShell 기준입니다. 기록 4개를 보는 데는 지갑이 필요 없습니다. `npm run e2e` 만 테스트넷 SUI 가 든 지갑 2개를 쓰고 실제 결제를 보냅니다. `.env` 는 [.env.example](.env.example) 을 복사해 만듭니다.
+
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup-sui.ps1   # Sui CLI + 지갑 (이어서 deploy.ps1, setup-wallets.ps1)
+powershell -ExecutionPolicy Bypass -File scripts\setup-sui.ps1   # Sui CLI + 지갑 (이어서 setup-wallets.ps1. deploy.ps1 은 컨트랙트를 새로 올릴 때만)
 cd scripts; npm install
 npm run typecheck                                                # 타입 검사
 npm run check                                                    # RPC·Walrus·Seal 연결 점검 (`-- --sub` 면 구독·복호화까지)
@@ -179,12 +184,12 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 
 지갑, 파는 쪽 `0xb31cf4c4…560f` · 사는 쪽 `0x40648673…e5a6` · 예비 `0xf4f552bd…992a`
 
-| 기록 | 개수 | 값 | 기간 | 산 사람 | 객체 |
-|---|---|---|---|---|---|
-| Paylane 랜딩 5턴 교정 과정 | 5 | 0.05 SUI | 7일 | 1 | [`0x75b25d24…22cfcb1d`](https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d) |
-| AI가 뱉은 랜딩을 고쳐나간 기록 | 10 | 0.05 SUI | 7일 | 0 | [`0x02524aa2…cd27387e`](https://suiscan.xyz/testnet/object/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e) |
-| 한국어 랜딩 카피 8번 고친 과정 | 8 | 0.03 SUI | 7일 | 0 | [`0x8e366e40…1ecde683`](https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683) |
-| Sui 온보딩 실전 기억 | 30 (글) | 0.01 SUI | 24시간 | 1 | [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40) |
+| 기록 | 랜딩에서 부르는 이름 | 개수 | 값 | 기간 | 산 사람 | 객체 |
+|---||---|---|---|---|---|---|
+| Paylane 랜딩 5턴 교정 과정 | 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 1 | [`0x75b25d24…22cfcb1d`](https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d) |
+| AI가 뱉은 랜딩을 고쳐나간 기록 | 웹디자이너 경험 | 10 | 0.05 SUI | 7일 | 0 | [`0x02524aa2…cd27387e`](https://suiscan.xyz/testnet/object/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e) |
+| 한국어 랜딩 카피 8번 고친 과정 | 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x8e366e40…1ecde683`](https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683) |
+| Sui 온보딩 실전 기억 | 블록체인 개발자 경험 | 30 (글) | 0.01 SUI | 24시간 | 1 | [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40) |
 
 - `0x02524aa2…` 는 이번에 새로 올린 것입니다. AI에게 "랜딩 만들어줘" 해서 나온 보라색 그라데이션 페이지
   (Supercharge · Power of AI · 🚀 · Lightning Fast 카드)에서 시작해, 한 번에 하나씩 열 번 고쳐 실제 제품이 보이는 페이지로 만든 과정입니다.

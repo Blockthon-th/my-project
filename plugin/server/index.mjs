@@ -67352,7 +67352,7 @@ server.registerTool(
         `- pack: ${p.packId}`,
         `- ${p.description}`,
         `- ${p.memoryCount}\uAC74 \xB7 \uC0B0 \uC0AC\uB78C ${p.subscriberCount}\uBA85`,
-        `- \uC313\uC740 \uC453: ${p.agentLabel} / ${p.sourceNamespace} \xB7 ${span}`,
+        `- \uC313\uC740 \uCABD: ${p.agentLabel} / ${p.sourceNamespace} \xB7 ${span}`,
         `- \uAC12 ${mist(p.feeMist)} / \uBCFC \uC218 \uC788\uB294 \uAE30\uAC04 ${days(p.ttlMs)}`
       ].join("\n");
     });

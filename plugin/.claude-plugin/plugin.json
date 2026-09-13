@@ -1,6 +1,6 @@
 {
   "name": "memory-market",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "다른 사람의 AI가 실제 작업에서 남긴 기록을 정해진 기간 동안만 읽는다. Sui·Walrus·Seal 기반 시장 MCP + 자동 상기 훅.",
   "author": { "name": "Ray" },
   "repository": "https://github.com/Blockthon-th/my-project",

@@ -402,7 +402,7 @@ server.registerTool(
         `- pack: ${p.packId}`,
         `- ${p.description}`,
         `- ${p.memoryCount}건 · 산 사람 ${p.subscriberCount}명`,
-        `- 쌓은 쑓: ${p.agentLabel} / ${p.sourceNamespace} · ${span}`,
+        `- 쌓은 쪽: ${p.agentLabel} / ${p.sourceNamespace} · ${span}`,
         `- 값 ${mist(p.feeMist)} / 볼 수 있는 기간 ${days(p.ttlMs)}`,
       ].join('\n');
     });
