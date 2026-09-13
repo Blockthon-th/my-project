@@ -4,10 +4,10 @@
 인라인 `<style>`/`<script>`만 쓴다. 빌드가 없어서 파일을 그대로 정적 호스팅에 올리면 된다.
 **CSS·JS 를 별도 파일로 빼지 마라.** 배포되는 것은 `site/index.html` 과 `site/img/` 뿐이다.
 
-카피 규칙은 `docs/glossary.md`, 수치와 사실은 `docs/ground-truth.md` 가 유일한 기준이다.
+카피 규칙은 `README 의 말투 기준`, 수치와 사실은 `README 의 기록 표` 가 유일한 기준이다.
 
 ## 화면 구성 (칸 넷)
-문장 규칙은 `docs/glossary.md` 를 따른다. 여기는 구조만 적는다.
+문장 규칙은 `README 의 말투 기준` 를 따른다. 여기는 구조만 적는다.
 
 1. **첫 화면** (`section.hero`), 파는 쪽에게 말을 건다. 라벨 · 돌아가는 제목 · 한 문장 · 버튼 하나.
    상단 바가 이 칸 안에 있고 `position:relative` 라 스크롤을 안 따라온다(`nav-overlap` 이 구조로 통과한다).
@@ -21,7 +21,7 @@
    실측 두 칸(시간 · 주고받은 횟수 · AI 사용료). 점수를 쓰지 않는다.
    실측 두 칸은 나란한 격자 자식이라 키가 저절로 같아진다. **한 칸만 따로 감싸면 `card-height` 가 깨진다.**
 4. `#sec-sell` (회색 칸), 파는 쪽 진입로. 설치 두 줄이 여기뿐이다.
-5. 맨 아래 (`div.bottom`), Sui · Walrus · Seal 을 각각 한 번 쓸 수 있는 유일한 칸(`docs/glossary.md`).
+5. 맨 아래 (`div.bottom`), Sui · Walrus · Seal 을 각각 한 번 쓸 수 있는 유일한 칸(`README 의 말투 기준`).
 
 돌아가는 제목은 `.slot` 폭을 제일 긴 말 기준 `10.1em` 으로 못 박고 `clip-path` 로 가로로 닦아 갈아끼운다.
 **세로로 밀면 안 된다.** `tools/check.mjs` 의 `h1-lines` 가 그 순간 세 줄로 세어 검사가 깨진다.

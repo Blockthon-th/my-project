@@ -29,7 +29,6 @@ Memory Market 은 그 대화 기록을 공개하고 사고파는 자리입니다
 | 진짜인지 | 확인할 방법이 없습니다 | 올린 뒤 바꿔치기가 안 되고, 후기는 산 쪽만 남깁니다 |
 
 > 제출물은 **이 저장소**와 **랜딩 페이지** 둘뿐입니다. 저장소·랜딩·체인에 올라간 것, 셋의 수치가 어긋나면 그건 잘못입니다.
-> 모든 수치의 기준값은 [docs/ground-truth.md](docs/ground-truth.md) 한 곳에 있습니다.
 
 ## 안에 뭐가 들어 있나
 
@@ -46,7 +45,6 @@ Memory Market 은 그 대화 기록을 공개하고 사고파는 자리입니다
 
 ## 지금 올라와 있는 기록: 정확히 4개
 
-기준값은 [docs/ground-truth.md](docs/ground-truth.md).
 **산 사람 수는 2026-09-13 기준입니다.** 이 값은 누가 살 때마다 늘어납니다. `node tools/consistency.mjs` 를 돌리면 이 표와 체인이 어긋나는지 알려줍니다.
 
 | 기록 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
@@ -152,7 +150,7 @@ node check-copy.mjs ..\site\index.html                           # 한국어 카
 cd ..; node tools\consistency.mjs                                # 랜딩·저장소·체인이 어긋나는지
 ```
 
-마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 아홉 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
+마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 이 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 아홉 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
 인터넷 연결이 필요합니다.
 
 `.env` 는 [.env.example](.env.example) 참고, 커밋 금지. 데모 실행은 [demo/README.md](demo/README.md).
@@ -200,12 +198,10 @@ skills/                   landing-copy-ko 한국어 랜딩 카피 스킬 (카피
 plugin/                   Claude Code 플러그인 (MCP 번들 + 훅), .claude-plugin/marketplace.json 과 짝
 demo/                     seller · buyer · baseline 템플릿 (기록을 다시 만들고 실험을 재현할 때 쓴다) · setup.ps1
 site/                     랜딩 페이지, index.html 단일 파일, 브라우저에서 체인과 Walrus 를 직접 읽는다
-docs/                     ground-truth.md 수치 기준값 · glossary.md 어휘 규칙 · DEMO.md 3분 대본 ·
                           dev-memories.md 개발 기억 30건(Sui 기록의 원천이자 그 자체로 상품)
 ```
 
 층별 문서 [contracts](contracts/memory_market/README.md) · [tools](tools/README.md) · [plugin](plugin/README.md) ·
-[demo](demo/README.md) · [site](site/README.md) · 기획(문제 정의·신뢰 모델) [PLANNING.md](PLANNING.md).
 
 ## 로드맵
 

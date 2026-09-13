@@ -6,7 +6,7 @@
 > 검사 도구만 쥐여주면 팩 없이도 3회 다 결국 5/5 를 맞춘다(176 / 201 / 226초). 그래서 파는 것은 **되냐 안 되냐가 아니라 얼마나 빨리 되냐**다.
 > 만료된 구독은 Seal 이 열쇠를 거부하고, 낡은 단계는 판매자가 폐기하면 다음 recall 에서 빠진다.
 
-숫자는 전부 [ground-truth.md](ground-truth.md) 값이다. 이 대본과 어긋나면 ground-truth 가 맞다.
+숫자는 전부 README 의 기록 표 값이다. 이 대본과 어긋나면 ground-truth 가 맞다.
 
 **발표 화면은 공개 랜딩(https://blockthon-th.github.io/my-project/)을 그대로 띄운다.** 별도 비교 화면(compare.html)은 저장소에서 뺐다.
 아래 대본의 D 탭1 / 탭2 / 탭3 은 각각 랜딩의 첫 화면 / 기록 상세(`#/pack/…`) / 상세의 "이 기록을 쓰면" 칸으로 읽는다. `R`·`F` 키는 없다.
@@ -45,7 +45,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 
 ## 지금 체인에 올라와 있는 것: 팩 넷
 
-기준값은 [ground-truth.md](ground-truth.md). 이 표와 어긋나면 ground-truth 가 맞다.
+기준값은 README 의 기록 표. 이 표와 어긋나면 ground-truth 가 맞다.
 
 패키지 `0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196` ·
 지갑, 판매자 `0xb31cf4c4…560f` · 구매자 `0x40648673…e5a6` · 예비 `0xf4f552bd…992a`
@@ -110,7 +110,7 @@ MCP 서버는 시작할 때 키를 읽으므로 **구매자 창(`claude`)을 껐
 - [ ] **Claude Code 로그인·신뢰** (2026-09-07 실측에서 두 번 걸린 지점):
   - npm 설치본은 PATH 에 없다: `& "$env:APPDATA\npm\claude.cmd" auth login` (또는 사용자 PATH 에 `%APPDATA%\npm` 추가)
   - 각 데모 폴더(`C:\demo\seller`, `buyer`, `baseline-*`)에서 `claude` 를 한 번 열어 **신뢰 대화상자 수락**. 수락 전에는 `.claude/settings.json` 의 `permissions.allow` 가 무시되어 `market_find` 가 "haven't granted" 로 거부된다. 헤드리스(`claude -p`)로 돌릴 때는 `~/.claude.json` 의 `projects["C:/demo/buyer"].hasTrustDialogAccepted: true` 가 있어야 한다
-- [ ] **오늘 체인 상태를 다시 확인한다**, 위 "지금 체인에 올라와 있는 것" 표와 [ground-truth.md](ground-truth.md) 가 같은 값인지.
+- [ ] **오늘 체인 상태를 다시 확인한다**, 위 "지금 체인에 올라와 있는 것" 표와 README 의 기록 표 가 같은 값인지.
 - [ ] **`0xef238e43…` 로 돌릴지 결정.** Paylane 팩으로 갈 거면 **예비 지갑 BUYER2 로 바꾼다**(맨 위 "예비 지갑으로 바꾸기").
       구독권 만료(2026-09-14 23:14:31 KST) 뒤라면 원래 구매자 지갑 그대로도 된다, 새 구독권이 발급되므로 영수증도 새로 남는다
 - [ ] `powershell -ExecutionPolicy Bypass -File C:\mm\demo\setup.ps1` → `C:\demo\{seller,buyer,baseline-1..3}`
