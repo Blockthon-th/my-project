@@ -600,7 +600,7 @@
      판 사람이 체인에 적어둔 이름은 못 고치니 상세 화면에 그대로 둔다.
      여기 없는 기록이 새로 올라오면 판 사람이 적은 이름을 그대로 쓴다. */
   var OURNAME = {};
-  OURNAME[SLOP_ID]  = ['웹디자이너 경험', 'AI 가 뱉은 보라색 화면을 열 번에 걸쳐 고쳤어요. 색을 몇 개까지 줄일지 정한 판단이 들어 있어요.'];
+  OURNAME[SLOP_ID]  = ['웹디자이너 경험', 'AI 티나는 화면을 열 번에 걸쳐 고쳤어요. 색을 몇 개까지 줄일지 정한 판단이 들어 있어요.'];
   OURNAME[STORY_ID] = ['웹퍼블리셔 경험', '버튼이 묻히고 제목이 넘치고 폰에서 옆으로 밀리던 것을 다섯 번에 걸쳐 잡았어요.'];
   OURNAME['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] =
     ['카피라이터 경험', '한국어 랜딩 문구를 여덟 번 고쳤어요. 첫 화면에 어떤 말을 쓰면 안 되는지가 들어 있어요.'];
@@ -619,10 +619,10 @@
 
   /* 뭘 만들었나 · 상세 머리에 쓰는 한 줄 */
   var MADE = {};
-  MADE[SLOP_ID]  = 'AI 가 뱉은 보라색 랜딩을 열 번 고쳐서 제품이 보이는 페이지로 만들었어요.';
+  MADE[SLOP_ID]  = 'AI 티나는 랜딩을 열 번 고쳐서 제품이 보이는 페이지로 만들었어요.';
   MADE[STORY_ID] = '송금 앱 랜딩에서 틀린 다섯 군데를 하나씩 잡았어요.';
-  MADE['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = '한국어 랜딩 문구를 여덟 번 고쳤어요.';
-  MADE['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = 'Sui 를 처음 붙이며 막힌 자리 서른 개를 적어뒀어요.';
+  MADE['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = '한국어 랜딩 문구를 여덟 번 고친 기록이에요. 고칠 때마다 무엇을 요청했고 왜 그렇게 바꿨는지, 어느 줄이 바뀌었는지가 함께 들어 있어요.';
+  MADE['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = 'Sui 를 처음 붙이며 막힌 자리 서른 개를 적은 글이에요. 자리마다 무엇이 막혔는지와 어떻게 풀었는지가 한 쌍으로 적혀 있어요. 사진은 없어요.';
 
   /* 체인에 사진이 없는 기록에 붙이는 우리 사진. 안에 든 실제 글로 만들었다. */
   var OURIMG = {};
@@ -1017,7 +1017,7 @@
   /* ---------- 상세 화면 ---------- */
   /* 어떤 경험을 했냐면요 · 기록마다 두 문장 */
   var STORY_TXT = {};
-  STORY_TXT[SLOP_ID]  = 'AI 한테 랜딩을 시켰더니 보라색 그라데이션에 영어 문구가 박힌 화면이 나왔어요. 열 번 고치면서 색을 몇 개까지 줄일지, 제목을 몇 자로 쓸지 기준이 생겼어요.';
+  STORY_TXT[SLOP_ID]  = 'AI 한테 랜딩을 시켰더니 AI 티나는 디자인이 나왔어요. 열 번 고치면서 색을 몇 개까지 줄일지, 제목을 몇 자로 쓸지 기준이 생겼어요.';
   STORY_TXT[STORY_ID] = '송금 앱 랜딩을 받았는데 버튼이 안 보이고 폰에서 옆으로 밀렸어요. 다섯 번 만에 다 잡았고, 어디부터 손대면 되돌아가지 않는지 알게 됐어요.';
   STORY_TXT['0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8'] = '우리 서비스를 소개하는 문장이 저희끼리만 알아듣는 말투성이였어요. 여덟 번 고치면서 첫 화면에 쓰면 안 되는 말이 뭔지 정리됐어요.';
   STORY_TXT['0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a'] = 'Sui 를 처음 붙이는데 문서대로 해도 막히는 데가 계속 나왔어요. 막힌 자리마다 원인과 해결을 적어 서른 개가 모였어요.';
@@ -1026,7 +1026,7 @@
     if(!t) return '';
     return '<div class="wrap block"><h2>어떤 경험을 했냐면요</h2><p class="body" style="max-width:720px">' + esc(t) + '</p></div>';
   }
-  /* 만든 것 · 글 대신 사진. 01 은 우리 전후, Paylane 은 체인의 전후, 나머지는 우리가 만든 한 장. */
+  /* 만든 것 · 전후 사진이 있는 기록은 사진, 없는 기록은 짧은 설명. */
   function madeBlock(p){
     var head = '<div class="wrap block"><h2>만든 것</h2>';
     if(p.id === SLOP_ID){
@@ -1042,11 +1042,9 @@
         + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-img="' + esc(pv.after) + '" data-alt="고친 뒤"><span class="skel" style="width:100%;height:100%"></span></button></div>'
         + '</div></div>';
     }
-    var im = OURIMG[p.id];
-    if(!im) return '';
-    return head + '<div class="shots" style="max-width:900px"><div>'
-      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + '. 눌러서 크게 보기"><img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '"></button>'
-      + '</div></div></div>';
+    var t = MADE[p.id];
+    if(!t) return '';
+    return head + '<p class="body" style="max-width:720px">' + esc(t) + '</p></div>';
   }
   /* 안에 든 대화 · 세 쌍은 열어 보여주고 나머지는 흐리게. 나(오른쪽)와 AI(왼쪽). */
   function chatBlock(p, steps, open){
@@ -1174,8 +1172,8 @@
     var who = SELLER[p.id] || ['판 사람', '', '#e8e4de'];
     h.push('<div class="who"><span class="ava" aria-hidden="true">' + AVA + '</span>'
       + '<span class="role">' + esc(who[0]) + '</span></div>');
-    h.push('<div class="price"><b>' + esc(sui(p.fee)) + '</b><span>' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요</span>'
-      + '<small>SUI 는 가상화폐 단위예요.</small></div>');
+    h.push('<div class="price"><b>' + esc(sui(p.fee)) + '</b>'
+      + '<small>' + esc(ttlText(p.ttl_ms)) + ' 동안 이용할 수 있어요</small></div>');
     h.push('<button class="btn sm" type="button" data-goto="howto">사는 법 보기</button>');
     h.push('</div>');
     h.push(madeBlock(p));
