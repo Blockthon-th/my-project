@@ -1,0 +1,173 @@
+[1440] list scrollWidth=1440 clientWidth=1440 overflow=[]
+[1440] cards=[{"sk":false,"t":"Paylane 랜딩 5턴 교정 과정 | 핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정 | 화면 기록 5개 · 0.05 SUI · 7일 동안 · 1명이 샀어요 | 안에 뭐가 들었는지 보기 →"},{"sk":false,"t":"Sui 온보딩 실전 기억 | Sui / Move / Walrus / Seal 를 처음부터 붙이며 실제로 막혔던 지점과 해결책. 문서에 없는 것 위주. | 글 기록 30개 · 0.01 SUI · 24시간 동안 · 아직 아무도 안 샀어요 | 안에 뭐가 들었는지 보기 →"}]
+[1440] list images=[{"nw":1280,"nh":800,"alt":"고치기 전 랜딩 화면"},{"nw":1280,"nh":800,"alt":"고친 뒤 랜딩 화면"}]
+[1440] detail scrollWidth=1440 cw=1440 hash=#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d overflow=[]
+[1440] detail images=["1280x800","1280x800","1280x800","1280x800"]
+[1440] goBack -> {"hash":"","listVisible":true,"detailHidden":true,"y":3677}
+[1440] errors=[]
+[768] list scrollWidth=768 clientWidth=768 overflow=[]
+[768] cards=[{"sk":false,"t":"Paylane 랜딩 5턴 교정 과정 | 핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정 | 화면 기록 5개 · 0.05 SUI · 7일 동안 · 1명이 샀어요 | 안에 뭐가 들었는지 보기 →"},{"sk":false,"t":"Sui 온보딩 실전 기억 | Sui / Move / Walrus / Seal 를 처음부터 붙이며 실제로 막혔던 지점과 해결책. 문서에 없는 것 위주. | 글 기록 30개 · 0.01 SUI · 24시간 동안 · 아직 아무도 안 샀어요 | 안에 뭐가 들었는지 보기 →"}]
+[768] list images=[{"nw":1280,"nh":800,"alt":"고치기 전 랜딩 화면"},{"nw":1280,"nh":800,"alt":"고친 뒤 랜딩 화면"}]
+[768] detail scrollWidth=768 cw=768 hash=#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d overflow=[]
+[768] detail images=["1280x800","1280x800","1280x800","1280x800"]
+[768] goBack -> {"hash":"","listVisible":true,"detailHidden":true,"y":3546}
+[768] errors=[]
+[375] list scrollWidth=375 clientWidth=375 overflow=[]
+[375] cards=[{"sk":false,"t":"Paylane 랜딩 5턴 교정 과정 | 핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정 | 화면 기록 5개 · 0.05 SUI · 7일 동안 · 1명이 샀어요 | 안에 뭐가 들었는지 보기 →"},{"sk":false,"t":"Sui 온보딩 실전 기억 | Sui / Move / Walrus / Seal 를 처음부터 붙이며 실제로 막혔던 지점과 해결책. 문서에 없는 것 위주. | 글 기록 30개 · 0.01 SUI · 24시간 동안 · 아직 아무도 안 샀어요 | 안에 뭐가 들었는지 보기 →"}]
+[375] list images=[{"nw":1280,"nh":800,"alt":"고치기 전 랜딩 화면"},{"nw":1280,"nh":800,"alt":"고친 뒤 랜딩 화면"}]
+[375] detail scrollWidth=375 cw=375 hash=#/pack/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d overflow=["TABLE. R676","THEAD. R676","TR. R676","TH. R420","TH. R567","TH. R676","TBODY. R676","TR.hi R676"]
+[375] detail images=["1280x800","1280x800","1280x800","1280x800"]
+[375] goBack -> {"hash":"","listVisible":true,"detailHidden":true,"y":4283}
+[375] errors=[]
+[first] visible text:
+당신의 시행착오를 사겠습니다
+AI랑 씨름하다 알게 된 것들 말이에요.
+버튼이 안 보여서 고치고, 제목이 세 줄로 떨어져서 또 고치고.
+다 고치고 나면 그 대화는 그냥 사라져요.
+여기서는 그걸 사고팔아요. 사는 쪽도 사람이 아니라 AI 예요.
+지금 팔리는 것 보기
+내 것도 팔아보기
+↓
+내려보면 그 대화가 한 줄씩 나와요
+[first] banned hits=null
+[reveal 1440] at top bubbles hidden 10/10
+[reveal 1440] slow scroll -> not-in=[] drift=[]
+[reveal 1440] fast jump -> not-in=[]
+[reveal 1440] mid-reload y=1614 invisible-in-viewport=[]
+[reveal 375] at top bubbles hidden 10/10
+[reveal 375] slow scroll -> not-in=[] drift=[]
+[reveal 375] fast jump -> not-in=[]
+[reveal 375] mid-reload y=1614 invisible-in-viewport=[]
+[reduced] reveal 0 dim of 24, scroll-behavior=auto
+[direct] early={"skel":0,"txt":"← 목록으로\nPaylane 랜딩 5턴 교정 과정\n\n핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정\n\n0"}
+[direct] {
+ "title": "Paylane 랜딩 5턴 교정 과정",
+ "chips": [
+  "0.05 SUI",
+  "7일 동안 열려요",
+  "기록 5개",
+  "1명이 샀어요",
+  "마지막 기록 2026년 9월 7일"
+ ],
+ "steps": [
+  "그라데이션 히어로의 주 CTA(.btn-primary)는 반투명(glass) 배경을 쓰지 말고, 배경색과 무관하게 대비가 보장되는 불…",
+  "word-break:keep-all 인 한국어 h1 은 폰트 크기를 낮추기 전에 카피 길이를 먼저 줄인다. 목표 줄수 n 이면 필요한…",
+  "가로 나열 목록(.countries 같은 flex row)에 min-width 로 폭을 강제하지 말고 flex-wrap:wrap 을 …",
+  "요금제 카드처럼 항목 수가 다른 카드 그리드는 컨테이너에 `align-items:stretch`(= start 제거), 카드에 `di…",
+  "position:fixed 헤더를 쓰면 첫 섹션의 padding-top 은 반드시 '헤더 height + 원래 여백' 이상으로 잡는다…"
+ ],
+ "checks": [
+  "버튼 대비 / 첫 section 안 가장 큰 CTA 의 전경/배경 대비 ≥ 4.5:1",
+  "제목 줄수 / h1 이 1280px 에서 2줄 이하",
+  "가로 스크롤 / 375px 에서 가로 스크롤 없음",
+  "카드 높이 / 가격/기능 카드 높이 편차 ≤ 8%",
+  "메뉴 겹침 / fixed/sticky nav 가 첫 텍스트를 가리지 않음"
+ ],
+ "imgs": [
+  "1280x800",
+  "1280x800"
+ ],
+ "links": [
+  "묶음 자체 0x75b2…cb1d",
+  "올린 사람 지갑 0xb31c…560f",
+  "산 AI 가 남긴 후기 7HzugJ…VuYP"
+ ]
+}
+[direct] errors=[]
+[textpack]
+← 목록으로
+Sui 온보딩 실전 기억
+
+Sui / Move / Walrus / Seal 를 처음부터 붙이며 실제로 막혔던 지점과 해결책. 문서에 없는 것 위주.
+
+0.01 SUI
+24시간 동안 열려요
+기록 30개
+아직 아무도 안 샀어요
+마지막 기록 2026년 9월 3일
+맛보기로 열어둔 2개
+
+이 묶음은 화면 기록이 아니라 글 묶음이에요. 아래 2개는 그냥 볼 수 있고, 나머지 28개는 사고 나서 열려요.
+
+한글이 포함된 `.ps1`은 UTF-8 BOM 없이 저장하면 PowerShell 5.x가 CP949로 읽어 깨진다. BOM(`utf-8-sig`)으로 저장할 것.
+`expected_failure(abort_code = ...)`를 쓰는 Move 테스트는 마지막에 도달 불가 코드가 필요해서 `abort 0`으로 끝내면 컴파일이 통과한다.
+이 묶음엔 없는 것
+
+고치기 전후 화면이랑 자동 검사 결과는 이 묶음에 안 들어 있어요. 글로 남긴 기록만 있어요.
+
+사는 법
+
+사람이 결제창을 누르는 게 아니라, AI 가 일하다 필요하면 알아서 사요.
+
+1
+
+플러그인을 깔아요. 두 줄이면 끝나요.
+
+/plugin marketplace add Blockthon-th/my-project
+/plugin install memory-market
+2
+
+지갑 열쇠를 한 번만 넣어둬요. ~/.memory-market/config.json 에 이렇게요.
+
+{"BUYER_SUI_PRIVATE_KEY":"suiprivkey1..."}
+3
+
+그다음엔 AI 에게 그냥 일을 시키면 돼요. 나머지는 AI 가 알아서 해요.
+
+체인에 남아 있는 것
+
+이 묶음(pack)은 아래 주소에 그대로 올라가 있어요. 값이랑 기간도 거기 적혀 있어요.
+
+묶음 자체
+0xaa3b…2a40
+올린 사람 지갑
+0xb31c…560f
+알아두실 것
+한 번 열어본 내용은 도로 거둘 수 없어요. 기간이 막는 건 그 뒤에 새로 올라오는 단계예요.
+판 사람이 자기 묶음을 사서 후기를 남기는 건 못 막아요.
+올린 뒤 바꿔치기는 막지만, 처음부터 지어낸 걸 올리는 건 못 막아요.
+저희가 돌리는 서버는 없지만 저장소랑 열쇠 서버는 남의 인프라예요.
+테스트넷이에요. 진짜 돈은 안 들어요.
+← 다른 묶음도 보기
+[fail gql] {"cardsErr":"지금 목록을 못 불러왔어요. 잠깐 뒤에 다시 눌러주세요.  다시 불러오기","cardsHtml":"","baHidden":true,"baErr":"고치기 전후 화면을 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.  다시 불러오기","retry":2,"skel":2}
+[fail gql] detail: ← 목록으로 |  | 묶음 정보를 못 불러왔어요. 잠깐 뒤에 다시 눌러주세요. |  | 다시 불러오기
+[fail gql] jsErrors=["console: Failed to load resource: net::ERR_FAILED"]
+[fail walrus] {"cardsErr":null,"cardsHtml":"Paylane 랜딩 5턴 교정 과정 | 핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정 | 글 기록 5개 · 0.05 SUI · 7일 동안 · 1명이 샀어요 | 안에 뭐가 들었는지 보기 → | Sui 온보딩 실전 기억 | Sui / Move / Walrus / Seal 를 처음부터 붙이며 실제로 막혔던 지점과 해결책","baHidden":true,"baErr":"고치기 전후 화면을 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.  다시 불러오기","retry":1,"skel":2}
+[fail walrus] detail: ← 목록으로 | Paylane 랜딩 5턴 교정 과정 |  | 핀테크 해외송금 앱 Paylane 랜딩 v1 — 결함 5개를 한 턴에 하나씩 교정한 과정 |  | 0.05 SUI | 7일 동안 열려요 | 기록 5개 | 1명이 샀어요 | 마지막 기록 2026년 9월 7일 |  | 미리보기를 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요. |  | 다시 불러오기 | 사는 법 |  | 사람이 결제창을 누르는 게 아니라, AI 가 일하다 필요하면 알아서 사요. |  | 
+[fail walrus] jsErrors=["console: Failed to load resource: net::ERR_FAILED","console: Failed to load resource: net::ERR_FAILED"]
+[fail both] {"cardsErr":"지금 목록을 못 불러왔어요. 잠깐 뒤에 다시 눌러주세요.  다시 불러오기","cardsHtml":"","baHidden":true,"baErr":"고치기 전후 화면을 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.  다시 불러오기","retry":2,"skel":2}
+[fail both] detail: ← 목록으로 |  | 묶음 정보를 못 불러왔어요. 잠깐 뒤에 다시 눌러주세요. |  | 다시 불러오기
+[fail both] jsErrors=["console: Failed to load resource: net::ERR_FAILED"]
+[cls] {"cls":0,"n":0,"top":[]}
+[type] {"s":"h1","fs":"58px","lh":"71.92px","fw":"800","ratio":16.74}
+[type] {"s":".hero-body span","fs":"19px","lh":"33.25px","fw":"400","ratio":7.3}
+[type] {"s":".hero-line","fs":"19px","lh":"33.25px","fw":"700","ratio":16.74}
+[type] {"s":".cue","fs":"14px","lh":"24.5px","fw":"400","ratio":3.61}
+[type] {"s":".btn","fs":"16px","lh":"20.8px","fw":"700","ratio":16.74}
+[type] {"s":".btn.ghost","fs":"16px","lh":"20.8px","fw":"700","ratio":16.74}
+[type] {"s":".h2","fs":"30px","lh":"42px","fw":"800","ratio":16.74}
+[type] {"s":".sub","fs":"16px","lh":"28px","fw":"400","ratio":7.3}
+[type] {"s":".bubble.me","fs":"16px","lh":"27.2px","fw":"500","ratio":16.74}
+[type] {"s":".bubble.you","fs":"16px","lh":"27.2px","fw":"400","ratio":17.49}
+[type] {"s":".gotlabel","fs":"12px","lh":"20.4px","fw":"700","ratio":7.31}
+[type] {"s":".pairno","fs":"12px","lh":"21px","fw":"700","ratio":3.77}
+[type] {"s":".closing","fs":"24px","lh":"38.4px","fw":"700","ratio":16.74}
+[type] {"s":".closing.two","fs":"24px","lh":"38.4px","fw":"700","ratio":7}
+[type] {"s":".num .big","fs":"52px","lh":"57.2px","fw":"800","ratio":16.74}
+[type] {"s":".num .who","fs":"16px","lh":"28px","fw":"700","ratio":16.74}
+[type] {"s":".num .desc","fs":"15px","lh":"26.25px","fw":"400","ratio":7.3}
+[type] {"s":".num .meta","fs":"13px","lh":"22.75px","fw":"400","ratio":3.61}
+[type] {"s":".note","fs":"14px","lh":"25.2px","fw":"400","ratio":3.61}
+[type] {"s":".card .nm","fs":"18px","lh":"26.1px","fw":"700","ratio":17.49}
+[type] {"s":".card .ds","fs":"14px","lh":"23.8px","fw":"400","ratio":7.63}
+[type] {"s":".card .mt","fs":"13px","lh":"22.75px","fw":"400","ratio":3.77}
+[type] {"s":".card .go","fs":"14px","lh":"24.5px","fw":"700","ratio":7.31}
+[type] {"s":".plain span","fs":"17px","lh":"29.75px","fw":"400","ratio":7.3}
+[type] {"s":".bottom .t span","fs":"15px","lh":"27.75px","fw":"400","ratio":7.3}
+[type] {"s":".limits h3","fs":"14px","lh":"24.5px","fw":"700","ratio":16.74}
+[type] {"s":".limits li","fs":"14px","lh":"25.2px","fw":"400","ratio":3.61}
+[type] {"s":".flinks","fs":"13px","lh":"22.75px","fw":"400","ratio":3.61}
+[type] {"s":".shot .cap","fs":"13px","lh":"22.75px","fw":"700","ratio":7.3}
+[layout 1440] {"edges":{"h1":244,"#sec-chat .h2":244,"#sec-proof .h2":244,"#sec-packs .h2":244,"#sec-sell .h2":244,".bottom .t":244},"heroH":900,"vh":900,"cueTop":832,"btnsBottom":612,"overlap":false}
+[layout 768] {"edges":{"h1":24,"#sec-chat .h2":24,"#sec-proof .h2":24,"#sec-packs .h2":24,"#sec-sell .h2":24,".bottom .t":24},"heroH":1024,"vh":1024,"cueTop":956,"btnsBottom":657,"overlap":false}
+[layout 375] {"edges":{"h1":18,"#sec-chat .h2":18,"#sec-proof .h2":18,"#sec-packs .h2":18,"#sec-sell .h2":18,".bottom .t":18},"heroH":812,"vh":812,"cueTop":744,"btnsBottom":625,"overlap":false}

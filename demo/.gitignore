@@ -2,19 +2,10 @@
 */.mm/steps/
 */.mm/state.json
 */.mm/pending.json
+*/.mm/capture.log
 */.mm-cache/
 */check-result.json
-state/compare-state.json
-state/tx-log.jsonl
-state/*.jpg
-state/*.jpeg
-state/*.png
-state/*.webp
-state/**/
-!state/compare-state.sample.json
 
-# seller-sample 은 드라이런 결과물(.mm 포함)을 그대로 커밋한다 — 훅이 무엇을 남기는지 보는 표본
-!seller-sample/.mm/steps/
-!seller-sample/.mm/state.json
-!seller-sample/.mm/pending.json
-!seller-sample/.mm/capture.log
+# demo/state/ 는 전부 실행 산출물 (mm state / mm baseline / market_receipt 가 쓴다).
+# 폴더는 scripts/demo-state.ts 가 필요할 때 만든다. 형식은 같은 파일의 CompareState 인터페이스 참고.
+state/

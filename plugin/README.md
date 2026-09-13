@@ -24,6 +24,15 @@
 | MCP 서버 | `market_list` · `market_preview` · `market_subscribe` · `market_recall` · `market_find` · `market_acquire` · `market_receipt` |
 | UserPromptSubmit 훅 | Sui/Move/Walrus/Seal 관련 질문일 때 "코드를 뒤지기 전에 시장을 먼저 확인하라"고 상기 |
 
+### `server/index.mjs` 는 왜 커밋돼 있나
+
+`cd scripts; npm run build:plugin` 이 `scripts/mcp/server.ts` 를 esbuild 로 묶어 만드는 2.3MB 단일 파일이다.
+생성물이지만 일부러 추적한다 — `/plugin marketplace add Blockthon-th/my-project` 로 설치하는 사람은
+이 저장소를 clone 만 하고 빌드하지 않기 때문에, 커밋돼 있지 않으면 플러그인이 뜨지 않는다.
+저장소 용량의 약 57% 가 이 한 파일이다. **읽거나 고칠 원본은 `scripts/mcp/server.ts` 이고,
+번들은 손으로 편집하지 말고 다시 빌드한다.**
+`plugin/hooks/on_user_prompt.mjs` 도 같은 이유로 플러그인 안에 사본이 아니라 원본으로 있다.
+
 훅이 필요한 이유: MCP 도구는 에이전트가 "지금 쓸 상황"이라고 판단해야만 호출된다.
 코딩 에이전트는 오류를 보면 먼저 로컬 코드를 뒤지므로, 도구 설명만으로는 잘 불리지 않는다.
 훅은 세션 첫 질문에만 전체 안내를 넣고, 이후엔 한 줄, 무관한 대화엔 아무것도 하지 않는다.

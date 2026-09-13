@@ -6,6 +6,16 @@ build/
 dist/
 *.log
 .DS_Store
+Thumbs.db
+desktop.ini
+*.tsbuildinfo
 contracts/**/build/
 scripts/.sync-state.json
 **/.claude/settings.local.json
+
+# 포집 훅 산출물 — .mm/config.json(템플릿)만 커밋한다
+**/.mm/steps/
+**/.mm/state.json
+**/.mm/pending.json
+**/.mm-cache/
+check-result.json

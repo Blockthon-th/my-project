@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>당신의 시행착오를 사겠습니다</title>
+<style>
+  :root{
+    --bg:#fafaf9;
+    --ink:#1c1917;
+    --ink-2:#44403c;
+    --muted:#78716c;
+    --faint:#a8a29e;
+    --line:#e7e5e4;
+    --line-2:#d6d3d1;
+    --card:#ffffff;
+    --accent:#c2410c;
+    --rail:64px;
+    --wrap:1040px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;max-width:100%}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    font-size:16px;
+    line-height:1.75;
+    word-break:keep-all;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  h1,h2,h3,p,figure,blockquote,ul,ol{margin:0}
+  ul{padding-left:0;list-style:none}
+
+  .wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 28px}
+  .narrow{max-width:760px}
+
+  /* ---------- 첫 화면 ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:64px 0 40px;
+    position:relative;
+  }
+  .hero h1{
+    font-size:clamp(34px,5.4vw,60px);
+    line-height:1.22;
+    letter-spacing:-0.02em;
+    font-weight:700;
+    margin-bottom:28px;
+  }
+  .lede{
+    font-size:clamp(17px,1.5vw,20px);
+    line-height:1.85;
+    color:var(--ink-2);
+    margin-bottom:26px;
+  }
+  .oneline{
+    font-size:clamp(17px,1.5vw,20px);
+    line-height:1.8;
+    font-weight:600;
+    padding-top:22px;
+    border-top:1px solid var(--line-2);
+    max-width:34em;
+  }
+  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:38px}
+  .btn{
+    display:inline-block;
+    padding:14px 26px;
+    border-radius:999px;
+    border:1px solid var(--ink);
+    text-decoration:none;
+    font-size:16px;font-weight:600;
+    background:transparent;color:var(--ink);
+    transition:background .18s ease,color .18s ease;
+  }
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn:hover{background:var(--ink);color:#fff}
+  .btn-primary:hover{background:#000}
+  .hint{
+    margin-top:56px;
+    font-size:14px;color:var(--muted);
+    display:flex;align-items:center;gap:10px;
+  }
+  .hint .arrow{
+    width:1px;height:26px;background:var(--line-2);
+    position:relative;flex:none;
+  }
+  .hint .arrow::after{
+    content:"";position:absolute;left:-3px;bottom:0;
+    width:7px;height:7px;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);
+    transform:rotate(45deg);
+  }
+
+  /* ---------- 섹션 공통 ---------- */
+  section{padding:96px 0}
+  .kicker{
+    font-size:13px;letter-spacing:.08em;color:var(--muted);
+    margin-bottom:14px;font-weight:600;
+  }
+  h2{
+    font-size:clamp(23px,2.6vw,32px);
+    line-height:1.45;letter-spacing:-0.015em;font-weight:700;
+  }
+  .sec-note{color:var(--muted);font-size:15px;margin-top:12px}
+
+  /* ---------- 기록지 ---------- */
+  .log{position:relative;margin-top:56px}
+  .log-track{
+    position:absolute;top:6px;bottom:0;
+    left:calc(var(--rail)/2 - 1px);
+    width:2px;background:var(--line);
+  }
+  .log-fill{
+    position:absolute;top:6px;
+    left:calc(var(--rail)/2 - 1px);
+    width:2px;background:var(--accent);
+    height:0;
+  }
+  .entry{
+    display:grid;grid-template-columns:var(--rail) minmax(0,1fr);
+    padding-bottom:64px;position:relative;
+  }
+  .rail{position:relative}
+  .marker{
+    position:absolute;top:0;left:calc(var(--rail)/2 - 17px);
+    width:34px;height:34px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--line-2);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;color:var(--faint);
+    transition:border-color .35s ease,color .35s ease;
+  }
+  .entry.in .marker{border-color:var(--accent);color:var(--accent)}
+  .said{
+    font-size:clamp(20px,2.3vw,27px);
+    line-height:1.55;font-weight:600;letter-spacing:-0.01em;
+    padding:0 0 0 20px;
+    border-left:3px solid var(--ink);
+    margin-bottom:22px;
+    max-width:800px;
+  }
+  .learned{padding-left:23px}
+  .lbl{
+    display:inline-block;font-size:12.5px;font-weight:700;
+    letter-spacing:.06em;color:var(--accent);margin-bottom:6px;
+  }
+  .learned p{font-size:16.5px;line-height:1.8;color:var(--ink-2);max-width:44em}
+
+  .closing{
+    margin-top:8px;padding-left:calc(var(--rail) + 23px);
+  }
+  .closing .end-dot{
+    position:absolute;left:calc(var(--rail)/2 - 5px);
+    width:10px;height:10px;border-radius:50%;background:var(--ink);margin-top:12px;
+  }
+  .closing p.big{
+    font-size:clamp(19px,2vw,24px);line-height:1.6;font-weight:700;
+  }
+  .closing p.after{
+    margin-top:34px;font-size:clamp(17px,1.7vw,21px);color:var(--ink-2);
+  }
+
+  /* ---------- before / after ---------- */
+  .shots{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:20px;margin-top:56px;
+  }
+  figure{margin:0}
+  .shot-cap{
+    font-size:13.5px;color:var(--muted);margin-bottom:8px;font-weight:600;
+  }
+  .shot-frame{
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card);
+  }
+  .shot-frame img{width:100%;height:auto}
+  .sk{
+    background:linear-gradient(90deg,#f0efee,#e8e6e4,#f0efee);
+    border-radius:10px;min-height:120px;
+  }
+  .sk.tall{aspect-ratio:16/10}
+  .sk.line{min-height:14px;border-radius:6px;margin:8px 0}
+  .fail{
+    border:1px solid var(--line-2);border-radius:10px;padding:20px;
+    background:var(--card);font-size:15px;color:var(--ink-2);
+  }
+  .fail button{
+    margin-top:12px;font:inherit;font-size:14px;font-weight:600;
+    padding:8px 16px;border-radius:999px;border:1px solid var(--ink);
+    background:transparent;color:var(--ink);cursor:pointer;
+  }
+
+  /* ---------- 숫자 셋 ---------- */
+  .nums{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:24px;margin-top:52px;
+  }
+  .num-card{
+    border-top:2px solid var(--ink);padding-top:20px;
+  }
+  .num-card.win{border-top-color:var(--accent)}
+  .num-big{
+    font-size:clamp(38px,4.6vw,54px);font-weight:700;letter-spacing:-0.03em;line-height:1.1;
+  }
+  .num-who{font-size:15.5px;font-weight:600;margin-top:10px}
+  .num-say{font-size:15px;color:var(--ink-2);margin-top:10px}
+  .num-meta{font-size:13.5px;color:var(--muted);margin-top:12px}
+  .foot-note{
+    margin-top:40px;font-size:14.5px;color:var(--muted);line-height:1.8;max-width:52em;
+  }
+
+  /* ---------- 카드 ---------- */
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:44px}
+  .card{
+    display:block;text-decoration:none;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:26px;
+    transition:border-color .18s ease,transform .18s ease;
+  }
+  .card:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .card h3{font-size:19px;font-weight:700;line-height:1.45;letter-spacing:-0.01em}
+  .card .desc{
+    font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.7;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .card .facts{
+    display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:20px;
+    font-size:14px;color:var(--ink-2);
+  }
+  .card .facts b{font-weight:700}
+  .card .open{
+    margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:14px;font-weight:600;color:var(--accent);
+  }
+
+  /* ---------- 파는 쪽 ---------- */
+  .sell-box{
+    margin-top:32px;font-size:17px;line-height:1.9;color:var(--ink-2);max-width:44em;
+  }
+
+  /* ---------- 맨 아래 ---------- */
+  .tail{
+    border-top:1px solid var(--line);padding:64px 0 96px;
+  }
+  .tail p{font-size:15px;color:var(--muted);line-height:1.9;max-width:46em}
+  .limits{margin-top:32px}
+  .limits .lbl2{font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:10px}
+  .limits li{
+    font-size:14.5px;color:var(--muted);line-height:1.8;
+    padding-left:16px;position:relative;
+  }
+  .limits li::before{
+    content:"";position:absolute;left:0;top:.85em;
+    width:5px;height:1px;background:var(--faint);
+  }
+
+  /* ---------- 상세 ---------- */
+  .back{
+    display:inline-block;margin:40px 0 30px;font-size:14.5px;
+    color:var(--muted);text-decoration:none;font-weight:600;
+  }
+  .back:hover{color:var(--ink)}
+  .d-head h1{
+    font-size:clamp(26px,3.4vw,40px);line-height:1.3;letter-spacing:-0.02em;font-weight:700;
+  }
+  .d-head .desc{margin-top:16px;font-size:16.5px;color:var(--ink-2);max-width:46em;line-height:1.8}
+  .d-facts{
+    display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:26px;
+    padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .d-fact{font-size:14px;color:var(--muted)}
+  .d-fact b{display:block;font-size:19px;color:var(--ink);font-weight:700;margin-top:2px}
+  .d-sec{padding:56px 0 0}
+  .d-sec h2{font-size:clamp(19px,2vw,24px)}
+  .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:14px;margin-top:24px}
+  .check{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--card)}
+  .check b{font-size:15.5px;display:block}
+  .check span{font-size:13px;color:var(--muted);display:block;margin-top:6px;line-height:1.6;overflow-wrap:anywhere}
+  .steps{margin-top:24px;border-top:1px solid var(--line)}
+  .step{padding:22px 0;border-bottom:1px solid var(--line)}
+  .step .no{font-size:13px;font-weight:700;color:var(--accent)}
+  .step .lesson{font-size:16.5px;line-height:1.75;margin-top:6px;color:var(--ink)}
+  .step .locked{
+    margin-top:12px;font-size:13.5px;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;
+  }
+  .lock-tag{
+    border:1px dashed var(--line-2);border-radius:6px;padding:3px 9px;font-size:12.5px;color:var(--muted);
+  }
+  .hash{font-size:12px;color:var(--faint);margin-top:8px;overflow-wrap:anywhere}
+  .tbl-scroll{overflow-x:auto;margin-top:24px;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+  th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{font-size:13px;color:var(--muted);font-weight:600}
+  tbody tr:first-child{background:#fff7ed}
+  tbody tr:first-child td{font-weight:600}
+  pre{
+    margin:20px 0 0;background:#1c1917;color:#fafaf9;border-radius:10px;
+    padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.8;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .links{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .links a{
+    font-size:14.5px;color:var(--accent);text-decoration:none;font-weight:600;
+    overflow-wrap:anywhere;
+  }
+  .links a:hover{text-decoration:underline}
+  .links .lk-note{font-size:13px;color:var(--muted);font-weight:400;display:block}
+  .samples{margin-top:22px;display:grid;gap:14px}
+  .sample{
+    border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:8px;padding:16px 18px;background:var(--card);
+    font-size:15px;line-height:1.8;color:var(--ink-2);overflow-wrap:anywhere;
+  }
+
+  /* ---------- 리빌 ---------- */
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+  .rv.in{opacity:1;transform:none}
+  .entry .said{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+  .entry .learned{opacity:0;transform:translateY(14px);transition:opacity .5s ease .22s,transform .5s ease .22s}
+  .entry.in .said,.entry.in .learned{opacity:1;transform:none}
+
+  html.rm .rv,html.rm .entry .said,html.rm .entry .learned{opacity:1;transform:none;transition:none}
+  html.rm .btn{transition:none}
+  @media (prefers-reduced-motion: reduce){
+    .rv,.entry .said,.entry .learned{opacity:1;transform:none;transition:none}
+    .card{transition:none}
+  }
+
+  /* ---------- 반응형 ---------- */
+  @media (max-width:900px){
+    .nums{grid-template-columns:1fr;gap:34px}
+    .cards{grid-template-columns:1fr}
+    .shots{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    :root{--rail:40px}
+    body{font-size:15.5px}
+    .wrap{padding:0 20px}
+    section{padding:72px 0}
+    .hero{padding:48px 0 32px}
+    .marker{width:28px;height:28px;left:calc(var(--rail)/2 - 14px);font-size:12.5px}
+    .said{padding-left:14px;margin-bottom:18px}
+    .learned{padding-left:17px}
+    .closing{padding-left:calc(var(--rail) + 17px)}
+    .entry{padding-bottom:48px}
+    .btn{padding:13px 22px;font-size:15px}
+    .cta{gap:10px}
+    .cta .btn{flex:1 1 auto;text-align:center}
+  }
+</style>
+<noscript><style>.rv,.entry .said,.entry .learned{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<!-- ============ 목록 화면 ============ -->
+<main id="view-list">
+
+  <header class="hero">
+    <div class="wrap"><div class="narrow">
+      <h1>당신의 시행착오를 사겠습니다</h1>
+      <p class="lede">
+        AI랑 씨름하다 알게 된 것들 말이에요.<br>
+        버튼이 안 보여서 고치고, 제목이 세 줄로 떨어져서 또 고치고.<br>
+        다 고치고 나면 그 대화는 그냥 사라져요.
+      </p>
+      <p class="oneline">여기서는 그걸 사고팔아요. 사는 쪽도 사람이 아니라 AI 예요.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#sale">지금 팔리는 것 보기</a>
+        <a class="btn" href="#sell">내 것도 팔아보기</a>
+      </div>
+      <div class="hint">
+        <span class="arrow"></span>
+        <span>아래로 내리면 실제 대화가 한 줄씩 나와요</span>
+      </div>
+    </div></div>
+  </header>
+
+  <!-- 2. 기록지 -->
+  <section id="story">
+    <div class="wrap">
+      <div class="narrow rv">
+        <p class="kicker">기록 하나</p>
+        <h2>어떤 사람이 송금 앱 랜딩을 만들다가 AI에게 다섯 번 지적했어요</h2>
+      </div>
+
+      <div class="log" id="log">
+        <div class="log-track"></div>
+        <div class="log-fill" id="logFill"></div>
+
+        <article class="entry">
+          <div class="rail"><span class="marker">1</span></div>
+          <div>
+            <blockquote class="said">버튼이 그라데이션에 묻혀 안 보여. 나머지 레이아웃은 승인. 버튼 대비만 고쳐.</blockquote>
+            <div class="learned">
+              <span class="lbl">알게 된 것</span>
+              <p>그라데이션 위에 올리는 버튼은 반투명 배경을 쓰면 안 돼요. 뒤 색이 뭐든 글자가 보이는 불투명 색을 써요.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="rail"><span class="marker">2</span></div>
+          <div>
+            <blockquote class="said">제목이 세 줄로 떨어져서 답답해. 1280px 에서 두 줄 안에 들어오게 해줘.</blockquote>
+            <div class="learned">
+              <span class="lbl">알게 된 것</span>
+              <p>한글 제목은 글자 크기를 줄이기 전에 문장을 줄여요. 폭 640px 에 56px 글자로 두 줄이면 22자 안쪽이에요.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="rail"><span class="marker">3</span></div>
+          <div>
+            <blockquote class="said">폰에서 보면 옆으로 스크롤돼. 지원 국가 줄이 범인 같아.</blockquote>
+            <div class="learned">
+              <span class="lbl">알게 된 것</span>
+              <p>가로로 늘어놓는 목록에 최소 너비를 박으면 좁은 화면에서 삐져나와요. 줄바꿈을 허용하면 넓은 화면 모양은 그대로예요.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="rail"><span class="marker">4</span></div>
+          <div>
+            <blockquote class="said">요금제 카드 세 장 높이가 제각각이야. 버튼은 카드 바닥에 붙여.</blockquote>
+            <div class="learned">
+              <span class="lbl">알게 된 것</span>
+              <p>내용 길이가 다른 카드는 컨테이너에서 높이를 맞추고 버튼만 아래로 밀어요.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="rail"><span class="marker">5</span></div>
+          <div>
+            <blockquote class="said">상단 고정 메뉴가 첫 문장을 가려.</blockquote>
+            <div class="learned">
+              <span class="lbl">알게 된 것</span>
+              <p>메뉴를 화면에 고정했으면 그 아래 첫 칸의 위 여백을 메뉴 높이보다 크게 잡아요. 메뉴를 건드리는 것보다 부작용이 적어요.</p>
+            </div>
+          </div>
+        </article>
+
+        <div class="closing">
+          <span class="end-dot"></span>
+          <p class="big rv">다섯 번 만에 다 고쳤어요. 그리고 이 대화는 보통 여기서 사라져요.</p>
+          <p class="after rv">사라지는 대신 팔 수 있으면 어떨까요.</p>
+        </div>
+      </div>
+
+      <div class="shots rv" id="storyShots">
+        <figure>
+          <figcaption class="shot-cap">고치기 전</figcaption>
+          <div class="sk tall"></div>
+        </figure>
+        <figure>
+          <figcaption class="shot-cap">고친 뒤</figcaption>
+          <div class="sk tall"></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 쓸모 -->
+  <section id="proof">
+    <div class="wrap">
+      <div class="narrow rv">
+        <p class="kicker">해본 것</p>
+        <h2>같은 문제가 있는 다른 페이지를 AI에게 고치게 해봤어요</h2>
+      </div>
+      <div class="nums">
+        <div class="num-card rv">
+          <div class="num-big">4 / 5</div>
+          <div class="num-who">아무것도 없이 혼자, 세 번</div>
+          <p class="num-say">세 번 다 같은 걸 놓쳤어요. 위에 나온 2번, 제목 줄바꿈이요.</p>
+          <div class="num-meta">16~26턴 · 3~6분</div>
+        </div>
+        <div class="num-card rv">
+          <div class="num-big">5 / 5</div>
+          <div class="num-who">검사 도구만 준 AI, 세 번</div>
+          <p class="num-say">시간을 들이면 혼자서도 결국 다 맞춰요.</p>
+          <div class="num-meta">3~4분</div>
+        </div>
+        <div class="num-card win rv">
+          <div class="num-big">5 / 5</div>
+          <div class="num-who">위 다섯 마디를 산 AI</div>
+          <p class="num-say">첫 시도에 끝냈어요.</p>
+          <div class="num-meta">15턴 · 2분</div>
+        </div>
+      </div>
+      <p class="foot-note rv">
+        사면 못 하던 걸 하게 되는 건 아니에요. 검사 도구를 쥐여주면 혼자서도 결국 맞춰요.<br>
+        다만 아무것도 없이 두면 세 번 다 같은 자리에서 멈췄고, 그게 2번에서 이미 겪은 문제였어요.
+      </p>
+    </div>
+  </section>
+
+  <!-- 4. 팔리는 것 -->
+  <section id="sale">
+    <div class="wrap">
+      <div class="narrow rv">
+        <p class="kicker">목록</p>
+        <h2>지금 올라와 있는 묶음</h2>
+        <p class="sec-note">누르면 안에 뭐가 들었는지 볼 수 있어요.</p>
+      </div>
+      <div class="cards" id="cards">
+        <div class="card"><div class="sk line" style="width:60%"></div><div class="sk line" style="width:85%"></div><div class="sk line" style="width:40%;margin-top:24px"></div></div>
+        <div class="card"><div class="sk line" style="width:50%"></div><div class="sk line" style="width:80%"></div><div class="sk line" style="width:40%;margin-top:24px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 파는 쪽 -->
+  <section id="sell">
+    <div class="wrap">
+      <div class="narrow rv">
+        <p class="kicker">파는 쪽</p>
+        <h2>파는 쪽은 따로 할 게 없어요</h2>
+        <p class="sell-box">
+          평소처럼 AI 랑 일하면 돼요. 설치해두면 고칠 때마다 알아서 기록돼요.<br>
+          뭘 지적했는지, 뭐가 바뀌었는지, 그래서 뭘 알게 됐는지까지요.<br>
+          쌓이면 묶어서 올리면 끝이에요.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 맨 아래 -->
+  <div class="tail">
+    <div class="wrap"><div class="narrow">
+      <p>
+        기록은 암호로 잠가서 분산 저장소에 올려요. 결제랑 사용 기간은 Sui 블록체인이 관리해요.<br>
+        기간이 지나면 열쇠가 안 나와요. 저희가 돌리는 서버는 없어요.<br>
+        지금은 테스트넷이라 진짜 돈은 안 들어요.
+      </p>
+      <div class="limits">
+        <div class="lbl2">못 하는 것도 적어둘게요</div>
+        <ul>
+          <li>한 번 열어본 내용은 도로 거둘 수 없어요. 기간이 막는 건 그 뒤에 새로 올라오는 단계예요.</li>
+          <li>판 사람이 자기 묶음을 사서 후기를 남기는 건 못 막아요.</li>
+          <li>올린 뒤 바꿔치기는 막지만, 처음부터 지어낸 걸 올리는 건 못 막아요.</li>
+          <li>저희가 돌리는 서버는 없지만 저장소랑 열쇠 서버는 남의 인프라예요.</li>
+          <li>테스트넷이에요.</li>
+        </ul>
+      </div>
+    </div></div>
+  </div>
+
+</main>
+
+<!-- ============ 상세 화면 ============ -->
+<main id="view-detail" hidden>
+  <div class="wrap">
+    <a class="back" href="#sale" id="backLink">← 목록으로</a>
+    <div id="detailBody"></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 상수 ---------- */
+  var GQL = 'https://graphql.testnet.sui.io/graphql';
+  var PKG = '0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196';
+  var WAL = 'https://aggregator.walrus-testnet.walrus.space/v1/blobs/';
+  var SCAN_OBJ = 'https://suiscan.xyz/testnet/object/';
+  var SCAN_TX = 'https://suiscan.xyz/testnet/tx/';
+  var STORY_PACK = '0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d';
+  var TX_RECEIPT = '7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP';
+  var TX_RETRACT = 'GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz';
+  var MIN_TTL = 300000;
+
+  var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (RM) document.documentElement.classList.add('rm');
+
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function shortId(id){
+    if (!id || id.length < 20) return id || '';
+    return id.slice(0, 10) + '…' + id.slice(-6);
+  }
+  function fmtSui(mist){
+    var n = Number(mist || 0) / 1e9;
+    if (!isFinite(n)) return '—';
+    return (Math.round(n * 1e6) / 1e6) + ' SUI';
+  }
+  function fmtTtl(ms){
+    var m = Number(ms || 0);
+    var h = m / 3600000;
+    if (h >= 48) return (Math.round(h / 24)) + '일';
+    if (h >= 1) return (Math.round(h)) + '시간';
+    return Math.max(1, Math.round(m / 60000)) + '분';
+  }
+
+  /* ---------- 네트워크 ---------- */
+  function gql(query){
+    return fetch(GQL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: query })
+    }).then(function(r){
+      if (!r.ok) throw new Error('응답 ' + r.status);
+      return r.json();
+    }).then(function(j){
+      if (j.errors && j.errors.length) throw new Error(j.errors[0].message || '조회 실패');
+      return j.data;
+    });
+  }
+  function packEvents(kind){
+    return gql('{ events(filter:{type:"' + PKG + '::market::' + kind + '"}, last: 20){ nodes { timestamp contents { json } } } }')
+      .then(function(d){ return ((d && d.events && d.events.nodes) || []).map(function(n){
+        return { at: n.timestamp, j: (n.contents && n.contents.json) || {} };
+      }); });
+  }
+  function packObject(id){
+    return gql('{ object(address:"' + id + '"){ asMoveObject { contents { json } } } }')
+      .then(function(d){
+        var j = d && d.object && d.object.asMoveObject && d.object.asMoveObject.contents
+          ? d.object.asMoveObject.contents.json : null;
+        if (!j) throw new Error('묶음을 못 찾았어요');
+        return j;
+      });
+  }
+  function walrusText(blobId){
+    return fetch(WAL + blobId).then(function(r){
+      if (!r.ok) throw new Error('저장소 응답 ' + r.status);
+      return r.text();
+    });
+  }
+  function walrusJson(blobId){
+    return walrusText(blobId).then(function(t){ return JSON.parse(t); });
+  }
+
+  /* ---------- 상태 ---------- */
+  var listCache = null;
+  var manifestCache = {};
+  var listScroll = 0;
+
+  function loadList(){
+    if (listCache) return Promise.resolve(listCache);
+    return packEvents('PackCreated').then(function(evs){
+      var ids = [], seen = {};
+      for (var i = evs.length - 1; i >= 0; i--) {
+        var id = evs[i].j.pack_id;
+        if (id && !seen[id]) { seen[id] = 1; ids.push(id); }
+      }
+      return Promise.all(ids.map(function(id){
+        return packObject(id).catch(function(){ return null; });
+      }));
+    }).then(function(objs){
+      var live = objs.filter(function(o){ return o && Number(o.ttl_ms) >= MIN_TTL; });
+      live.sort(function(a, b){ return Number(b.created_at_ms) - Number(a.created_at_ms); });
+      listCache = live;
+      return live;
+    });
+  }
+
+  function loadManifest(pack){
+    var id = pack.id;
+    if (manifestCache[id]) return Promise.resolve(manifestCache[id]);
+    var blobs = pack.preview_blob_ids || [];
+    if (!blobs.length) { manifestCache[id] = { kind: 'none' }; return Promise.resolve(manifestCache[id]); }
+    return walrusText(blobs[0]).then(function(txt){
+      var m = null;
+      try { m = JSON.parse(txt); } catch (e) { m = null; }
+      var out;
+      if (m && m.schema === 'mm.manifest/1') {
+        out = { kind: 'manifest', m: m };
+      } else {
+        out = { kind: 'texts', texts: [txt] };
+        return Promise.all(blobs.slice(1).map(function(b){
+          return walrusText(b).catch(function(){ return null; });
+        })).then(function(rest){
+          rest.forEach(function(t){ if (t) out.texts.push(t); });
+          manifestCache[id] = out;
+          return out;
+        });
+      }
+      manifestCache[id] = out;
+      return out;
+    });
+  }
+
+  /* ---------- 리빌 ---------- */
+  var io = null;
+  function observeReveals(root){
+    var targets = $$('.rv, .entry', root || document).filter(function(el){ return !el.classList.contains('in'); });
+    if (RM || !('IntersectionObserver' in window)) {
+      targets.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    if (!io) {
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    }
+    targets.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ---------- 세로선 차오르기 ---------- */
+  var logEl = $('#log'), fillEl = $('#logFill'), ticking = false;
+  function updateFill(){
+    ticking = false;
+    if (!logEl || !fillEl) return;
+    if (RM) { fillEl.style.height = '100%'; return; }
+    var r = logEl.getBoundingClientRect();
+    var anchor = window.innerHeight * 0.58;
+    var p = (anchor - r.top) / Math.max(1, r.height);
+    p = p < 0 ? 0 : (p > 1 ? 1 : p);
+    fillEl.style.height = (p * 100).toFixed(2) + '%';
+  }
+  function onScroll(){
+    if (!ticking) { ticking = true; window.requestAnimationFrame(updateFill); }
+  }
+  if (RM) {
+    if (fillEl) fillEl.style.height = '100%';
+  } else {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  }
+
+  /* ---------- 목록: 이야기 스크린샷 ---------- */
+  function renderStoryShots(){
+    var box = $('#storyShots');
+    if (!box) return;
+    packObject(STORY_PACK).then(function(p){
+      return loadManifest(p);
+    }).then(function(res){
+      if (res.kind !== 'manifest' || !res.m.previews) throw new Error('미리보기가 없어요');
+      var b = res.m.previews.before, a = res.m.previews.after;
+      box.innerHTML =
+        '<figure><figcaption class="shot-cap">고치기 전</figcaption>' +
+        '<div class="shot-frame"><img alt="고치기 전 화면" src="' + WAL + esc(b) + '"></div></figure>' +
+        '<figure><figcaption class="shot-cap">고친 뒤</figcaption>' +
+        '<div class="shot-frame"><img alt="고친 뒤 화면" src="' + WAL + esc(a) + '"></div></figure>';
+    }).catch(function(err){
+      box.innerHTML = '<div class="fail" style="grid-column:1/-1">화면 두 장을 저장소에서 못 가져왔어요. (' + esc(err.message) + ')' +
+        '<br><button type="button" id="retryShots">다시 시도</button></div>';
+      var b = $('#retryShots');
+      if (b) b.addEventListener('click', function(){
+        box.innerHTML = '<figure><figcaption class="shot-cap">고치기 전</figcaption><div class="sk tall"></div></figure>' +
+                        '<figure><figcaption class="shot-cap">고친 뒤</figcaption><div class="sk tall"></div></figure>';
+        renderStoryShots();
+      });
+    });
+  }
+
+  /* ---------- 목록: 카드 ---------- */
+  function renderCards(){
+    var box = $('#cards');
+    if (!box) return;
+    loadList().then(function(packs){
+      if (!packs.length) { box.innerHTML = '<div class="fail">지금은 올라와 있는 묶음이 없어요.</div>'; return; }
+      box.innerHTML = packs.map(function(p){
+        var bought = Number(p.subscriber_count) > 0 ? (p.subscriber_count + '명이 샀어요') : '아직 산 사람은 없어요';
+        return '<a class="card rv" href="#/pack/' + esc(p.id) + '">' +
+          '<h3>' + esc(p.name) + '</h3>' +
+          '<p class="desc">' + esc(p.description) + '</p>' +
+          '<div class="facts">' +
+            '<span>기록 <b>' + esc(p.memory_count) + '</b>개</span>' +
+            '<span><b>' + esc(fmtSui(p.fee)) + '</b></span>' +
+            '<span><b>' + esc(fmtTtl(p.ttl_ms)) + '</b> 동안</span>' +
+            '<span>' + esc(bought) + '</span>' +
+          '</div>' +
+          '<div class="open">안에 뭐가 들었는지 보기 →</div>' +
+        '</a>';
+      }).join('');
+      observeReveals(box);
+    }).catch(function(err){
+      box.innerHTML = '<div class="fail" style="grid-column:1/-1">목록을 못 불러왔어요. (' + esc(err.message) + ')' +
+        '<br><button type="button" id="retryCards">다시 시도</button></div>';
+      var b = $('#retryCards');
+      if (b) b.addEventListener('click', function(){
+        box.innerHTML = '<div class="card"><div class="sk line" style="width:60%"></div><div class="sk line" style="width:85%"></div></div>';
+        renderCards();
+      });
+    });
+  }
+
+  /* ---------- 상세 ---------- */
+  var CHECK_KO = {
+    'cta-contrast': '버튼이 배경에 묻히지 않아요',
+    'h1-lines': '제목이 두 줄 안에 들어와요',
+    'no-hscroll': '좁은 화면에서 옆으로 안 밀려요',
+    'card-height': '카드 세 장 높이가 맞아요',
+    'nav-overlap': '고정 메뉴가 첫 문장을 안 가려요'
+  };
+
+  function resultTable(){
+    return '<div class="tbl-scroll"><table>' +
+      '<thead><tr><th>누가 고쳤나</th><th>최종</th><th>턴</th><th>시간</th><th>수정</th></tr></thead>' +
+      '<tbody>' +
+      '<tr><td>이 묶음을 산 AI</td><td>5/5 (첫 시도)</td><td>15</td><td>120초</td><td>6</td></tr>' +
+      '<tr><td>검사 도구만 준 AI ×3</td><td>5/5 · 5/5 · 5/5</td><td>여러 턴</td><td>176 / 201 / 226초</td><td>—</td></tr>' +
+      '<tr><td>아무것도 없이 ×3</td><td>4/5 · 4/5 · 4/5</td><td>16 / 26 / 17</td><td>210 / 350 / 218초</td><td>11 / 20 / 14</td></tr>' +
+      '</tbody></table></div>' +
+      '<p class="sec-note">세 번 다 놓친 건 제목 줄바꿈이고, 이 묶음의 2번 교훈과 같은 문제예요.</p>';
+  }
+
+  function buySection(){
+    return '<div class="d-sec"><h2>사는 법</h2>' +
+      '<p class="sec-note">사는 쪽은 AI 예요. 사람이 할 일은 처음 한 번뿐이에요.</p>' +
+      '<pre>/plugin marketplace add Blockthon-th/my-project\n/plugin install memory-market</pre>' +
+      '<pre>~/.memory-market/config.json\n{"BUYER_SUI_PRIVATE_KEY":"suiprivkey1..."}</pre>' +
+      '<p class="sec-note">지갑은 한 번만 넣어두면 돼요. 그다음엔 AI 에게 그냥 일을 시키면 필요할 때 알아서 사요.</p></div>';
+  }
+
+  function limitsBlock(){
+    return '<div class="d-sec"><h2>못 하는 것도 적어둘게요</h2>' +
+      '<div class="limits"><ul>' +
+      '<li>한 번 열어본 내용은 도로 거둘 수 없어요. 기간이 막는 건 그 뒤에 새로 올라오는 단계예요.</li>' +
+      '<li>판 사람이 자기 묶음을 사서 후기를 남기는 건 못 막아요.</li>' +
+      '<li>올린 뒤 바꿔치기는 막지만, 처음부터 지어낸 걸 올리는 건 못 막아요.</li>' +
+      '<li>저희가 돌리는 서버는 없지만 저장소랑 열쇠 서버는 남의 인프라예요.</li>' +
+      '<li>테스트넷이에요.</li>' +
+      '</ul></div></div>';
+  }
+
+  function renderDetail(id){
+    var box = $('#detailBody');
+    box.innerHTML =
+      '<div class="sk line" style="width:55%;height:34px"></div>' +
+      '<div class="sk line" style="width:80%"></div>' +
+      '<div class="sk tall" style="margin-top:32px"></div>';
+
+    var pack = null;
+    packObject(id).then(function(p){
+      pack = p;
+      return Promise.all([
+        loadManifest(p).catch(function(){ return { kind: 'none' }; }),
+        packEvents('Subscribed').catch(function(){ return []; })
+      ]);
+    }).then(function(res){
+      var mres = res[0];
+      var subs = res[1].filter(function(e){ return e.j.pack_id === pack.id; });
+      paintDetail(box, pack, mres, subs);
+    }).catch(function(err){
+      box.innerHTML = '<div class="fail">이 묶음을 못 불러왔어요. (' + esc(err.message) + ')' +
+        '<br><button type="button" id="retryDetail">다시 시도</button></div>';
+      var b = $('#retryDetail');
+      if (b) b.addEventListener('click', function(){ renderDetail(id); });
+    });
+  }
+
+  function paintDetail(box, p, mres, subs){
+    var h = [];
+
+    h.push('<div class="d-head">');
+    h.push('<h1>' + esc(p.name) + '</h1>');
+    h.push('<p class="desc">' + esc(p.description) + '</p>');
+    h.push('<div class="d-facts">');
+    h.push('<div class="d-fact">값<b>' + esc(fmtSui(p.fee)) + '</b></div>');
+    h.push('<div class="d-fact">볼 수 있는 기간<b>' + esc(fmtTtl(p.ttl_ms)) + '</b></div>');
+    h.push('<div class="d-fact">안에 든 기록<b>' + esc(p.memory_count) + '개</b></div>');
+    h.push('<div class="d-fact">산 사람<b>' + esc(p.subscriber_count) + '명</b></div>');
+    h.push('</div></div>');
+
+    if (mres.kind === 'manifest' && mres.m.previews) {
+      h.push('<div class="d-sec"><h2>고치기 전 / 고친 뒤</h2><div class="shots" style="margin-top:24px">');
+      h.push('<figure><figcaption class="shot-cap">고치기 전</figcaption><div class="shot-frame">' +
+             '<img alt="고치기 전 화면" src="' + WAL + esc(mres.m.previews.before) + '"></div></figure>');
+      h.push('<figure><figcaption class="shot-cap">고친 뒤</figcaption><div class="shot-frame">' +
+             '<img alt="고친 뒤 화면" src="' + WAL + esc(mres.m.previews.after) + '"></div></figure>');
+      h.push('</div></div>');
+    } else if (mres.kind === 'texts') {
+      h.push('<div class="d-sec"><h2>맛보기</h2>');
+      h.push('<p class="sec-note">이 묶음은 화면 작업이 아니라 글로 된 기록이라 보여줄 그림이 없어요. 대신 안에 든 기록 ' +
+             mres.texts.length + '개를 통째로 공개해요.</p>');
+      h.push('<div class="samples">');
+      mres.texts.forEach(function(t){ h.push('<div class="sample">' + esc(t) + '</div>'); });
+      h.push('</div></div>');
+    }
+
+    if (mres.kind === 'manifest' && mres.m.checks && mres.m.checks.length) {
+      h.push('<div class="d-sec"><h2>이 묶음이 보장하는 것</h2>');
+      h.push('<p class="sec-note">고친 결과가 이 다섯 가지를 통과했어요. 기계가 매번 다시 재는 항목이에요.</p>');
+      h.push('<div class="checks">');
+      mres.m.checks.forEach(function(c){
+        h.push('<div class="check"><b>' + esc(CHECK_KO[c.id] || c.id) + '</b><span>' + esc(c.desc) + '</span></div>');
+      });
+      h.push('</div></div>');
+    }
+
+    if (mres.kind === 'manifest' && mres.m.steps && mres.m.steps.length) {
+      h.push('<div class="d-sec"><h2>안에 든 ' + mres.m.steps.length + '단계</h2>');
+      h.push('<p class="sec-note">알게 된 것은 사기 전에도 보여요. 지적한 말 원문이랑 실제 코드 변경, 단계별 화면은 사고 나서 열려요.</p>');
+      h.push('<div class="steps">');
+      mres.m.steps.forEach(function(s){
+        var lesson = String(s.title || '').replace(/^fix:\s*/, '');
+        h.push('<div class="step">' +
+          '<div class="no">' + esc(s.step) + '단계</div>' +
+          '<div class="lesson">' + esc(lesson) + '</div>' +
+          '<div class="locked">' +
+            '<span class="lock-tag">지적한 말 원문</span>' +
+            '<span class="lock-tag">코드 변경</span>' +
+            '<span class="lock-tag">이 단계 화면</span>' +
+            '<span>사면 열려요</span>' +
+          '</div>' +
+          '<div class="hash">기록 지문 ' + esc(String(s.record_sha256 || '').slice(0, 16)) + '…</div>' +
+        '</div>');
+      });
+      h.push('</div>');
+      h.push('<p class="sec-note">위 문장은 목록에 넣으려고 끝을 자른 것이고, 전문은 안에 들어 있어요. ' +
+             '기록 지문은 올린 뒤에 내용을 바꾸지 않았다는 걸 확인하는 값이에요.</p>');
+      h.push('</div>');
+    }
+
+    if (mres.kind === 'manifest') {
+      h.push('<div class="d-sec"><h2>이걸 산 AI 가 실제로 낸 결과</h2>');
+      h.push(resultTable());
+      h.push('</div>');
+    }
+
+    h.push(buySection());
+
+    h.push('<div class="d-sec"><h2>기록이 남은 자리</h2><div class="links">');
+    h.push('<a target="_blank" rel="noopener" href="' + SCAN_OBJ + esc(p.id) + '">이 묶음 ' + esc(shortId(p.id)) +
+           '<span class="lk-note">값 · 기간 · 산 사람 수가 여기 그대로 적혀 있어요</span></a>');
+    if (subs.length) {
+      h.push('<a target="_blank" rel="noopener" href="' + SCAN_OBJ + esc(subs[subs.length - 1].j.subscription_id) + '">' +
+             '가장 최근에 산 기록 ' + esc(shortId(subs[subs.length - 1].j.subscription_id)) +
+             '<span class="lk-note">' + esc(new Date(subs[subs.length - 1].at).toLocaleString('ko-KR')) + '</span></a>');
+    }
+    h.push('</div>');
+    h.push('<p class="sec-note" style="margin-top:28px">아래 둘은 이 묶음 것이 아니라, 이 마켓에서 실제로 일어난 거래예요. ' +
+           '사고 나면 어떤 자국이 남는지 보여드리려고 걸어뒀어요.</p>');
+    h.push('<div class="links">');
+    h.push('<a target="_blank" rel="noopener" href="' + SCAN_TX + TX_RECEIPT + '">산 AI 가 후기를 남긴 거래' +
+           '<span class="lk-note">쓸모 있었는지 아닌지를 사고 난 뒤에 남겨요</span></a>');
+    h.push('<a target="_blank" rel="noopener" href="' + SCAN_TX + TX_RETRACT + '">잘못된 기록을 내린 거래' +
+           '<span class="lk-note">판 사람이 기록 하나를 목록에서 뺀 자국이에요</span></a>');
+    h.push('</div></div>');
+
+    h.push(limitsBlock());
+    h.push('<div style="height:96px"></div>');
+
+    box.innerHTML = h.join('');
+  }
+
+  /* ---------- 라우터 ---------- */
+  var listView = $('#view-list'), detailView = $('#view-detail');
+  var current = null;
+
+  function routeOf(){
+    var m = /^#\/pack\/(0x[0-9a-fA-F]+)/.exec(location.hash || '');
+    return m ? ('pack:' + m[1]) : 'list';
+  }
+
+  function applyRoute(){
+    var r = routeOf();
+    if (r === current) return;
+    var was = current;
+    current = r;
+    if (r === 'list') {
+      detailView.hidden = true;
+      listView.hidden = false;
+      if (was && was.indexOf('pack:') === 0) {
+        if (listScroll > 0) {
+          window.scrollTo(0, listScroll);
+        } else {
+          var t = location.hash ? document.querySelector(location.hash) : null;
+          if (t) t.scrollIntoView(); else window.scrollTo(0, 0);
+        }
+        setTimeout(function(){ updateFill(); }, 0);
+      }
+    } else {
+      if (!was || was === 'list') listScroll = window.pageYOffset || 0;
+      listView.hidden = true;
+      detailView.hidden = false;
+      window.scrollTo(0, 0);
+      renderDetail(r.slice(5));
+    }
+  }
+
+  window.addEventListener('hashchange', applyRoute);
+
+  /* ---------- 시작 ---------- */
+  observeReveals(document);
+  updateFill();
+  renderStoryShots();
+  renderCards();
+  applyRoute();
+})();
+</script>
+</body>
+</html>

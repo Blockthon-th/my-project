@@ -6,10 +6,9 @@
 demo/
   seller/            판매자 템플릿 — Paylane(핀테크 송금) 랜딩 v1, 결함 5개. CLAUDE.md(step-note 규칙) + capture 훅 + .mm/config.json + SESSION-SCRIPT.md(5턴 대본)
   buyer/             구매자 템플릿 — 케어핏(헬스케어 예약) 랜딩 v1, 같은 결함 유형 5개. CLAUDE.md(market_find→acquire→적용→check→receipt) + .mcp.json + /improve
-  seller-sample/     판매자 템플릿을 실제 capture 훅으로 5턴 돌린 결과 (.mm/steps/step-1..5.* 포함, 검사 1/5→5/5). 훅이 무엇을 남기는지 보는 표본이자 `mm review --project C:\mm\demo\seller-sample` 연습용
   baseline/          팩 없이 돌릴 때의 CLAUDE.md·/improve (시장 문장만 뺀 동일 내용). index.html 은 setup.ps1 이 buyer 것을 복사
   compare.html       발표 화면. 탭 3개(소개 / 필름스트립 / 구독 전·후). state/compare-state.json 을 읽고 없으면 샘플로 렌더
-  state/             mm CLI 가 쓰는 compare-state.json + 스크린샷 (커밋 안 함). compare-state.sample.json 은 형식 샘플
+  state/             mm CLI 가 쓰는 compare-state.json + 스크린샷 (전부 실행 산출물 — 커밋 안 하고, 없으면 만들어진다). 형식은 scripts/demo-state.ts 의 CompareState
   serve.mjs          demo/ 를 http://localhost:8787 로 서빙 (file:// 로 열면 fetch 가 막혀 샘플만 보인다)
   setup.ps1          템플릿을 C:\demo\{seller,buyer,baseline-1..3} 로 복사 (리허설마다 초기화)
   freeze-live.mjs    리허설의 live 결과를 fallback 으로 얼림 → 본 데모에서 R 키 대체 화면

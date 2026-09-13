@@ -306,7 +306,8 @@
 
 <script>
 /* ───────────────────────── 샘플 데이터 (state 파일이 없을 때) ─────────────────────────
-   형식은 demo/state/compare-state.sample.json 과 같다. thumb/shot 이 없으면 페이지가 와이어프레임을 그린다. */
+   형식은 scripts/demo-state.ts 의 CompareState 인터페이스와 같다. thumb/shot 이 없으면 페이지가 와이어프레임을 그린다.
+   아래 숫자는 화면 배치를 확인하기 위한 자리표시자다 — 실측값이 아니므로 발표에 인용하지 않는다. */
 const ORDER = ['cta-contrast', 'h1-lines', 'no-hscroll', 'card-height', 'nav-overlap'];
 const CHECKS = [
   ['cta-contrast', 'CTA 대비 ≥ 4.5:1'],
