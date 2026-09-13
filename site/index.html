@@ -187,6 +187,18 @@
   #view-detail .block h2{ font-size:28px; margin:0 0 14px; }
   #view-detail .block h2::before{ content:""; display:block; width:28px; height:3px; background:var(--accent); margin-bottom:14px; }
   #view-detail .block .bl{ margin-bottom:22px; }
+  /* 상세는 전부 가운데 정렬 */
+  #view-detail .wrap{ text-align:center; }
+  #view-detail .dtop{ padding-left:0; padding-right:0; }
+  #view-detail .dtitle, #view-detail .price, #view-detail .block .bl, #view-detail .block .body{ margin-left:auto; margin-right:auto; }
+  #view-detail .who{ justify-content:center; }
+  #view-detail .block h2::before{ margin-left:auto; margin-right:auto; }
+  #view-detail .shots{ margin-left:auto; margin-right:auto; }
+  #view-detail .save{ margin-left:auto; margin-right:auto; max-width:760px; }
+  #view-detail .chat{ margin-left:auto; margin-right:auto; text-align:left; }
+  #view-detail .locked{ margin-left:auto; margin-right:auto; }
+  #view-detail .steps{ max-width:720px; margin-left:auto; margin-right:auto; text-align:left; }
+  #view-detail .linkrow, #view-detail .back{ display:inline-block; }
   /* 기록 01 안에 실제로 들어 있는 화면 두 장 */
   .shots{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; max-width:380px; }
   .shots .cap{ font-size:15px; color:var(--mute); margin-bottom:8px; }
