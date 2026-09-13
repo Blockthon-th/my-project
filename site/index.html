@@ -156,9 +156,17 @@
   .card .nm{ font-size:22px; line-height:1.3; font-weight:600; }
   .who{ display:flex; align-items:center; gap:12px; margin-top:12px; }
   .ava{ flex:0 0 auto; width:40px; height:40px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-    font-family:var(--mono); font-size:12px; font-weight:700; color:#141414; letter-spacing:.06em; }
+    background:#efeae3; color:#3b3733; overflow:hidden; }
+  .ava svg{ width:22px; height:22px; display:block; }
+  .dtop .ava svg{ width:26px; height:26px; }
   .role{ font-size:17px; color:var(--mute); }
   .dtop .who{ margin-top:18px; } .dtop .ava{ width:48px; height:48px; font-size:13px; } .dtop .role{ font-size:19px; color:var(--ink); }
+  .price{ margin:22px 0 18px; font-size:22px; line-height:1.4; }
+  .price b{ font-size:34px; font-weight:700; margin-right:12px; }
+  .price span{ color:var(--ink); }
+  .price small{ display:block; font-size:15px; color:var(--mute); margin-top:4px; }
+  .chat.lt .msg.me{ background:var(--accent); color:#141414; }
+  .chat.lt .msg.ai{ background:#f1ede7; color:var(--ink); }
   .facts{ display:grid; grid-template-columns:96px minmax(0,1fr); gap:14px 24px; margin:28px 0 24px; max-width:760px; }
   .facts dt{ font-family:var(--mono); font-size:14px; letter-spacing:.06em; color:var(--mute); padding-top:4px; }
   .facts dd{ margin:0; font-size:21px; line-height:1.5; font-weight:500; overflow-wrap:anywhere; }
@@ -230,8 +238,33 @@
   .msg .from{ display:block; font-family:var(--mono); font-size:12px; letter-spacing:.06em; margin-bottom:6px; opacity:.72; }
   .msg.me{ align-self:flex-end; background:var(--dark-accent); color:#141414; border-bottom-right-radius:5px; }
   .msg.me .from{ text-align:right; }
-  .msg.ai{ align-self:flex-start; background:#262626; color:var(--ondark); border-bottom-left-radius:5px; }
+  .msg.ai{ align-self:flex-start; background:#f1ede7; color:var(--ink); border-bottom-left-radius:5px; }
+  .on-dark .msg.ai{ background:#262626; color:var(--ondark); }
   @media (max-width:768px){ .msg{ max-width:88%; font-size:17px; } }
+  /* 전후 사진: 화살표 하나, 바뀐 것 세 줄 */
+  .ba{ display:grid; grid-template-columns:1fr 56px 1fr; gap:18px; align-items:center; max-width:980px; margin:36px auto 0; }
+  .baf{ margin:0; text-align:center; }
+  .baf .shot{ width:100%; }
+  .baf figcaption{ font-size:16px; color:var(--mute); margin-top:10px; }
+  .baarrow{ font-size:44px; line-height:1; color:var(--accent-dark); text-align:center; }
+  .bachg{ list-style:none; padding:0; display:flex; justify-content:center; flex-wrap:wrap; gap:12px 40px; margin:24px auto 0; font-size:17px; }
+  .bachg s{ color:var(--mute); margin-right:10px; }
+  .bachg b{ color:var(--ink); font-weight:600; }
+  @media (max-width:760px){ .ba{ grid-template-columns:1fr; gap:8px; } .baarrow{ transform:rotate(90deg); font-size:36px; } .bachg{ flex-direction:column; gap:8px; align-items:center; } }
+  /* 대화 칸은 흰 바탕, 가운데 정렬 */
+  #sec-inside .wrap{ text-align:center; }
+  #sec-inside .eyebrow{ justify-content:center; }
+  #sec-inside .h2, #sec-inside .lead.w{ margin-left:auto; margin-right:auto; }
+  #sec-inside .chat{ margin-left:auto; margin-right:auto; text-align:left; max-width:720px; }
+  #sec-inside .vs{ max-width:880px; margin-left:auto; margin-right:auto; }
+  #sec-inside .vbox{ text-align:center; border-top-color:#d8d8d8; }
+  #sec-inside .vbox.win{ border-top-color:var(--accent); }
+  #sec-inside .vlab{ color:var(--mute); }
+  #sec-inside .vbox.win .vlab{ color:var(--ink); }
+  #sec-inside .vbox.lose .vnum{ color:var(--mute); }
+  #sec-inside .vbox.win .vnum{ color:var(--accent-dark); }
+  #sec-inside .vdelta{ background:var(--accent); color:#141414; }
+  #sec-inside .vmeta{ color:var(--mute); }
   /* 처음부터 했을 때 vs 경험을 샀을 때 — 이긴 쪽만 크다 */
   .vs{ display:grid; grid-template-columns:5fr 7fr; gap:32px; margin-top:56px; align-items:stretch; }
   .vbox{ padding-top:22px; border-top:1px solid #5b5b5b; }
@@ -447,12 +480,22 @@
   </section>
 
   <!-- ────────── 산 AI 가 읽는 것 ────────── -->
-  <section class="sec on-dark" id="sec-inside">
-    <span class="gl" aria-hidden="true"></span>
+  <section class="sec" id="sec-inside">
     <div class="wrap">
       <p class="eyebrow reveal"><span class="bk l"></span>산 AI 가 읽는 것<span class="bk r"></span></p>
       <h2 class="h2 reveal">대화 기록을 판매합니다</h2>
-      <p class="lead w reveal" style="--d:100ms">웹디자이너 경험 안에 든 대화예요.</p>
+      <p class="lead w reveal" style="--d:100ms">웹디자이너 경험 안에 든 대화 열 개 중 세 개예요.</p>
+
+      <div class="ba reveal">
+        <figure class="baf"><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 처음 만든 것" aria-label="AI 가 처음 만든 것 — 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="AI 가 처음 만든 것"></button><figcaption>AI 가 처음 만든 것</figcaption></figure>
+        <div class="baarrow" aria-hidden="true">→</div>
+        <figure class="baf"><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="열 번 대화한 뒤" aria-label="열 번 대화한 뒤 — 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="열 번 대화한 뒤"></button><figcaption>열 번 대화한 뒤</figcaption></figure>
+      </div>
+      <ul class="bachg reveal" style="--d:120ms">
+        <li><s>보라색 그라데이션</s><b>흰 바탕에 색 하나</b></li>
+        <li><s>둥근 버튼 셋</s><b>각진 버튼 하나</b></li>
+        <li><s>제목 네 줄</s><b>제목 두 줄</b></li>
+      </ul>
 
       <div class="chat">
         <div class="msg me"><span class="from">나</span><p>보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.</p></div>
@@ -478,7 +521,7 @@
         </div>
       </div>
 
-      <p class="body reveal" style="margin-top:26px"><a href="#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e" style="color:var(--dark-accent);text-decoration:none">이 기록 안을 더 보기 →</a></p>
+      <p class="body reveal" style="margin-top:26px"><a href="#/pack/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e" style="color:var(--accent-dark);text-decoration:none">이 기록 안을 더 보기 →</a></p>
     </div>
   </section>
 
@@ -541,14 +584,17 @@
   OURNAME['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] =
     ['카피라이터 경험', '한국어 랜딩 문구를 여덟 번 고쳤어요. 첫 화면에 어떤 말을 쓰면 안 되는지가 들어 있어요.'];
   OURNAME['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] =
-    ['가상화폐 개발자 경험', '처음 붙이는 사람이 막히는 자리만 서른 개 모았어요. 사진 없이 글로만 들어 있어요.'];
+    ['블록체인 개발자 경험', '처음 붙이는 사람이 막히는 자리만 서른 개 모았어요. 사진 없이 글로만 들어 있어요.'];
 
   /* 판 사람 프로필. 데모용으로 붙인 역할 표시다. [역할, 아바타 글자, 아바타 색] */
+  var AVA = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">'
+    + '<circle cx="12" cy="8" r="4" fill="currentColor"/>'
+    + '<path d="M4 20.5c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8" fill="currentColor"/></svg>';
   var SELLER = {};
   SELLER[SLOP_ID]  = ['5년차 웹디자이너', 'WD', '#ffd2c4'];
   SELLER[STORY_ID] = ['7년차 웹퍼블리셔', 'WP', '#d9e8ff'];
   SELLER['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] = ['4년차 카피라이터', 'CW', '#e6f2d9'];
-  SELLER['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = ['3년차 가상화폐 개발자', 'DEV', '#efe6ff'];
+  SELLER['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] = ['3년차 블록체인 개발자', 'DEV', '#efe6ff'];
 
   /* 뭘 만들었나 — 상세 머리에 쓰는 한 줄 */
   var MADE = {};
@@ -566,6 +612,27 @@
 
   /* 어두운 칸에 옮겨 적은 다섯 마디. 저장된 값의 지문으로 이어 붙여 어긋날 수 없게 한다. */
   /* 상세 화면에서 먼저 보여주는 세 개. 저장된 값의 지문으로 고른다. */
+  /* 그때 실제로 한 말(원문)과 AI 가 한 일. 저장된 값의 지문으로 묶는다. */
+  var SAID_BY_SHA = {};
+  var REPLY_BY_SHA = {};
+  SAID_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.';
+  REPLY_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '그라데이션이랑 흐림 효과를 걷어냈어요. 색은 하나만 남기고, 나머지는 검정 글자와 가는 선으로 정리했어요.';
+  SAID_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼도 그 사이트처럼 바꿔줘. 둥근 알약 말고 각진 사각형에 작은 글씨. 그림자랑 빛나는 효과는 빼고. 강조색은 정말 눈길이 가야 하는 딱 한 곳에만 남기고 나머지는 무채색으로.';
+  REPLY_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼을 각진 사각형으로 바꿨어요. 강조색은 제일 중요한 버튼 하나에만 남기고, 나머지는 테두리만 뒀어요.';
+  SAID_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '제목이 네 줄로 떨어져서 첫 화면을 다 잡아먹었어. 89px 은 그대로 두고 문장을 줄여서 두 줄 안에 들어오게 해줘. 크기를 낮추지 말고 카피를 줄이는 쪽으로.';
+  REPLY_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '글자 크기는 그대로 두고 문장을 줄여서 두 줄에 맞췄어요. 한 줄에 들어가는 글자 수부터 세고 카피를 다시 썼어요.';
+  SAID_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼이 그라데이션에 묻혀 안 보여. 나머지 레이아웃은 승인. 버튼 대비만 고쳐.';
+  REPLY_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼 배경을 비치는 색에서 꽉 찬 색으로 바꿨어요. 뒤가 무슨 색이든 글자가 보여요.';
+  SAID_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '제목이 세 줄로 떨어져서 답답해. 1280px 에서 두 줄 안에 들어오게 카피를 줄이든 크기를 조정하든 해. 히어로의 다른 건 그대로.';
+  REPLY_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '글자 크기는 두고 문장을 줄여서 두 줄에 맞췄어요. 폭 640px 에 56px 글자면 22자 안쪽이에요.';
+  SAID_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '폰(375px)에서 보면 옆으로 스크롤돼. 지원 국가 줄이 범인 같아. 가로 스크롤만 없애고 데스크톱 모양은 유지해.';
+  REPLY_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '지원 국가 줄에 박아둔 최소 폭을 빼고, 좁아지면 아랫줄로 넘어가게 했어요. 넓은 화면 모양은 그대로예요.';
+  SAID_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '랜딩 페이지를 하나 만들건데, 우리 서비스를 소개하고 웹 페이지를 만듦으로써 목적은 우리 서비스가 사실 설명하기가 어렵잖아, 그걸 이해하기 편하게 하고 싶어';
+  REPLY_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '첫 화면에서 회사 이름과 기술 이름을 뺐어요. 처음 온 사람이 모르는 말은 안 써요.';
+  SAID_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '일반 사용자가 우리 프로덕트를 이해하고 있는게 아니면 지금 너가 쓴 설명들이 이해가 가겠냐? 되게 직관적으로 써도 모자랄 판에 설명을 왜 이렇게 하는지 모르겠네. 멋부리지 말고 진솔한 설명으로 바꿔줘';
+  REPLY_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '제목을 제품 소개가 아니라 읽는 사람이 겪어본 상황으로 바꿨어요. 꾸미는 말도 뺐어요.';
+  SAID_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '이 페이지처럼 스크롤을 내리면 AI와 대화한 기록이 한줄 씩 보이는 형태로 표현하고 싶은데 (ohmy.skin)';
+  REPLY_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '말투를 해요체 하나로 통일했어요. 설명 대신 읽는 사람이 했을 법한 말로 썼어요.';
   var SHOW3 = {};
   SHOW3['0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e'] = ['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31', 'e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757', '8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'];
   SHOW3['0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d'] = ['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222', '8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e', 'c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'];
@@ -896,7 +963,7 @@
       var who = SELLER[p.id] || ['판 사람', '', '#e8e4de'];
       return '<a class="card reveal" style="--d:' + (i * 80) + 'ms" href="#/pack/' + esc(p.id) + '">'
         + '<span class="nm">' + esc(ourName(p)) + '</span>'
-        + '<span class="who"><span class="ava" aria-hidden="true" style="background:' + who[2] + '">' + esc(who[1]) + '</span>'
+        + '<span class="who"><span class="ava" aria-hidden="true">' + AVA + '</span>'
         +   '<span class="role">' + esc(who[0]) + '</span></span>'
         + cardShot(p)
         + '</a>';
@@ -924,6 +991,48 @@
   }
 
   /* ---------- 상세 화면 ---------- */
+  /* 만든 것 — 글 대신 사진. 01 은 우리 전후, Paylane 은 체인의 전후, 나머지는 우리가 만든 한 장. */
+  function madeBlock(p){
+    var head = '<div class="wrap block"><h2>만든 것</h2>';
+    if(p.id === SLOP_ID){
+      return head + '<div class="shots" style="max-width:900px">'
+        + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="고치기 전" aria-label="고치기 전 — 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="고치기 전"></button></div>'
+        + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="고친 뒤" aria-label="고친 뒤 — 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="고친 뒤"></button></div>'
+        + '</div></div>';
+    }
+    if(isSheet(p) && p.preview.sheet.previews && p.preview.sheet.previews.before && p.preview.sheet.previews.after){
+      var pv = p.preview.sheet.previews;
+      return head + '<div class="shots" style="max-width:900px">'
+        + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-img="' + esc(pv.before) + '" data-alt="고치기 전"><span class="skel" style="width:100%;height:100%"></span></button></div>'
+        + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-img="' + esc(pv.after) + '" data-alt="고친 뒤"><span class="skel" style="width:100%;height:100%"></span></button></div>'
+        + '</div></div>';
+    }
+    var im = OURIMG[p.id];
+    if(!im) return '';
+    return head + '<div class="shots" style="max-width:900px"><div>'
+      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + ' — 눌러서 크게 보기"><img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '"></button>'
+      + '</div></div></div>';
+  }
+  /* 안에 든 대화 — 세 쌍은 열어 보여주고 나머지는 흐리게. 나(오른쪽)와 AI(왼쪽). */
+  function chatBlock(p, steps, open){
+    var pick = SHOW3[p.id] || [];
+    var idx = [];
+    pick.forEach(function(sh){ steps.forEach(function(st, i){ if(st.record_sha256 === sh) idx.push(i); }); });
+    if(!idx.length) idx = [0,1,2].filter(function(i){ return i < steps.length; });
+    var out = '';
+    idx.forEach(function(i){
+      var sh = steps[i].record_sha256;
+      var said = SAID_BY_SHA[sh], reply = REPLY_BY_SHA[sh] || open[i] || '';
+      if(said) out += '<div class="msg me"><span class="from">나</span><p>' + esc(said) + '</p></div>';
+      if(reply) out += '<div class="msg ai"><span class="from">AI</span><p>' + esc(reply) + '</p></div>';
+    });
+    return '<div class="wrap block"><h2>안에 든 대화</h2>'
+      + '<p class="bl">전부 ' + steps.length + '개 중 ' + idx.length + '개예요. 나머지는 사면 열려요.</p>'
+      + '<div class="chat lt">' + out + '</div>'
+      + '<div class="locked" style="margin-top:14px"><div class="mgrp">' + maskRows(4, 4, 90) + '</div>'
+      + '<button class="unlock" type="button" data-goto="howto"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</button></div>'
+      + '</div>';
+  }
   /* 이 기록을 쓰면 얼마나 줄어드나. 실제로 잰 건 웹퍼블리셔 경험 하나라, 나머지는 그 비율을 예상으로 보여준다.
      숫자는 docs/ground-truth.md 실측 표의 것만 쓴다. 기록 없이 세 번 평균 4분 20초 · $1.42 · 약 20번. */
   function savingsBlock(p){
@@ -1028,15 +1137,13 @@
     h.push('<a class="back" href="#/">← 목록으로</a>');
     h.push('<h1 class="dtitle">' + esc(ourName(p)) + '</h1>');
     var who = SELLER[p.id] || ['판 사람', '', '#e8e4de'];
-    h.push('<div class="who"><span class="ava" aria-hidden="true" style="background:' + who[2] + '">' + esc(who[1]) + '</span>'
+    h.push('<div class="who"><span class="ava" aria-hidden="true">' + AVA + '</span>'
       + '<span class="role">' + esc(who[0]) + '</span></div>');
-    h.push('<dl class="facts">'
-      + '<dt>만든 것</dt><dd>' + esc(MADE[p.id] || ourDesc(p)) + '</dd>'
-      + '<dt>값</dt><dd>' + esc(sui(p.fee)) + ' · ' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요'
-      +   '<small>SUI 는 가상화폐 단위예요.</small></dd>'
-      + '</dl>');
+    h.push('<div class="price"><b>' + esc(sui(p.fee)) + '</b><span>' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요</span>'
+      + '<small>SUI 는 가상화폐 단위예요.</small></div>');
     h.push('<button class="btn sm" type="button" data-goto="howto">사는 법 보기</button>');
     h.push('</div>');
+    h.push(madeBlock(p));
     h.push(savingsBlock(p));
 
     /* 사기 전에 볼 수 있는 줄 */
@@ -1046,63 +1153,16 @@
         open.push(LESSON_BY_SHA[s.record_sha256] || tidy(s.title));
       });
     } else if(pv.kind === 'text'){
-      (pv.texts || []).forEach(function(t){ open.push(plain(t.trim())); });
-    }
-
-    if(isSheet(p)){
-      var m = pv.sheet;
-
-      if(p.id === SLOP_ID){
-        h.push('<div class="wrap block"><h2>고치기 전 / 고친 뒤</h2>'
-          + '<p class="bl">눌러보면 화면 전체가 열려요.</p>'
-          + '<div class="shots" style="max-width:900px">'
-          + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="고치기 전" aria-label="고치기 전 — 눌러서 크게 보기"><img src="img/slop-before.jpg" width="1280" height="800" alt="보라색 배경에 영어 문구가 박힌 랜딩 화면"></button></div>'
-          + '<div><div class="cap">이 기록대로 고친 것</div><button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="이 기록대로 고친 것" aria-label="이 기록대로 고친 것 — 눌러서 크게 보기"><img src="img/clean-after.jpg" width="1280" height="800" alt="지금 보고 있는 이 랜딩의 첫 화면"></button></div>'
-          + '</div></div>');
-      } else if(m.previews && m.previews.before && m.previews.after) h.push(shotsBlock(m.previews.before, m.previews.after));
-
-      if(m.steps && m.steps.length){
-        var pick = SHOW3[p.id];
-        var shown = [];
-        if(pick){
-          pick.forEach(function(sha){ m.steps.forEach(function(st, i){ if(st.record_sha256 === sha) shown.push(i); }); });
-        }
-        if(!shown.length) shown = [0,1,2].filter(function(i){ return i < m.steps.length; });
-        h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
-          + '<p class="bl">전부 ' + m.steps.length + '개 중 세 개예요. 나머지는 사면 열려요.</p>'
-          + '<div class="items">'
-          + shown.map(function(i, k){
-              return '<div class="row"><span class="n">0' + (k + 1) + '</span><div class="rb">'
-                +   '<div class="lab">알게 된 것</div>'
-                +   '<p class="body">' + esc(open[i] || '') + '</p>'
-                +   '<div class="lab" style="margin-top:16px">그때 오간 대화</div>'
-                +   '<div class="locked"><div class="mgrp">' + maskRows(i + 1, 3, 92) + '</div>'
-                +   '<button class="unlock" type="button" data-goto="howto"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</button></div>'
-                + '</div></div>';
-            }).join('')
-          + '</div></div>');
-      }
-
-    } else if(pv.kind === 'text'){
       var texts = pv.texts || [];
       var total = Number(p.memory_count) || texts.length;
-      var rest = Math.max(0, total - texts.length);
-      h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
+      h.push('<div class="wrap block"><h2>안에 든 것</h2>'
         + '<p class="bl">전부 ' + total + '개 중 ' + texts.length + '개예요. 나머지는 사면 열려요.</p>'
-        + '<div class="items">'
-        + texts.map(function(t, i){
-            var no = (i + 1) < 10 ? ('0' + (i + 1)) : String(i + 1);
-            return '<div class="row"><span class="n">' + no + '</span><div class="rb">'
-              + '<div class="lab">알게 된 것</div><p class="body">' + esc(plain(t.trim())) + '</p></div></div>';
-          }).join('')
-        + (rest > 0
-            ? '<div class="row"><span class="n">0' + (texts.length + 1) + '</span><div class="rb">'
-              + '<div class="lab">알게 된 것</div>'
-              + '<div class="locked"><div class="mgrp">' + maskRows(2, 2, 90) + '</div>'
-              + '<button class="unlock" type="button" data-goto="howto"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</button></div>'
-              + '</div></div>'
-            : '')
-        + '</div></div>');
+        + '<div class="chat lt">'
+        + texts.map(function(t){ return '<div class="msg ai"><span class="from">AI</span><p>' + esc(plain(t.trim())) + '</p></div>'; }).join('')
+        + '</div>'
+        + '<div class="locked" style="margin-top:14px"><div class="mgrp">' + maskRows(3, 3, 88) + '</div>'
+        + '<button class="unlock" type="button" data-goto="howto"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</button></div>'
+        + '</div>');
     } else if(pv.kind === 'none'){
       h.push('<div class="wrap block"><h2>안에 뭐가 들었나</h2>'
         + '<p class="bl">이 기록은 미리 열어둔 게 없어요. 사면 ' + esc(p.memory_count) + '개가 다 보여요.</p>'
@@ -1132,6 +1192,7 @@
 
     detailEl.innerHTML = h.join('');
     fillShots(detailEl);
+    sweep();
   }
 
   /* ---------- 사진 크게 보기 ---------- */
