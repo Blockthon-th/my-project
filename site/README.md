@@ -15,7 +15,7 @@
    여기에 숫자·값·사진을 넣지 않는다.
 2. `#sec-list`, 체인에서 읽어온 목록. 카드가 아니라 `64px + 1fr` 번호 줄 넷이다.
    이름과 한 줄 설명만 `OURNAME` 에서 오고 개수·값·기간·산 사람 수는 전부 응답에서 온다.
-   01 줄 밑에만 `img/slop-before.jpg` / `img/clean-after.jpg` 두 장이 붙는다(`SLOP_ID` 기록의 내용이라서).
+   01 줄 밑에만 `img/landing-before.jpg` / `img/clean-after.jpg` 두 장이 붙는다(`SLOP_ID` 기록의 내용이라서).
    칸 맨 아래에 SUI 를 처음 풀어 쓰는 한 줄이 있다. **이 문장을 위로 올리면 첫 화면 검사가 깨진다.**
 3. `#sec-inside` (어두운 칸), `STORY_ID` 기록 안. 지적한 말과 알게 된 것 세 쌍, 가려진 줄 하나,
    실측 두 칸(시간 · 주고받은 횟수 · AI 사용료). 점수를 쓰지 않는다.
@@ -67,14 +67,14 @@
 
 ## 경로 규칙 (배포본 기준)
 `https://blockthon-th.github.io/my-project/` 로 배포되고 `site/index.html` 이 `/index.html`, `site/img/` 가 `/img/` 로 펼쳐진다.
-- 사진은 `img/slop-before.jpg` 처럼 **맨 앞 `/` 없이** 건다. `/img/…` 는 저장소 이름이 경로에 끼어 404 가 난다.
+- 사진은 `img/landing-before.jpg` 처럼 **맨 앞 `/` 없이** 건다. `/img/…` 는 저장소 이름이 경로에 끼어 404 가 난다.
 - 바깥으로 나가는 링크는 전체 주소로 쓴다. 저장소는 `https://github.com/Blockthon-th/my-project`.
 
 ## 로컬에서 열기
 ```powershell
 node site/serve.mjs   # http://localhost:8788
 ```
-상세 화면은 `http://localhost:8788/#/pack/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d` 처럼 해시를 직접 붙여도 열린다.
+상세 화면은 `http://localhost:8788/#/pack/0xa7591287a26848d0c40936f23d241b0ad35968869f5f1536b1f7cc3f5c839988` 처럼 해시를 직접 붙여도 열린다.
 그냥 `start site/index.html` 로 파일을 열어도 동작한다(fetch 대상이 전부 외부 https 라 CORS 문제 없음).
 
 `.preview/` 는 Playwright 로 찍은 검증 스크린샷이라 커밋하지 않는다(`.gitignore`).

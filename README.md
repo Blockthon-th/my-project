@@ -71,7 +71,7 @@ AI 가 한 일은 이 순서였습니다.
 
 | 기록 | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
 |---|---|---|---|---|---|
-| 웹디자이너 경험 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
+| 웹디자이너 경험 | 15번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
 | 웹퍼블리셔 경험 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
 | 카피라이터 경험 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 |
 | 블록체인 개발자 경험 | 글 33건 | 0.01 SUI | 24시간 | 0 | 실제 교훈 글 2건 |
@@ -127,7 +127,7 @@ Sui 의 성질을 쓴 자리는 이렇습니다.
 
 - **결제와 구독권 발급이 한 트랜잭션.** `subscribe` 는 `Coin<SUI>` 가 정확히 `fee` 인지 확인하고 판매자에게 바로 보낸 뒤 `Subscription` 을 돌려줍니다. 에스크로도 정산도 없습니다.
 - **만료는 Clock(`0x6`) 기준.** `expires_at_ms = now + ttl_ms`. 시간을 컨트랙트가 재니 오프체인 서버 없이 기간제가 됩니다.
-- **PTB 하나로 올리기.** `mm publish` 는 `create_pack` + `publish`×N + `add_preview`×3 을 한 트랜잭션에 담습니다. 웹디자이너 경험은 [한 건](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg)에 10단계 + 미리보기 3건입니다.
+- **PTB 하나로 올리기.** `mm publish` 는 `create_pack` + `publish`×N + `add_preview`×3 을 한 트랜잭션에 담습니다. 웹디자이너 경험은 [한 건](https://suiscan.xyz/testnet/tx/2umb7v5NnMVCgiGiugc2i6JDKzmi9qA2w9hyh1TCd2ev)에 15단계 + 미리보기 3건입니다.
 - **접근 규칙이 컨트랙트에 있음.** `seal_approve(id, sub, pack, clock)` 는 세 가지만 봅니다. 구독권이 이 팩 것인가, 만료 전인가, 열쇠 ID 가 팩 ID 로 시작하는가. Seal 키 서버가 이 함수를 dry-run 해서 통과할 때만 키를 줍니다.
 - **읽기는 gRPC 와 GraphQL.** 공개 풀노드의 JSON-RPC 는 폐기됐습니다. 쓰기와 객체 조회는 `@mysten/sui` 2.x 의 gRPC 클라이언트를 씁니다(트랜잭션 resolution 이 돼서 가스와 객체 버전을 직접 채우지 않습니다). 팩 목록은 GraphQL(`graphql.testnet.sui.io`) 입니다. gRPC 의 이벤트 색인은 최근 체크포인트만 들고 있어 며칠 지난 `PackCreated` 가 안 나오기 때문입니다. 랜딩도 같은 GraphQL 을 브라우저에서 직접 읽습니다(CORS `*`).
 - 이벤트 5종 `PackCreated` · `MemoryPublished` · `Subscribed` · `ReceiptLeft` · `Retracted`. Move 테스트 19개.
@@ -249,14 +249,14 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 
 | 기록 | 개수 | 값 | 기간 | 산 사람 | 객체 |
 |---|---|---|---|---|---|
-| 웹디자이너 경험 | 10 | 0.05 SUI | 7일 | 0 | [`0xef238e43…9f2a813d`](https://suiscan.xyz/testnet/object/0xef238e432a6f24cd3118088b237ba2122ed39813bec649c39d70e38b9f2a813d) |
+| 웹디자이너 경험 | 15 | 0.05 SUI | 7일 | 0 | [`0xa7591287…5c839988`](https://suiscan.xyz/testnet/object/0xa7591287a26848d0c40936f23d241b0ad35968869f5f1536b1f7cc3f5c839988) |
 | 웹퍼블리셔 경험 | 5 | 0.05 SUI | 7일 | 1 | [`0x8ac6510d…29cd3132`](https://suiscan.xyz/testnet/object/0x8ac6510d9c6066ee6b788ff5ec8753bff6cbeb7d2fcf9e91bc93e7f029cd3132) |
 | 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x0dcb9195…b23993e8`](https://suiscan.xyz/testnet/object/0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8) |
 | 블록체인 개발자 경험 | 33 (글) | 0.01 SUI | 24시간 | 0 | [`0x66c6eefe…8766fa7a`](https://suiscan.xyz/testnet/object/0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a) |
 
 실제 거래 기록도 체인에 있습니다.
 
-- [기록 올리기](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg): 한 트랜잭션에 10단계 + 미리보기 3건
+- [기록 올리기](https://suiscan.xyz/testnet/tx/2umb7v5NnMVCgiGiugc2i6JDKzmi9qA2w9hyh1TCd2ev): 한 트랜잭션에 15단계 + 미리보기 3건
 - [산 쪽의 후기](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP): 실측에 쓴 옛 웹퍼블리셔 기록에 남은 것
 - [판 쪽의 내리기](https://suiscan.xyz/testnet/tx/GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz): 검증용 기록에서 한 것
 
