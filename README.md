@@ -84,80 +84,75 @@ SUI 는 가상화폐 단위이고, 지금은 연습용 네트워크라 진짜 �
 
 # 여기부터는 개발자용입니다
 
-위쪽은 이 서비스가 무엇인지 설명한 부분입니다. 아래쪽은 저장소를 받아 직접 돌려보려는 사람을 위한 것이라
-기술 용어와 명령어를 그대로 씁니다. 수치는 위와 같은 값을 씁니다.
+저장소를 받아 직접 돌려보려는 사람을 위한 부분입니다. 기술 용어와 명령어를 그대로 씁니다.
 
-## 기술 스택
+## 구조
 
-Sui · Walrus · Seal 위에 얹은 앱 층이고, 프로토콜은 수정하지 않았습니다. Sui testnet 배포 완료.
+Sui · Walrus · Seal 위에 얹은 앱 층입니다. 프로토콜은 수정하지 않았고 Sui testnet 에 배포돼 있습니다.
 
-- **Seal**, 판매자 기계에서 단계별로 암호화한다. 키 ID = 팩 ID ‖ u16 단계번호. 복호화 키는 키 서버(Mysten)가
-  온체인 `seal_approve` 시뮬레이션(이 팩의 구독인가 · Clock 기준 만료 전인가)을 통과할 때만 내려온다.
-- **Walrus**, 암호화된 블롭과 미리보기 블롭 저장. 공개되는 건 시작·끝 스크린샷과 manifest 뿐이다.
-- **Sui**, 공유 객체 `MemoryPack`, 결제와 `Subscription` 발급(수수료는 즉시 판매자에게), Clock 기준 만료,
-  dynamic field. 한 트랜잭션에 publish×N + 미리보기 최대 3건.
-- **MCP**, 구매자 에이전트가 쓰는 도구 7개. 도구 종류에 묶이지 않는다.
+| 층 | 무엇을 하나 |
+|---|---|
+| **Sui** | 공유 객체 `MemoryPack`, 결제와 `Subscription` 발급(수수료는 즉시 판매자에게), Clock 기준 만료, dynamic field. 한 트랜잭션에 publish×N + 미리보기 최대 3건 |
+| **Seal** | 판매자 기계에서 단계별로 암호화. 키 ID = 팩 ID ‖ u16 단계번호. 복호화 키는 키 서버가 `seal_approve`(이 팩의 구독인가, 만료 전인가)를 통과할 때만 내려줌 |
+| **Walrus** | 암호화된 블롭과 미리보기 저장. 공개되는 건 시작·끝 스크린샷과 manifest 뿐 |
+| **MCP** | 구매자 AI 가 쓰는 도구 7개. 도구 종류에 묶이지 않음 |
+
+흐름은 이렇습니다.
 
 ```
-[판매자] 평소대로 작업 → 훅 3종이 턴마다 .mm/steps/step-N.json (파일이 안 바뀐 턴은 안 센다)
-   └ mm publish: 단계마다 Seal 암호화 → Walrus → 트랜잭션 1건으로 publish×N + 미리보기
+판매자   평소대로 작업 → 훅이 턴마다 .mm/steps/step-N.json 을 남김
+         mm publish → 단계마다 Seal 암호화 → Walrus → 트랜잭션 1건으로 publish×N + 미리보기
 
-[구매자 에이전트]
-  market_find     검색 · 미리보기 해시 대조 · 영수증/폐기 수
-  market_acquire  SUI 결제 → Subscription → seal_approve 통과 시에만 배치 fetchKeys 1회로 전 단계 복호화
-                  → 각 해시를 공개 manifest 와 대조
-  market_receipt  적용·검사 후, 구독권 가진 사람만 남기는 영수증 (구독권 1개당 1회, 두 번째는 abort code 5)
+구매자   market_find     검색 · 미리보기 해시 대조
+         market_acquire  SUI 결제 → Subscription → seal_approve 통과 시 전 단계 복호화 → 해시를 manifest 와 대조
+         market_receipt  적용·검사 후 남기는 후기 (구독권 1개당 1회)
 
-만료 → 새 클라이언트는 키를 못 받는다 │ 판매자 retract → 구매자의 다음 조회에서 자동 제외
+만료     새 클라이언트는 키를 못 받음        판매자 retract → 다음 조회에서 자동 제외
 ```
 
-MCP 도구 7개(`scripts/mcp/server.ts`) = 위 셋 + 텍스트 기억용
-`market_list` → `market_preview` → `market_subscribe` → `market_recall`.
+MCP 도구 7개는 `scripts/mcp/server.ts` 에 있습니다. 위 셋에 텍스트 기억용 `market_list` · `market_preview` · `market_subscribe` · `market_recall` 이 더해집니다.
 
 ## 설치
 
-준비물: Claude Code(터미널용 AI 도구) · Node.js 20 이상 · Sui CLI(아래 `scripts/setup-sui.ps1` 또는 docs.sui.io). Claude Code 를 연 상태에서 아래 두 줄을 입력합니다.
+준비물은 Claude Code, Node.js 20 이상, Sui CLI 입니다. Claude Code 를 연 상태에서 두 줄을 입력합니다.
 
 ```
 /plugin marketplace add Blockthon-th/my-project
 /plugin install memory-market
 ```
 
-결제에는 **본인 지갑**이 필요합니다. `~/.memory-market/config.json` 에 `{ "BUYER_SUI_PRIVATE_KEY": "suiprivkey1..." }` 를
-한 번 넣으면 모든 프로젝트에서 쓰입니다. testnet 키는 `sui client new-address ed25519` →
-`sui client faucet --address <주소>` → `sui keytool export --key-identity <주소>`.
-컨트랙트 주소는 공개 정보라 기본값이 들어 있습니다.
-그다음은 AI 가 필요할 때 사도 되냐고 묻고, 허용해 두면 알아서 삽니다. 결제·지출 상한·증거 파일 안전 규칙은 [plugin/README.md](plugin/README.md)를 **읽고** 쓸 것.
+결제에는 본인 지갑이 필요합니다. `~/.memory-market/config.json` 에 한 번만 적어 두면 모든 프로젝트에서 쓰입니다.
+
+```json
+{ "BUYER_SUI_PRIVATE_KEY": "suiprivkey1..." }
+```
+
+testnet 키는 `sui client new-address ed25519` → `sui client faucet --address <주소>` → `sui keytool export --key-identity <주소>` 로 만듭니다. 컨트랙트 주소는 공개 정보라 기본값이 들어 있습니다. 지출 상한과 안전 규칙은 [plugin/README.md](plugin/README.md) 에 있습니다.
 
 ## 직접 돌려보기
 
 Windows PowerShell 기준입니다. 기록 4개를 보는 데는 지갑이 필요 없습니다. `npm run e2e` 만 테스트넷 SUI 가 든 지갑 2개를 쓰고 실제 결제를 보냅니다. `.env` 는 [.env.example](.env.example) 을 복사해 만듭니다.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup-sui.ps1   # Sui CLI + 지갑 (이어서 setup-wallets.ps1. deploy.ps1 은 컨트랙트를 새로 올릴 때만)
+powershell -ExecutionPolicy Bypass -File scripts\setup-sui.ps1   # Sui CLI + 지갑
 cd scripts; npm install
 npm run typecheck                                                # 타입 검사
-npm run check                                                    # RPC·Walrus·Seal 연결 점검 (`-- --sub` 면 구독·복호화까지)
-npm run e2e; npm run e2e:design                                  # 전 과정 검증 (텍스트 기억 / 디자인 과정)
-npm run mm -- --help; npm run build:plugin                       # 판매·구매 CLI · MCP 서버 번들
-cd ..\tools; npm install; npx playwright install chromium
+npm run check                                                    # 체인·Walrus·Seal 연결 점검. -- --sub 를 붙이면 구독·복호화까지
+npm run e2e; npm run e2e:design                                  # 전 과정 검증
+npm run mm -- --help; npm run build:plugin                       # 판매·구매 CLI, MCP 서버 번들
+cd ..	ools; npm install; npx playwright install chromium
 node selftest.mjs                                                # 포집 훅 자체 검증
-node check.mjs ..\demo\buyer\index.html                          # 디자인 5항목
+node check.mjs ..\demouyer\index.html                          # 디자인 5항목
 node check-copy.mjs ..\site\index.html                           # 한국어 카피 6항목
-cd ..; node tools\consistency.mjs                                # 랜딩·저장소·체인이 어긋나는지
+cd ..; node tools\consistency.mjs                                # 랜딩·저장소·체인 대조
 ```
 
-마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 이 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 아홉 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
-인터넷 연결이 필요합니다.
-
-`.env` 는 [.env.example](.env.example) 참고, 커밋 금지. 데모 실행은 [demo/README.md](demo/README.md).
-랜딩 페이지는 [site/index.html](site/index.html) 한 파일이고, 브라우저에서 체인과 Walrus 를 직접 읽습니다.
+마지막 명령이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어 이 문서와 랜딩의 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 아홉 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다. 데모 실행 순서는 [demo/README.md](demo/README.md) 와 [docs/DEMO.md](docs/DEMO.md) 에 있습니다.
 
 ## 체인에 올라간 주소 (Sui testnet)
 
-패키지 [`0x50cd511c…548f5196`](https://suiscan.xyz/testnet/object/0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196)
-
-지갑, 파는 쪽 `0xb31cf4c4…560f` · 사는 쪽 `0x40648673…e5a6` · 예비 `0xf4f552bd…992a`
+- 패키지 [`0x50cd511c…548f5196`](https://suiscan.xyz/testnet/object/0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196)
+- 지갑: 파는 쪽 `0xb31cf4c4…560f` · 사는 쪽 `0x40648673…e5a6` · 예비 `0xf4f552bd…992a`
 
 | 기록 | 개수 | 값 | 기간 | 산 사람 | 객체 |
 |---|---|---|---|---|---|
@@ -166,45 +161,34 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 | 카피라이터 경험 | 8 | 0.03 SUI | 7일 | 0 | [`0x0dcb9195…b23993e8`](https://suiscan.xyz/testnet/object/0x0dcb91952d099a1592ad604702aad38f115ce943277127fff58b5b1ab23993e8) |
 | 블록체인 개발자 경험 | 33 (글) | 0.01 SUI | 24시간 | 0 | [`0x66c6eefe…8766fa7a`](https://suiscan.xyz/testnet/object/0x66c6eefe159f9f74ee3d137778561d7235fbf32a59338b33ea82b3eb8766fa7a) |
 
-- `0xef238e43…` 는 이번에 새로 올린 것입니다. AI에게 "랜딩 만들어줘" 해서 나온 보라색 그라데이션 페이지
-  (Supercharge · Power of AI · 🚀 · Lightning Fast 카드)에서 시작해, 한 번에 하나씩 열 번 고쳐 실제 제품이 보이는 페이지로 만든 과정입니다.
-  시작은 디자인 검사 5개 중 3개 · 카피 검사 6개 중 4개 통과였고, 끝은 디자인 5개 전부 · 카피 6개 중 5개입니다
-  (따옴표 절제만 걸렸습니다, 예시 문구를 따옴표로 감싸서). 5~6번째에서 awwwards 올해의 사이트 cerebrium.ai 를 참고했고
-  (제목 89px · 굵기 300 · 줄간격 1.0 · 자간 -2.2px · 왼쪽 정렬 · 각진 버튼),
-  **7번째가 이 기록의 값어치입니다**, 그 수치를 그대로 베꼈더니 한국어 제목이 네 줄로 터져 첫 화면을 통째로 먹었고,
-  크기를 낮추는 대신 카피를 줄여서 잡았습니다. publish 트랜잭션
-  [`7vZ9WXZz…`](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg) 한 건에 10단계 + 미리보기 3건.
-- `0x0dcb9195…` 은 미리보기 블롭이 manifest 하나뿐이라 스크린샷이 없습니다. 검사 결과 칸도 비어 있습니다.
-- `0x66c6eefe…` 는 텍스트 기억이라 manifest 가 없고, 미리보기 자리에 기억 두 건이 그대로 올라가 있습니다.
-  사기 전에 이만큼이 보입니다, *"한글이 포함된 `.ps1` 은 UTF-8 BOM 없이 저장하면 PowerShell 5.x 가 CP949 로 읽어 깨진다"* ·
-  *"`expected_failure(abort_code = ...)` 를 쓰는 Move 테스트는 마지막에 도달 불가 코드가 필요해서 `abort 0` 으로 끝내면 컴파일이 통과한다"*.
-- 라이브 트랜잭션, [영수증](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP)(`0x75b2…` 에 남은 것) ·
-  [폐기](https://suiscan.xyz/testnet/tx/GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz)(통합 검증용 팩에 남은 것, 지금은 목록에 없음)
+실제 거래 기록도 체인에 있습니다.
 
-만료 구독 조회는 `seal_approve aborted: subscription expired`, 같은 구독권의 두 번째 영수증은 abort code 5(`EReceiptExists`),
-`retract` 후 조회 제외까지 실측했습니다. 전체 표·트랜잭션 목록·3분 대본은 [docs/DEMO.md](docs/DEMO.md).
+- [기록 올리기](https://suiscan.xyz/testnet/tx/7vZ9WXZzgJPhGvG2HpccLR3bQ2vTv56sjisKDEoWtvyg): 한 트랜잭션에 10단계 + 미리보기 3건
+- [산 쪽의 후기](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP): 실측에 쓴 옛 웹퍼블리셔 기록에 남은 것
+- [판 쪽의 내리기](https://suiscan.xyz/testnet/tx/GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz): 검증용 기록에서 한 것
+
+만료된 구독으로 열면 `seal_approve aborted: subscription expired`, 같은 구독권의 두 번째 후기는 abort code 5(`EReceiptExists`) 로 막히는 것까지 실측했습니다.
 
 ## 폴더 구조
 
-```
-contracts/memory_market/  Move, MemoryPack · PackCap · Subscription · seal_approve · leave_receipt · retract (테스트 19개)
-scripts/                  공용 층(config·session·tx·market·records·evidence·memories·filter·txlog·demo-state) · mm.ts CLI
-                          mcp/server.ts (도구 7개) · sync · e2e · e2e-design · check · setup-sui/deploy/setup-wallets.ps1
-tools/                    capture.mjs 포집 훅 · check.mjs 디자인 5항목 · check-copy.mjs 카피 6항목 · shot.mjs · first-edit.mjs · lib.mjs · selftest.mjs
-skills/                   landing-copy-ko 한국어 랜딩 카피 스킬 (카피 기록이 나온 작업 규칙, check-copy.mjs 사본 동봉, 두 벌을 같이 고친다)
-plugin/                   Claude Code 플러그인 (MCP 번들 + 훅), .claude-plugin/marketplace.json 과 짝
-demo/                     seller · buyer · baseline 템플릿 (기록을 다시 만들고 실험을 재현할 때 쓴다) · setup.ps1
-site/                     랜딩 페이지, index.html 단일 파일, 브라우저에서 체인과 Walrus 를 직접 읽는다
-                          dev-memories.md 개발 기억 30건(Sui 기록의 원천이자 그 자체로 상품)
-```
+| 폴더 | 내용 |
+|---|---|
+| `contracts/memory_market/` | Move 컨트랙트. `MemoryPack` · `PackCap` · `Subscription` · `seal_approve` · `leave_receipt` · `retract`, 테스트 19개 |
+| `scripts/` | 공용 층(config · session · tx · market · records · evidence · memories · filter · txlog), `mm.ts` CLI, `mcp/server.ts` 도구 7개, sync · e2e · check, 설치 스크립트 |
+| `tools/` | `capture.mjs` 포집 훅, `check.mjs` 디자인 5항목, `check-copy.mjs` 카피 6항목, `consistency.mjs` 정합 검사, `shot.mjs`, `selftest.mjs` |
+| `plugin/` + `.claude-plugin/` | Claude Code 플러그인(MCP 번들 + 훅)과 마켓플레이스 등록 |
+| `skills/landing-copy-ko/` | 한국어 랜딩 카피 스킬. `check-copy.mjs` 사본 동봉 |
+| `site/` | 랜딩 페이지. `index.html` 한 파일이 브라우저에서 체인과 Walrus 를 직접 읽음 |
+| `demo/` | 판매·구매·대조군 템플릿. 기록을 다시 만들고 실험을 재현할 때 씀 |
+| `docs/` | `DEMO.md` 데모 대본, `dev-memories.md` 개발 기억(블록체인 개발자 경험의 원천) |
 
-층별 문서 [contracts](contracts/memory_market/README.md) · [tools](tools/README.md) · [plugin](plugin/README.md) ·
+층별 문서: [contracts](contracts/memory_market/README.md) · [tools](tools/README.md) · [plugin](plugin/README.md)
 
 ## 로드맵
 
-**정정(supersede)** 낡은 내용을 지우는 대신 새로 고친 것으로 대체하고 산 쪽이 차이를 본다 ·
-**도메인 확장** 검사 항목을 기록이 직접 싣고 오게 해서 웹 디자인 밖으로 ·
-**스폰서 결제** 재단이 예치하고 신규 개발자는 공짜로 ·
-Quilt 로 한 기록을 묶어 저장 · Walrus Sites 카탈로그 · MemWal 자동 수집 연결
+- **정정**: 낡은 내용을 지우는 대신 새로 고친 것으로 대체하고, 산 쪽이 차이를 본다
+- **도메인 확장**: 검사 항목을 기록이 직접 싣고 오게 해서 웹 디자인 밖으로
+- **스폰서 결제**: 재단이 예치하고 신규 개발자는 공짜로
+- Quilt 로 한 기록을 묶어 저장, Walrus Sites 카탈로그, MemWal 자동 수집 연결
 
 Blockthon 2026 출품작. MIT.
