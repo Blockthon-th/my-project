@@ -19,3 +19,6 @@ scripts/.sync-state.json
 **/.mm/pending.json
 **/.mm-cache/
 check-result.json
+
+# 랜딩 검증 스크린샷
+site/.preview/

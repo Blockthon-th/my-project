@@ -60259,6 +60259,7 @@ function parseSpendCap(raw) {
 }
 var GRPC_URL = setting("SUI_GRPC_URL") ?? "https://fullnode.testnet.sui.io:443";
 var suiClient = new SuiGrpcClient({ network: NETWORK, baseUrl: GRPC_URL });
+var GRAPHQL_URL = setting("SUI_GRAPHQL_URL") ?? "https://graphql.testnet.sui.io/graphql";
 var COMMITTEE_SERVERS = [
   {
     objectId: "0xb012378c9f3799fb5b1a7083da74a4069e3c3f1c93de0b27212a5799ce1e1e98",
@@ -66969,12 +66970,31 @@ var MIN_LISTED_TTL_MS = 5 * 60 * 1e3;
 var hiddenPacks = new Set(
   (process.env.MARKET_HIDDEN_PACKS ?? "").split(",").map((s) => s.trim()).filter(Boolean)
 );
-async function listPacks(limit = 50, includeAll = false) {
-  const res = await suiClient.listEvents({
-    filter: { eventType: `${PACKAGE_ID}::market::PackCreated` },
-    limit
+var PACK_CREATED = () => `${PACKAGE_ID}::market::PackCreated`;
+async function packIdsFromGrpc(limit) {
+  const res = await suiClient.listEvents({ filter: { eventType: PACK_CREATED() }, limit });
+  return res.events.map((e) => e.json?.pack_id).filter((v) => typeof v === "string");
+}
+async function packIdsFromGraphql(limit) {
+  const first = Math.min(Math.max(limit, 1), 50);
+  const query = `{ events(filter: { type: "${PACK_CREATED()}" }, first: ${first}) { nodes { contents { json } } } }`;
+  const res = await fetch(GRAPHQL_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ query })
   });
-  const ids = res.events.map((e) => e.json?.pack_id).filter((v) => typeof v === "string");
+  if (!res.ok) throw new Error(`GraphQL ${res.status} ${res.statusText}`);
+  const body = await res.json();
+  if (body.errors?.length) throw new Error(`GraphQL: ${body.errors.map((e) => e.message).join("; ")}`);
+  return (body.data?.events?.nodes ?? []).map((n) => n.contents?.json?.pack_id).filter((v) => typeof v === "string");
+}
+async function listPacks(limit = 50, includeAll = false) {
+  const [gql, grpc] = await Promise.allSettled([packIdsFromGraphql(limit), packIdsFromGrpc(limit)]);
+  if (gql.status === "rejected" && grpc.status === "rejected") throw grpc.reason;
+  const ids = [
+    ...gql.status === "fulfilled" ? gql.value : [],
+    ...grpc.status === "fulfilled" ? grpc.value : []
+  ];
   const packs = await Promise.all([...new Set(ids)].map((id) => getPack(id).catch(() => null)));
   const all = packs.filter((p) => p !== null);
   if (includeAll) return all;

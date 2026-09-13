@@ -15,6 +15,7 @@ import { fromHex, isValidSuiObjectId, normalizeSuiObjectId, toHex, SUI_CLOCK_OBJ
 import { bcs } from '@mysten/sui/bcs';
 import type { Signer } from '@mysten/sui/cryptography';
 import {
+  GRAPHQL_URL,
   KEY_SERVERS,
   PACKAGE_ID,
   SEAL_PACKAGE_ID,
@@ -508,18 +509,53 @@ const hiddenPacks = new Set(
     .filter(Boolean),
 );
 
+const PACK_CREATED = () => `${PACKAGE_ID}::market::PackCreated`;
+
+/** 풀노드 gRPC 이벤트 색인 — 빠르지만 최근 체크포인트만 들고 있다. */
+async function packIdsFromGrpc(limit: number): Promise<string[]> {
+  const res = await suiClient.listEvents({ filter: { eventType: PACK_CREATED() }, limit });
+  return res.events
+    .map((e) => (e.json as { pack_id?: string } | null)?.pack_id)
+    .filter((v): v is string => typeof v === 'string');
+}
+
+/**
+ * GraphQL 색인 — 전체 이력을 들고 있다. 오래된 팩이 gRPC 에서 사라지는 걸 메운다.
+ * (config.ts 의 GRAPHQL_URL 주석 참고. 한 페이지 상한이 50 이다.)
+ */
+async function packIdsFromGraphql(limit: number): Promise<string[]> {
+  const first = Math.min(Math.max(limit, 1), 50);
+  const query = `{ events(filter: { type: "${PACK_CREATED()}" }, first: ${first}) { nodes { contents { json } } } }`;
+  const res = await fetch(GRAPHQL_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ query }),
+  });
+  if (!res.ok) throw new Error(`GraphQL ${res.status} ${res.statusText}`);
+  const body = (await res.json()) as {
+    data?: { events?: { nodes?: { contents?: { json?: { pack_id?: string } | null } | null }[] } };
+    errors?: { message?: string }[];
+  };
+  if (body.errors?.length) throw new Error(`GraphQL: ${body.errors.map((e) => e.message).join('; ')}`);
+  return (body.data?.events?.nodes ?? [])
+    .map((n) => n.contents?.json?.pack_id)
+    .filter((v): v is string => typeof v === 'string');
+}
+
 /**
  * PackCreated 이벤트로 시장의 팩을 나열한다.
+ * 두 색인(GraphQL = 전체 이력, gRPC = 최신)을 합집합으로 쓴다. 한쪽이 죽어도 목록은 나오고,
+ * 둘 다 죽으면 그때 예외를 올린다.
  * @param includeAll true 면 테스트 팩까지 전부 (점검용)
  */
 export async function listPacks(limit = 50, includeAll = false): Promise<PackInfo[]> {
-  const res = await suiClient.listEvents({
-    filter: { eventType: `${PACKAGE_ID}::market::PackCreated` },
-    limit,
-  });
-  const ids = res.events
-    .map((e) => (e.json as { pack_id?: string } | null)?.pack_id)
-    .filter((v): v is string => typeof v === 'string');
+  const [gql, grpc] = await Promise.allSettled([packIdsFromGraphql(limit), packIdsFromGrpc(limit)]);
+  if (gql.status === 'rejected' && grpc.status === 'rejected') throw grpc.reason;
+  // GraphQL 이 체크포인트 오름차순이라 그걸 앞에 두고, gRPC 에만 있는(= 색인이 아직 안 따라온) 팩을 뒤에 붙인다.
+  const ids = [
+    ...(gql.status === 'fulfilled' ? gql.value : []),
+    ...(grpc.status === 'fulfilled' ? grpc.value : []),
+  ];
   const packs = await Promise.all([...new Set(ids)].map((id) => getPack(id).catch(() => null)));
   const all = packs.filter((p): p is PackInfo => p !== null);
   if (includeAll) return all;

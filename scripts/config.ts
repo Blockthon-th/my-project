@@ -94,6 +94,14 @@ export const GRPC_URL = setting('SUI_GRPC_URL') ?? 'https://fullnode.testnet.sui
 export const suiClient = new SuiGrpcClient({ network: NETWORK, baseUrl: GRPC_URL });
 
 /**
+ * 풀노드의 **이벤트 색인은 최근 체크포인트만** 들고 있다. 며칠 지난 PackCreated 는
+ * gRPC `listEvents` 에서 아예 사라진다(2026-09-13 확인: 팩 6개 중 당일에 만든 1개만 돌아왔다).
+ * GraphQL 색인은 전체 이력을 갖고 있어서 팩 목록을 만들 때 gRPC 와 합쳐서 쓴다.
+ * 조회 전용이고 CORS 가 `*` 라 정적 랜딩(site/)도 같은 엔드포인트를 읽는다.
+ */
+export const GRAPHQL_URL = setting('SUI_GRAPHQL_URL') ?? 'https://graphql.testnet.sui.io/graphql';
+
+/**
  * Seal 키 서버 (testnet). 두 가지 선택지:
  *  - independent (기본): 독립 운영 서버 2대, threshold 2. **현재 동작 확인된 조합.**
  *  - committee: 탈중앙 모드(aggregator 경유). 2026-09 기준 testnet 에서 세션 키 인증서를

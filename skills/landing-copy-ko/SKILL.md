@@ -114,6 +114,10 @@ content-type 헤더가 없어도 대개 렌더되지만 `x-content-type-options:
 node tools/check-copy.mjs <html 또는 url> --banned "제품명,기술명,내부용어"
 ```
 
+경로는 저장소 루트 기준이다. Playwright 가 `tools/node_modules` 에만 있어서 이 폴더에 같이 둔 `check-copy.mjs` 사본을
+그 자리에서 돌리면 `Cannot find package 'playwright'` 가 난다. 사본은 스킬을 다른 저장소로 옮길 때 쓰고
+여기서는 `tools/` 쪽을 돌린다.
+
 여섯 항목을 본다. 첫 화면 금지어 · 말투 일관성 · 분열문 · 대시 절제 · 따옴표 절제 · 375px 가로 스크롤.
 형태소 분석기를 쓰지 않으므로 완벽하지 않다. 실패로 뜬 항목은 사람이 한 번 보라는 신호다.
 

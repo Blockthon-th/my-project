@@ -99,6 +99,8 @@ node selftest.mjs; node check.mjs ..\demo\buyer\index.html       # 포집 훅 �
 - 패키지 [`0x50cd511c…548f5196`](https://suiscan.xyz/testnet/object/0x50cd511c24786aa091e26a46d5c66ec32308ceb6379902eaf1045d99548f5196)
 - 디자인 과정 팩 · 5단계 · 0.05 SUI · 7일 [`0x75b25d24…22cfcb1d`](https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d)
 - Sui 삽질 기억 팩 · 30건 · 0.01 SUI · 24시간 [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40)
+- 한국어 랜딩 카피 팩 · 8단계 · 0.03 SUI · 7일 [`0x8e366e40…1ecde683`](https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683).
+  미리보기 블롭이 manifest 하나뿐이다. 스크린샷이 없는 대신 채점 기준인 카피 검사 6항목을 manifest 에 직접 싣고 온다
 - 라이브 트랜잭션 [영수증](https://suiscan.xyz/testnet/tx/7HzugJeJna9LDGynREvAer6a3xxMErHxb8WQcmutVuYP) · [폐기](https://suiscan.xyz/testnet/tx/GZFerzGztZzyzmpLriHMN4L6m1m7GX58ehkAbJsC4rYz)
 
 ## 구조
@@ -107,10 +109,11 @@ node selftest.mjs; node check.mjs ..\demo\buyer\index.html       # 포집 훅 �
 contracts/memory_market/  Move — MemoryPack · PackCap · Subscription · seal_approve · leave_receipt · retract
 scripts/                  공용 층(config·session·tx·market·records·evidence) · mm.ts CLI
                           mcp/server.ts (도구 7개) · sync · e2e · e2e-design · check · *.ps1
-tools/                    capture.mjs 포집 훅 · check.mjs 검사 5항목 · shot.mjs · lib.mjs · selftest.mjs
+tools/                    capture.mjs 포집 훅 · check.mjs 검사 5항목 · check-copy.mjs 카피 검사 6항목 · shot.mjs · lib.mjs · selftest.mjs
+skills/                   landing-copy-ko 한국어 랜딩 카피 스킬 (카피 팩의 8단계가 나온 작업 규칙, check-copy.mjs 사본 동봉)
 plugin/                   Claude Code 플러그인 (MCP 번들 + 훅), .claude-plugin/marketplace.json 과 짝
 demo/                     seller · buyer · baseline 템플릿 · compare.html 발표 화면 · setup.ps1 · serve.mjs
-site/                     랜딩 페이지
+site/                     랜딩 페이지 — index.html 단일 파일, 브라우저에서 체인과 Walrus 를 직접 읽는다
 docs/                     DEMO.md 3분 대본 · dev-memories.md 개발 기억 30건(Sui 팩의 원천이자 그 자체로 상품)
 ```
 

@@ -36,8 +36,15 @@ function parseWH(s, fb) {
 }
 
 function countHonorific(text) {
-  const formal = (text.match(/(습니다|입니다)[.!?」"'\s)]/g) || []).length;
-  const polite = (text.match(/(해요|예요|이에요|어요|아요|세요|네요|거든요)[.!?」"'\s)]/g) || []).length;
+  // 합쇼체 어미는 어간 + -(스)ㅂ니다 다. '습니다|입니다' 만 세면 '합니다·걸립니다·드립니다·채워집니다'
+  // 를 통째로 놓친다(이름이 합니다체인데 정작 '합니다' 를 못 셌다). '니다' 앞 음절의 받침이
+  // ㅂ(종성 17)인지로 센다 — '다니다·지니다' 같은 기본형은 받침이 없어 걸리지 않는다.
+  let formal = 0;
+  for (const m of text.matchAll(/([\uac00-\ud7a3])니다(?=[.!?\u2026\u300d\u201d"'\s)]|$)/g)) {
+    const i = m[1].charCodeAt(0) - 0xac00;
+    if (i % 28 === 17) formal++;
+  }
+  const polite = (text.match(/(해요|예요|이에요|어요|아요|세요|네요|거든요|나요|져요|워요|려요|와요|봐요|지요|죠)(?=[.!?\u2026\u300d\u201d"'\s)]|$)/g) || []).length;
   return { formal, polite };
 }
 
@@ -101,7 +108,10 @@ export async function runCopyChecks(target, opts = {}) {
     details['dash-restraint'] = { pass: dashes <= 3, count: dashes };
 
     // 5. 따옴표 강조
-    const quotes = (prose.match(/[""][^""\n]{1,40}[""]/g) || []).length + (prose.match(/「[^」\n]{1,40}」/g) || []).length;
+    // 곧은 따옴표(")와 굽은 따옴표(\u201c \u201d)를 함께 본다. 한글 카피의 강조는 대개 굽은 쪽이다.
+    // \u 이스케이프로 적는다 — 굽은 따옴표를 글자 그대로 두면 파일이 ASCII 로 정규화될 때
+    // 곧은 따옴표로 바뀌어 조용히 [""] 같은 중복 문자 클래스가 된다(실제로 그렇게 깨져 있었다).
+    const quotes = (prose.match(/[\u201c\u201d"][^\u201c\u201d"\n]{1,40}[\u201c\u201d"]/g) || []).length + (prose.match(/\u300c[^\u300d\n]{1,40}\u300d/g) || []).length;
     details['quote-restraint'] = { pass: quotes < 5, count: quotes };
 
     // 6. 375px 가로 스크롤
@@ -126,7 +136,11 @@ if (isMain(import.meta.url)) {
   const a = { target: null, banned: null, viewport: null, mobile: null };
   for (let i = 0; i < argv.length; i++) {
     const v = argv[i];
-    if (v === '--banned') a.banned = argv[++i].split(',').map((s) => s.trim()).filter(Boolean);
+    if (v === '--banned') {
+      const arg = argv[++i];
+      if (arg === undefined) { console.error('--banned 뒤에 쉼표로 구분한 목록이 필요하다'); process.exit(2); }
+      a.banned = arg.split(',').map((s) => s.trim()).filter(Boolean);
+    }
     else if (v === '--viewport') a.viewport = parseWH(argv[++i]);
     else if (v === '--mobile') a.mobile = parseWH(argv[++i]);
     else if (!v.startsWith('--') && !a.target) a.target = v;

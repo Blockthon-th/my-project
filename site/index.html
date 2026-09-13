@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>당신의 시행착오를 사겠습니다</title>
-<meta name="description" content="AI랑 씨름하다 알게 된 것들을 사고파는 곳이에요. 사는 쪽도 사람이 아니라 AI 예요.">
+<meta name="description" content="AI랑 씨름하다 알게 된 것들을 사고파는 곳이에요. 사는 쪽도 사람이 아니라 AI예요.">
 <style>
   :root{
     --bg:#fafaf9;
     --ink:#1c1917;
     --muted:#57534e;
-    --faint:#8a827c;
+    --faint:#6f6a65;
     --line:#e7e5e4;
     --line-soft:#f0efed;
     --card:#ffffff;
@@ -36,11 +36,11 @@
   a{color:inherit}
   button{font:inherit}
 
-  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding-left:24px; padding-right:24px; }
   /* every section shares one left edge; prose just stops earlier */
   .hero-body, .hero-line, .btns, .h2, .sub, .note, .plain, .chat, .closing,
   .bottom .t, .limits, .flinks, .ddesc, .dmeta, .block h2, .block .lead,
-  .howto, .linklist, .steps, .errbox, .quote{ max-width:var(--col); }
+  .howto, .linklist, .steps, .errbox, .quote, .foot-note, .ba-note, .sellcmd{ max-width:var(--col); }
   h1, .dtitle{ max-width:840px; }
 
   /* ---------- hero ---------- */
@@ -48,7 +48,7 @@
     min-height:100vh;
     display:flex; flex-direction:column; justify-content:center;
     position:relative;
-    padding:96px 0 128px;
+    padding:88px 0 92px;
   }
   h1{
     font-size:clamp(34px, 5.4vw, 58px);
@@ -74,10 +74,10 @@
     transition:opacity .15s ease;
   }
   .btn:hover{opacity:.84}
-  .btn.ghost{ background:transparent; color:var(--ink); border-color:#d6d3d1; }
+  .btn.ghost{ background:transparent; color:var(--ink); border-color:#b9b4ae; }
   .btn.ghost:hover{ border-color:var(--ink); opacity:1; }
   .cue{
-    position:absolute; bottom:44px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
     width:100%; max-width:var(--maxw); padding:0 24px;
     color:var(--faint); font-size:14px;
     display:flex; align-items:center; gap:8px;
@@ -92,18 +92,18 @@
     letter-spacing:-0.01em; margin:0 0 8px;
   }
   .sub{ color:var(--muted); margin:0 0 44px; }
-  .eyebrow{ font-size:13px; font-weight:700; color:var(--accent); letter-spacing:.02em; margin:0 0 10px; }
 
   /* ---------- chat ---------- */
-  .chat{ margin-top:56px; }
-  .pair{ margin-bottom:64px; }
+  .chat{ margin-top:52px; }
+  .pair{ margin-bottom:44px; scroll-margin-top:90px; }
   .pairno{
-    width:24px;height:24px;border-radius:50%;
-    border:1px solid var(--line); background:var(--card);
-    color:var(--faint); font-size:12px; font-weight:700;
+    width:26px;height:26px;border-radius:50%;
+    border:1px solid #d6d3d1; background:var(--card);
+    color:var(--ink); font-size:13px; font-weight:800;
     display:flex;align-items:center;justify-content:center;
-    margin:0 0 14px auto;
+    margin:0 0 12px auto;
   }
+  .pair:target .pairno{ border-color:var(--accent); color:var(--accent); }
   .row{ display:flex; }
   .row.me{ justify-content:flex-end; }
   .row.you{ justify-content:flex-start; margin-top:12px; }
@@ -123,22 +123,24 @@
     color:var(--accent); margin-bottom:4px;
   }
   .closing{
-    margin:104px 0 0; font-size:clamp(19px,2.2vw,24px); line-height:1.6;
+    margin:96px 0 0; font-size:clamp(19px,2.2vw,24px); line-height:1.6;
     font-weight:700; letter-spacing:-0.01em;
   }
-  .closing.two{ margin-top:88px; color:var(--accent); }
+  .closing.two{ margin-top:80px; color:var(--accent); }
 
   /* ---------- before / after ---------- */
-  .ba{ margin-top:72px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .shot{ }
+  .ba{ margin-top:64px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   .shot .cap{ font-size:13px; font-weight:700; color:var(--muted); margin-bottom:10px; }
-  .shot .frame{
+  .frame{
+    display:block; width:100%; padding:0; margin:0;
     border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--card);
-    aspect-ratio:16/10;
+    aspect-ratio:16/10; cursor:zoom-in;
   }
-  .shot img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
+  .frame img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
+  .ba-note{ margin-top:18px; color:var(--muted); font-size:14px; line-height:1.8; }
+  .ba-note b{ font-weight:700; color:var(--ink); }
 
-  .skel{ width:100%; height:100%; background:linear-gradient(90deg,#f2f1ef 25%,#e9e7e4 37%,#f2f1ef 63%); background-size:400% 100%; animation:sh 1.4s ease infinite; }
+  .skel{ display:block; width:100%; height:100%; background:linear-gradient(90deg,#f2f1ef 25%,#e9e7e4 37%,#f2f1ef 63%); background-size:400% 100%; animation:sh 1.4s ease infinite; }
   @keyframes sh{ 0%{background-position:100% 0} 100%{background-position:0 0} }
 
   .errbox{
@@ -150,14 +152,17 @@
     border:1px solid var(--ink); background:transparent; color:var(--ink);
     border-radius:999px; padding:8px 16px; font-size:14px; font-weight:700; cursor:pointer;
   }
+  .retry[disabled]{ opacity:.55; cursor:default; }
 
   /* ---------- numbers ---------- */
-  .nums{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .nums{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; align-items:start; }
+  .nums .num{ display:flex; flex-direction:column; height:100%; }
   .num .big{ font-size:clamp(38px,4.6vw,52px); font-weight:800; letter-spacing:-0.03em; line-height:1.1; }
   .num.win .big{ color:var(--accent); }
   .num .who{ font-weight:700; margin-top:8px; }
-  .num .desc{ color:var(--muted); font-size:15px; margin-top:6px; }
-  .num .meta{ color:var(--faint); font-size:13px; margin-top:10px; font-variant-numeric:tabular-nums; }
+  .num .desc{ color:var(--muted); font-size:15px; margin-top:6px; flex:1 1 auto; }
+  .num .meta{ color:var(--faint); font-size:13px; margin-top:12px; font-variant-numeric:tabular-nums; }
+  .num .desc a{ color:var(--accent); text-underline-offset:3px; }
   .note{ margin-top:44px; color:var(--faint); font-size:14px; line-height:1.8; border-top:1px solid var(--line); padding-top:20px; }
 
   /* ---------- pack cards ---------- */
@@ -172,12 +177,15 @@
   .card .ds{ color:var(--muted); font-size:14px; line-height:1.7; margin-bottom:18px; }
   .card .mt{ color:var(--faint); font-size:13px; font-variant-numeric:tabular-nums; }
   .card .go{ margin-top:18px; font-size:14px; font-weight:700; color:var(--accent); }
-  .card.sk{ pointer-events:none; }
+  .card.sk{ pointer-events:none; min-height:212px; }
   .card.sk .l{ height:14px; border-radius:4px; background:#f0efed; margin-bottom:10px; }
+  .foot-note{ margin-top:26px; color:var(--faint); font-size:14px; line-height:1.8; }
 
   /* ---------- sell ---------- */
   .plain{ color:var(--muted); font-size:17px; }
   .plain span{ display:block; }
+  .sellcmd{ margin-top:28px; }
+  .sellcmd p{ margin:0 0 10px; color:var(--faint); font-size:14px; }
 
   /* ---------- bottom ---------- */
   .bottom{ border-top:1px solid var(--line); padding:64px 0 96px; }
@@ -186,12 +194,12 @@
   .limits{ margin-top:40px; }
   .limits h3{ font-size:14px; font-weight:700; margin:0 0 14px; color:var(--ink); }
   .limits ul{ margin:0; padding:0; list-style:none; }
-  .limits li{ color:var(--faint); font-size:14px; line-height:1.8; padding-left:14px; position:relative; margin-bottom:6px; }
-  .limits li::before{ content:""; position:absolute; left:0; top:.85em; width:5px; height:1px; background:#c9c4bf; }
-  .flinks{ margin-top:36px; font-size:13px; color:var(--faint); }
-  .flinks a{ color:var(--faint); text-decoration:underline; text-underline-offset:3px; }
+  .limits li{ color:var(--muted); font-size:14px; line-height:1.8; padding-left:14px; position:relative; margin-bottom:6px; }
+  .limits li::before{ content:""; position:absolute; left:0; top:.85em; width:5px; height:1px; background:#a9a49e; }
+  .flinks{ margin-top:36px; font-size:13px; color:var(--faint); line-height:1.9; }
+  .flinks a{ color:var(--muted); text-decoration:underline; text-underline-offset:3px; }
   .flinks a:hover{ color:var(--ink); }
-  .flinks span{ display:block; margin-bottom:6px; }
+  .flinks span{ display:block; }
 
   /* ---------- detail ---------- */
   .back{
@@ -199,7 +207,7 @@
     font-size:14px; font-weight:700; margin-bottom:36px;
   }
   .back:hover{ color:var(--ink); }
-  .dtop{ padding:56px 0 0; }
+  .dtop{ padding-top:56px; }
   .dtitle{ font-size:clamp(26px,3.4vw,38px); line-height:1.3; font-weight:800; letter-spacing:-0.02em; margin:0 0 14px; }
   .ddesc{ color:var(--muted); margin:0 0 24px; }
   .dmeta{ display:flex; flex-wrap:wrap; gap:10px; }
@@ -208,23 +216,31 @@
     padding:6px 14px; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums;
   }
   .chip.hi{ border-color:var(--accent); color:var(--accent); font-weight:700; }
-  .block{ padding:56px 0 0; }
+  .price-note{ margin:14px 0 0; color:var(--faint); font-size:13px; }
+  .block{ padding-top:56px; }
   .block h2{ font-size:20px; font-weight:800; margin:0 0 6px; letter-spacing:-0.01em; }
   .block .lead{ color:var(--muted); font-size:15px; margin:0 0 22px; }
 
   .checks{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .chk{ border:1px solid var(--line); background:var(--card); border-radius:10px; padding:14px 16px; }
   .chk .k{ font-weight:700; font-size:15px; }
-  .chk .v{ color:var(--faint); font-size:13px; line-height:1.65; margin-top:4px; }
+  .chk .v{ color:var(--muted); font-size:14px; line-height:1.7; margin-top:4px; }
+  details{ margin-top:8px; }
+  details summary{ font-size:12px; color:var(--faint); cursor:pointer; }
+  details .raw{
+    margin-top:6px; font-size:12px; color:var(--muted); line-height:1.7;
+    background:#f6f5f3; border-radius:6px; padding:8px 10px; word-break:break-all;
+  }
 
   .steps{ border:1px solid var(--line); border-radius:12px; background:var(--card); overflow:hidden; }
   .step{ padding:18px 20px; border-bottom:1px solid var(--line-soft); }
   .step:last-child{ border-bottom:0; }
   .step .n{ font-size:12px; font-weight:700; color:var(--accent); }
   .step .ls{ font-size:15px; line-height:1.7; margin-top:4px; }
+  .step .cut{ font-size:13px; color:var(--faint); margin-top:6px; }
   .step .lk{ margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; }
-  .lock{ font-size:12px; color:var(--faint); border:1px dashed #d6d3d1; border-radius:6px; padding:3px 9px; background:#faf9f8; }
-  .hashline{ font-size:11px; color:#a8a29e; margin-top:8px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; word-break:break-all; }
+  .lock{ font-size:12px; color:var(--muted); border:1px dashed #c9c4bf; border-radius:6px; padding:3px 9px; background:#faf9f8; }
+  .hashline{ font-size:12px; color:var(--faint); margin-top:8px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; word-break:break-all; }
 
   .tablewrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--card); }
   table{ border-collapse:collapse; width:100%; min-width:520px; font-size:14px; }
@@ -232,9 +248,9 @@
   thead th{ font-size:12px; color:var(--faint); font-weight:700; }
   tbody tr:last-child td{ border-bottom:0; }
   tbody tr.hi td{ background:var(--accent-soft); font-weight:700; }
-  td.num{ font-variant-numeric:tabular-nums; }
+  td.tnum{ font-variant-numeric:tabular-nums; }
+  .tnote{ color:var(--faint); font-size:13px; margin-top:14px; }
 
-  .howto{ counter-reset:s; }
   .howto .s{ display:flex; gap:14px; margin-bottom:22px; }
   .howto .idx{
     flex:0 0 auto; width:24px; height:24px; border-radius:50%;
@@ -266,6 +282,19 @@
     padding:16px 18px; font-size:15px; line-height:1.75; margin-bottom:12px; color:var(--ink);
   }
 
+  /* ---------- lightbox ---------- */
+  .lb{
+    position:fixed; inset:0; z-index:50; background:rgba(28,25,23,.88);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .lb img{ max-width:100%; max-height:86vh; border-radius:6px; }
+  .lb .x{
+    position:absolute; top:18px; right:18px;
+    background:#fafaf9; color:#1c1917; border:0; border-radius:999px;
+    padding:8px 16px; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .lb .cap2{ position:absolute; bottom:20px; left:0; right:0; text-align:center; color:#fafaf9; font-size:13px; }
+
   /* ---------- reveal ---------- */
   .reveal{ opacity:0; transform:translateY(14px); transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1); transition-delay:var(--d,0ms); }
   .reveal.in{ opacity:1; transform:none; }
@@ -280,14 +309,15 @@
     .ba{ grid-template-columns:1fr; gap:28px; }
     section{ padding:76px 0; }
     .bubble{ max-width:94%; }
-    .pair{ margin-bottom:52px; }
+    .pair{ margin-bottom:48px; }
   }
   @media (max-width:400px){
-    .wrap{ padding:0 18px; }
+    .wrap{ padding-left:18px; padding-right:18px; }
     .cue{ padding:0 18px; }
     .btn{ padding:13px 20px; font-size:15px; }
     .linklist a{ flex-direction:column; gap:6px; }
     .linklist .id{ text-align:left; }
+    pre{ white-space:pre-wrap; word-break:break-all; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -312,7 +342,7 @@
         <span>버튼이 안 보여서 고치고, 제목이 세 줄로 떨어져서 또 고치고.</span>
         <span>다 고치고 나면 그 대화는 그냥 사라져요.</span>
       </p>
-      <p class="hero-line">여기서는 그걸 사고팔아요. 사는 쪽도 사람이 아니라 AI 예요.</p>
+      <p class="hero-line">여기서는 그걸 사고팔아요. 사는 쪽도 사람이 아니라 AI예요.</p>
       <div class="btns">
         <a class="btn" href="#sec-packs">지금 팔리는 것 보기</a>
         <a class="btn ghost" href="#sec-sell">내 것도 팔아보기</a>
@@ -328,31 +358,31 @@
 
       <div class="chat">
 
-        <div class="pair">
+        <div class="pair" id="pair-1">
           <div class="pairno reveal">1</div>
           <div class="row me reveal"><div class="bubble me">버튼이 그라데이션에 묻혀 안 보여. 나머지 레이아웃은 승인. 버튼 대비만 고쳐.</div></div>
           <div class="row you reveal" style="--d:300ms"><div class="bubble you"><span class="gotlabel">알게 된 것</span>그라데이션 위에 올리는 버튼은 반투명 배경을 쓰면 안 돼요. 뒤 색이 뭐든 글자가 보이는 불투명 색을 써요.</div></div>
         </div>
 
-        <div class="pair">
+        <div class="pair" id="pair-2">
           <div class="pairno reveal">2</div>
           <div class="row me reveal"><div class="bubble me">제목이 세 줄로 떨어져서 답답해. 1280px 에서 두 줄 안에 들어오게 해줘.</div></div>
           <div class="row you reveal" style="--d:300ms"><div class="bubble you"><span class="gotlabel">알게 된 것</span>한글 제목은 글자 크기를 줄이기 전에 문장을 줄여요. 폭 640px 에 56px 글자로 두 줄이면 22자 안쪽이에요.</div></div>
         </div>
 
-        <div class="pair">
+        <div class="pair" id="pair-3">
           <div class="pairno reveal">3</div>
           <div class="row me reveal"><div class="bubble me">폰에서 보면 옆으로 스크롤돼. 지원 국가 줄이 범인 같아.</div></div>
           <div class="row you reveal" style="--d:300ms"><div class="bubble you"><span class="gotlabel">알게 된 것</span>가로로 늘어놓는 목록에 최소 너비를 박으면 좁은 화면에서 삐져나와요. 줄바꿈을 허용하면 넓은 화면 모양은 그대로예요.</div></div>
         </div>
 
-        <div class="pair">
+        <div class="pair" id="pair-4">
           <div class="pairno reveal">4</div>
           <div class="row me reveal"><div class="bubble me">요금제 카드 세 장 높이가 제각각이야. 버튼은 카드 바닥에 붙여.</div></div>
           <div class="row you reveal" style="--d:300ms"><div class="bubble you"><span class="gotlabel">알게 된 것</span>내용 길이가 다른 카드는 컨테이너에서 높이를 맞추고 버튼만 아래로 밀어요.</div></div>
         </div>
 
-        <div class="pair">
+        <div class="pair" id="pair-5">
           <div class="pairno reveal">5</div>
           <div class="row me reveal"><div class="bubble me">상단 고정 메뉴가 첫 문장을 가려.</div></div>
           <div class="row you reveal" style="--d:300ms"><div class="bubble you"><span class="gotlabel">알게 된 것</span>메뉴를 화면에 고정했으면 그 아래 첫 칸의 위 여백을 메뉴 높이보다 크게 잡아요. 메뉴를 건드리는 것보다 부작용이 적어요.</div></div>
@@ -366,13 +396,17 @@
       <div class="ba reveal" id="ba">
         <div class="shot">
           <div class="cap">고치기 전</div>
-          <div class="frame" id="ba-before"><div class="skel"></div></div>
+          <button class="frame" type="button" id="ba-before"><span class="skel"></span></button>
         </div>
         <div class="shot">
           <div class="cap">고친 뒤</div>
-          <div class="frame" id="ba-after"><div class="skel"></div></div>
+          <button class="frame" type="button" id="ba-after"><span class="skel"></span></button>
         </div>
       </div>
+      <p class="ba-note reveal" id="ba-note">
+        눌러서 크게 보면 두 가지가 보여요. <b>제목이 세 줄에서 두 줄로 줄었고</b>, <b>위에 고정된 메뉴가 첫 줄을 덮던 것도 없어졌어요.</b>
+        나머지 세 가지는 이 화면 아래쪽이라 여기선 안 보여요.
+      </p>
       <div id="ba-err" hidden style="margin-top:24px"></div>
     </div>
   </section>
@@ -381,11 +415,12 @@
   <section id="sec-proof">
     <div class="wrap">
       <h2 class="h2 reveal">같은 문제가 있는 다른 페이지를 AI에게 고치게 해봤어요</h2>
-      <div class="nums" style="margin-top:44px">
+      <p class="sub reveal">검사 다섯 항목 중 몇 개를 통과했는지예요.</p>
+      <div class="nums">
         <div class="num reveal">
           <div class="big">4 / 5</div>
           <div class="who">아무것도 없이 혼자, 세 번</div>
-          <div class="desc">세 번 다 같은 걸 놓쳤어요. 위에 나온 2번, 제목 줄바꿈이요.</div>
+          <div class="desc">세 번 다 같은 걸 놓쳤어요. 위에 나온 <a href="#pair-2">2번</a>, 제목 줄바꿈이요.</div>
           <div class="meta">16~26턴 · 3~6분</div>
         </div>
         <div class="num reveal" style="--d:120ms">
@@ -414,10 +449,13 @@
       <h2 class="h2">지금 올라와 있는 묶음</h2>
       <p class="sub">눌러보면 안에 뭐가 들었는지 볼 수 있어요.</p>
       <div class="cards" id="cards">
-        <div class="card sk"><div class="l" style="width:70%"></div><div class="l" style="width:90%"></div><div class="l" style="width:40%"></div></div>
-        <div class="card sk"><div class="l" style="width:60%"></div><div class="l" style="width:85%"></div><div class="l" style="width:45%"></div></div>
+        <div class="card sk"><div class="l" style="width:70%"></div><div class="l" style="width:52%;height:10px"></div><div class="l" style="width:96%;margin-top:18px"></div><div class="l" style="width:88%"></div><div class="l" style="width:64%;margin-top:18px;height:10px"></div></div>
+        <div class="card sk"><div class="l" style="width:60%"></div><div class="l" style="width:44%;height:10px"></div><div class="l" style="width:92%;margin-top:18px"></div><div class="l" style="width:80%"></div><div class="l" style="width:58%;margin-top:18px;height:10px"></div></div>
       </div>
       <div id="cards-err" hidden style="margin-top:20px"></div>
+      <p class="foot-note">
+        묶음 이름이랑 설명은 올린 사람이 쓴 그대로예요. 값은 SUI 라는 단위로 적혀 있는데, 지금은 테스트넷이라 진짜 돈은 안 들어요.
+      </p>
     </div>
   </section>
 
@@ -426,10 +464,15 @@
     <div class="wrap">
       <h2 class="h2">파는 쪽은 따로 할 게 없어요</h2>
       <p class="plain" style="margin-top:24px">
-        <span>평소처럼 AI 랑 일하면 돼요. 설치해두면 고칠 때마다 알아서 기록돼요.</span>
+        <span>평소처럼 AI랑 일하면 돼요. 설치해두면 고칠 때마다 알아서 기록돼요.</span>
         <span>뭘 지적했는지, 뭐가 바뀌었는지, 그래서 뭘 알게 됐는지까지요.</span>
         <span>쌓이면 묶어서 올리면 끝이에요.</span>
       </p>
+      <div class="sellcmd">
+        <p>설치는 이 두 줄이에요. Claude Code 에 붙여 넣으면 돼요.</p>
+        <pre>/plugin marketplace add Blockthon-th/my-project
+/plugin install memory-market</pre>
+      </div>
     </div>
   </section>
 
@@ -459,6 +502,13 @@
 <!-- ==================== DETAIL ==================== -->
 <main id="view-detail" hidden></main>
 
+<!-- ==================== LIGHTBOX ==================== -->
+<div class="lb" id="lb" hidden>
+  <button class="x" type="button" id="lb-close">닫기</button>
+  <img id="lb-img" alt="">
+  <div class="cap2" id="lb-cap"></div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -468,6 +518,38 @@
   var AGG  = 'https://aggregator.walrus-testnet.walrus.space/v1/blobs/';
   var SCAN = 'https://suiscan.xyz/testnet/';
   var MIN_TTL = 300000;
+
+  /* 이 페이지 2번 섹션이 다루는 묶음. 3번 표의 실측도 이 묶음으로 잰 것이라 여기에만 붙인다. */
+  var STORY_PACK = '0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d';
+
+  /* 위 대화에 나온 다섯 마디. 체인 기록의 지문으로만 이어 붙여서 어긋날 수 없게 한다. */
+  var LESSON_BY_SHA = {
+    '02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222':
+      '그라데이션 위에 올리는 버튼은 반투명 배경을 쓰면 안 돼요. 뒤 색이 뭐든 글자가 보이는 불투명 색을 써요.',
+    '8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e':
+      '한글 제목은 글자 크기를 줄이기 전에 문장을 줄여요. 폭 640px 에 56px 글자로 두 줄이면 22자 안쪽이에요.',
+    'c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8':
+      '가로로 늘어놓는 목록에 최소 너비를 박으면 좁은 화면에서 삐져나와요. 줄바꿈을 허용하면 넓은 화면 모양은 그대로예요.',
+    'df7fb11e9b351032ad56dec59d49fd93606140416a17901116e6323aae8947af':
+      '내용 길이가 다른 카드는 컨테이너에서 높이를 맞추고 버튼만 아래로 밀어요.',
+    '80a07fe37e6185d09ba919571cc74e7b41ada0147402f5958cb790be3f20e743':
+      '메뉴를 화면에 고정했으면 그 아래 첫 칸의 위 여백을 메뉴 높이보다 크게 잡아요. 메뉴를 건드리는 것보다 부작용이 적어요.'
+  };
+
+  /* 검사 항목을 사람 말로. 모르는 항목이 오면 원문만 보여준다. */
+  var CHECK_KO = {
+    'cta-contrast':      ['버튼 대비', '첫 화면에서 제일 큰 버튼 글자가 배경에 묻히지 않는지 봐요.'],
+    'h1-lines':          ['제목 줄수', '넓은 화면에서 제목이 두 줄 안에 들어오는지 봐요.'],
+    'no-hscroll':        ['가로 스크롤', '좁은 폰 화면에서 옆으로 밀리지 않는지 봐요.'],
+    'no-hscroll-375':    ['가로 스크롤', '좁은 폰 화면에서 옆으로 밀리지 않는지 봐요.'],
+    'card-height':       ['카드 높이', '나란히 놓인 카드들의 높이가 들쭉날쭉하지 않은지 봐요.'],
+    'nav-overlap':       ['메뉴 겹침', '위에 고정된 메뉴가 첫 문장을 가리지 않는지 봐요.'],
+    'first-screen-jargon':['첫 화면에 낯선 말', '처음 온 사람이 모를 만한 단어가 첫 화면에 없는지 봐요.'],
+    'honorific-consistent':['말투 통일', '해요체랑 합니다체가 섞이지 않았는지 봐요.'],
+    'no-cleft':          ['번역 티 나는 문장', '"핵심은 ~다" 같은 문장이 없는지 봐요.'],
+    'dash-restraint':    ['대시 남용', '설명을 대시로 덧붙이는 버릇이 잦지 않은지 봐요.'],
+    'quote-restraint':   ['따옴표 강조', '따옴표로 강조하는 횟수가 많지 않은지 봐요.']
+  };
 
   var listEl   = document.getElementById('view-list');
   var detailEl = document.getElementById('view-detail');
@@ -506,6 +588,14 @@
     if(isNaN(d.getTime())) return '';
     return d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일';
   }
+  /* 체인에 저장될 때부터 끝이 잘린 줄이 있다. 짝 없는 따옴표 같은 찌꺼기만 걷어낸다. */
+  function tidy(t){
+    t = String(t || '').replace(/^(fix|init|polish|chore|feat)\s*:\s*/i, '').trim();
+    var ticks = (t.match(/`/g) || []).length;
+    if(ticks % 2 === 1) t = t.replace(/`[^`]*$/, '').replace(/[\s,·]+$/, '') + '…';
+    return t;
+  }
+  function isCut(t){ return /…\s*$/.test(String(t || '')); }
 
   function gql(query){
     return fetch(GQL, {
@@ -570,7 +660,11 @@
           if(Number(j.ttl_ms) < MIN_TTL) return;
           out.push(j);
         });
-        out.sort(function(a,b){ return Number(b.created_at_ms) - Number(a.created_at_ms); });
+        out.sort(function(a,b){
+          if(a.id === STORY_PACK) return -1;
+          if(b.id === STORY_PACK) return 1;
+          return Number(b.created_at_ms) - Number(a.created_at_ms);
+        });
         return out;
       });
     }).then(function(packs){
@@ -611,6 +705,17 @@
          + '<button class="retry" type="button" data-retry>다시 불러오기</button></div>';
   }
 
+  function kindLabel(p){
+    var pv = p.preview || {};
+    if(pv.kind === 'manifest'){
+      var m = pv.manifest || {};
+      var hasShots = m.previews && m.previews.before && m.previews.after;
+      return hasShots ? '화면 기록' : '기록';
+    }
+    if(pv.kind === 'text') return '글 기록';
+    return '기록';
+  }
+
   function renderCards(){
     var box = document.getElementById('cards');
     var err = document.getElementById('cards-err');
@@ -633,11 +738,11 @@
     }
 
     box.innerHTML = state.packs.map(function(p){
-      var kind = p.preview && p.preview.kind === 'manifest' ? '화면 기록' : '글 기록';
       return '<a class="card" href="#/pack/' + esc(p.id) + '">'
         + '<div class="nm">' + esc(p.name) + '</div>'
         + '<div class="ds">' + esc(p.description) + '</div>'
-        + '<div class="mt">' + kind + ' ' + esc(p.memory_count) + '개 · ' + esc(sui(p.fee)) + ' · ' + esc(ttlText(p.ttl_ms)) + ' 동안 · ' + esc(buyers(p.subscriber_count)) + '</div>'
+        + '<div class="mt">' + kindLabel(p) + ' ' + esc(p.memory_count) + '개 · ' + esc(sui(p.fee))
+        + ' · ' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요 · ' + esc(buyers(p.subscriber_count)) + '</div>'
         + '<div class="go">안에 뭐가 들었는지 보기 →</div>'
         + '</a>';
     }).join('');
@@ -648,14 +753,17 @@
     var after  = document.getElementById('ba-after');
     var err    = document.getElementById('ba-err');
     var ba     = document.getElementById('ba');
+    var note   = document.getElementById('ba-note');
     if(!before) return;
 
-    if(state.error && !state.packs){
+    function fail(){
       ba.hidden = true;
+      note.hidden = true;
       err.hidden = false;
       err.innerHTML = errBox('고치기 전후 화면을 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.');
-      return;
     }
+
+    if(state.error && !state.packs){ fail(); return; }
     if(!state.packs) return;
 
     var src = null;
@@ -666,14 +774,10 @@
       }
     });
 
-    if(!src){
-      ba.hidden = true;
-      err.hidden = false;
-      err.innerHTML = errBox('고치기 전후 화면을 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.');
-      return;
-    }
+    if(!src){ fail(); return; }
 
     ba.hidden = false;
+    note.hidden = false;
     err.hidden = true;
     err.innerHTML = '';
     putImg(before, src.before, '고치기 전 랜딩 화면');
@@ -686,9 +790,17 @@
     var img = new Image();
     img.alt = alt;
     img.decoding = 'async';
-    img.onload = function(){ frame.innerHTML = ''; frame.appendChild(img); };
+    img.onload = function(){
+      frame.innerHTML = '';
+      frame.appendChild(img);
+      frame.setAttribute('data-full', blobUrl(blobId));
+      frame.setAttribute('data-cap', alt);
+      frame.setAttribute('aria-label', alt + ' — 눌러서 크게 보기');
+    };
     img.onerror = function(){
-      frame.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8a827c;font-size:13px;padding:12px;text-align:center">화면을 못 불러왔어요</div>';
+      frame.innerHTML = '<span style="display:flex;align-items:center;justify-content:center;height:100%;color:#6f6a65;font-size:13px;padding:12px;text-align:center">화면을 못 불러왔어요</span>';
+      frame.removeAttribute('data-full');
+      frame.style.cursor = 'default';
     };
     img.src = blobUrl(blobId);
   }
@@ -696,16 +808,23 @@
   function renderFooterLinks(){
     var el = document.getElementById('flinks');
     if(!el) return;
-    var parts = [];
-    parts.push('<span>직접 확인해보고 싶으면 여기서 볼 수 있어요.</span>');
+    var parts = ['<span>직접 확인해보고 싶으면 여기서 볼 수 있어요.</span>'];
+    var links = [];
+
     var rec = null;
-    Object.keys(state.receipts).forEach(function(k){ if(!rec && state.receipts[k]) rec = state.receipts[k]; });
+    (state.packs || []).forEach(function(p){
+      if(!rec && state.receipts[p.id]) rec = state.receipts[p.id];
+    });
     if(rec){
-      parts.push('<a href="' + SCAN + 'tx/' + esc(rec) + '" target="_blank" rel="noopener">산 AI 가 남긴 후기 기록</a> · ');
+      links.push('<a href="' + SCAN + 'tx/' + esc(rec) + '" target="_blank" rel="noopener">산 AI가 남긴 후기 한 건</a>');
     }
-    if(state.retracts.length && state.retracts[state.retracts.length-1].digest){
-      parts.push('<a href="' + SCAN + 'tx/' + esc(state.retracts[state.retracts.length-1].digest) + '" target="_blank" rel="noopener">잘못 올린 기록을 거둔 흔적</a>');
+    var ret = null;
+    state.retracts.forEach(function(r){ if(r.digest) ret = r; });
+    if(ret){
+      links.push('<a href="' + SCAN + 'tx/' + esc(ret.digest) + '" target="_blank" rel="noopener">잘못 올린 기록을 거둔 흔적</a>');
     }
+    if(links.length) parts.push('<span>' + links.join(' · ') + '</span>');
+    if(ret) parts.push('<span>거둔 기록은 기간이 너무 짧아서 목록에 안 보이는 묶음 거예요.</span>');
     el.innerHTML = parts.join('');
   }
 
@@ -716,39 +835,33 @@
   }
 
   /* ---------- render: detail ---------- */
-  var CHECK_KO = {
-    'cta-contrast':'버튼 대비',
-    'h1-lines':'제목 줄수',
-    'no-hscroll':'가로 스크롤',
-    'card-height':'카드 높이',
-    'nav-overlap':'메뉴 겹침'
-  };
-
   function resultsTable(){
     return '<div class="tablewrap"><table>'
       + '<thead><tr><th>누가 고쳤나</th><th>최종</th><th>턴</th><th>걸린 시간</th><th>수정 횟수</th></tr></thead>'
       + '<tbody>'
-      + '<tr class="hi"><td>이 묶음을 산 AI</td><td class="num">5 / 5 (첫 시도)</td><td class="num">15</td><td class="num">120초</td><td class="num">6</td></tr>'
-      + '<tr><td>검사 도구만 준 AI ×3</td><td class="num">5/5 · 5/5 · 5/5</td><td>여러 턴</td><td class="num">176 / 201 / 226초</td><td>—</td></tr>'
-      + '<tr><td>아무것도 없이 ×3</td><td class="num">4/5 · 4/5 · 4/5</td><td class="num">16 / 26 / 17</td><td class="num">210 / 350 / 218초</td><td class="num">11 / 20 / 14</td></tr>'
+      + '<tr class="hi"><td>이 묶음을 산 AI</td><td class="tnum">5 / 5 (첫 시도)</td><td class="tnum">15</td><td class="tnum">120초</td><td class="tnum">6</td></tr>'
+      + '<tr><td>검사 도구만 준 AI ×3</td><td class="tnum">5/5 · 5/5 · 5/5</td><td>여러 턴</td><td class="tnum">176 / 201 / 226초</td><td>—</td></tr>'
+      + '<tr><td>아무것도 없이 ×3</td><td class="tnum">4/5 · 4/5 · 4/5</td><td class="tnum">16 / 26 / 17</td><td class="tnum">210 / 350 / 218초</td><td class="tnum">11 / 20 / 14</td></tr>'
       + '</tbody></table></div>'
-      + '<p style="color:#8a827c;font-size:13px;margin-top:14px">세 번 다 놓친 건 제목 줄바꿈이에요. 이 묶음의 2번 교훈이랑 같은 문제고요.</p>';
+      + '<p class="tnote">세 번 다 놓친 건 제목 줄바꿈이에요. 이 묶음의 2번 교훈이랑 같은 문제고요.</p>'
+      + '<p class="tnote">이 표는 저희가 직접 재서 적어둔 값이에요. 체인에서 읽어오는 값은 위쪽 값·기간·기록 수예요.</p>';
   }
 
   function howToBuy(){
-    return '<div class="block"><h2>사는 법</h2>'
-      + '<p class="lead">사람이 결제창을 누르는 게 아니라, AI 가 일하다 필요하면 알아서 사요.</p>'
+    return '<div class="wrap block"><h2>사는 법</h2>'
+      + '<p class="lead">사람이 결제창을 누르는 게 아니에요. AI가 일하다 필요하면 알아서 사요.</p>'
       + '<div class="howto">'
       + '<div class="s"><div class="idx">1</div><div class="bd"><p>플러그인을 깔아요. 두 줄이면 끝나요.</p>'
       + '<pre>/plugin marketplace add Blockthon-th/my-project\n/plugin install memory-market</pre></div></div>'
       + '<div class="s"><div class="idx">2</div><div class="bd"><p>지갑 열쇠를 한 번만 넣어둬요. <code class="inl">~/.memory-market/config.json</code> 에 이렇게요.</p>'
-      + '<pre>{"BUYER_SUI_PRIVATE_KEY":"suiprivkey1..."}</pre></div></div>'
-      + '<div class="s"><div class="idx">3</div><div class="bd"><p>그다음엔 AI 에게 그냥 일을 시키면 돼요. 나머지는 AI 가 알아서 해요.</p></div></div>'
+      + '<pre>{"BUYER_SUI_PRIVATE_KEY":"suiprivkey1..."}</pre>'
+      + '<p style="color:#6f6a65;font-size:13px">테스트넷 지갑이라 진짜 자산은 안 들어 있어요.</p></div></div>'
+      + '<div class="s"><div class="idx">3</div><div class="bd"><p>그다음엔 AI에게 그냥 일을 시키면 돼요. "이 랜딩 좀 고쳐줘" 하고 맡기면, 필요하다고 판단할 때 알아서 사요.</p></div></div>'
       + '</div></div>';
   }
 
   function limitsBlock(){
-    return '<div class="block"><h2>알아두실 것</h2>'
+    return '<div class="wrap block"><h2>솔직히 이런 건 못 해요</h2>'
       + '<div class="limits" style="margin-top:14px"><ul>'
       + '<li>한 번 열어본 내용은 도로 거둘 수 없어요. 기간이 막는 건 그 뒤에 새로 올라오는 단계예요.</li>'
       + '<li>판 사람이 자기 묶음을 사서 후기를 남기는 건 못 막아요.</li>'
@@ -801,6 +914,7 @@
       + '<span class="chip">' + esc(buyers(p.subscriber_count)) + '</span>'
       + (p.last_memory_at_ms ? '<span class="chip">마지막 기록 ' + esc(dateText(p.last_memory_at_ms)) + '</span>' : '')
       + '</div>');
+    h.push('<p class="price-note">SUI 는 이 네트워크에서 쓰는 단위예요. 지금은 테스트넷이라 진짜 돈은 안 들어요.</p>');
     h.push('</div>');
 
     if(pv.kind === 'manifest'){
@@ -808,61 +922,78 @@
 
       if(m.previews && m.previews.before && m.previews.after){
         h.push('<div class="wrap block"><h2>고치기 전 / 고친 뒤</h2>'
-          + '<p class="lead">이 두 장은 사기 전에도 볼 수 있어요.</p>'
+          + '<p class="lead">이 두 장은 사기 전에도 볼 수 있어요. 눌러서 크게 볼 수 있고요.</p>'
           + '<div class="ba" style="margin-top:0">'
-          + '<div class="shot"><div class="cap">고치기 전</div><div class="frame" data-img="' + esc(m.previews.before) + '"><div class="skel"></div></div></div>'
-          + '<div class="shot"><div class="cap">고친 뒤</div><div class="frame" data-img="' + esc(m.previews.after) + '"><div class="skel"></div></div></div>'
-          + '</div></div>');
+          + '<div class="shot"><div class="cap">고치기 전</div><button class="frame" type="button" data-img="' + esc(m.previews.before) + '" data-alt="고치기 전 랜딩 화면"><span class="skel"></span></button></div>'
+          + '<div class="shot"><div class="cap">고친 뒤</div><button class="frame" type="button" data-img="' + esc(m.previews.after) + '" data-alt="고친 뒤 랜딩 화면"><span class="skel"></span></button></div>'
+          + '</div>'
+          + '<p class="ba-note">두 장에서 눈으로 보이는 건 둘이에요. <b>제목이 세 줄에서 두 줄로 줄었고</b>, <b>위에 고정된 메뉴가 첫 줄을 덮던 것도 없어졌어요.</b> 나머지 세 가지는 화면 아래쪽이라 여기선 안 보여요.</p>'
+          + '</div>');
       }
 
       if(m.checks && m.checks.length){
-        h.push('<div class="wrap block"><h2>이 묶음이 책임지는 다섯 가지</h2>'
-          + '<p class="lead">고친 화면이 이 다섯 개를 실제로 통과했어요.</p><div class="checks">'
+        h.push('<div class="wrap block"><h2>이 묶음이 책임지는 ' + m.checks.length + '가지</h2>'
+          + '<p class="lead">고친 화면이 이 항목들을 실제로 통과했어요.</p><div class="checks">'
           + m.checks.map(function(c){
-              return '<div class="chk"><div class="k">' + esc(CHECK_KO[c.id] || c.id) + '</div>'
-                   + '<div class="v">' + esc(c.desc) + '</div></div>';
+              var ko = CHECK_KO[c.id];
+              return '<div class="chk">'
+                   + '<div class="k">' + esc(ko ? ko[0] : c.id) + '</div>'
+                   + '<div class="v">' + esc(ko ? ko[1] : c.desc) + '</div>'
+                   + (ko ? '<details><summary>검사 기준 원문 보기</summary><div class="raw">' + esc(c.desc) + '</div></details>' : '')
+                   + '</div>';
             }).join('')
           + '</div></div>');
       }
 
       if(m.steps && m.steps.length){
+        var anyCut = m.steps.some(function(s){ return isCut(tidy(s.title)); });
         h.push('<div class="wrap block"><h2>안에 든 ' + m.steps.length + '단계</h2>'
-          + '<p class="lead">교훈은 여기까지 미리 볼 수 있어요. 지적한 말 원문이랑 실제로 바뀐 코드, 단계별 화면은 사고 나서 열려요.</p>'
+          + '<p class="lead">알게 된 것은 사기 전에도 볼 수 있어요.'
+          + (anyCut ? ' 다만 목록에 넣느라 끝이 잘린 줄이 있어요.' : '')
+          + ' 지적한 말 원문이랑 실제로 바뀐 코드, 단계별 화면은 사고 나서 열려요.</p>'
+          + '<p class="lead" style="margin-top:-12px">아래 지문은 올린 뒤에 내용을 바꿔치기하지 않았다는 걸 확인하는 값이에요.</p>'
           + '<div class="steps">'
           + m.steps.map(function(s){
-              var t = String(s.title || '').replace(/^fix:\s*/, '');
+              var raw = tidy(s.title);
+              var known = LESSON_BY_SHA[s.record_sha256];
+              var body = known ? known : raw;
               return '<div class="step">'
                 + '<div class="n">' + esc(s.step) + '단계</div>'
-                + '<div class="ls">' + esc(t) + '</div>'
+                + '<div class="ls">' + esc(body) + '</div>'
+                + (known
+                    ? '<div class="cut">위 대화에서 읽은 그 마디예요.</div>'
+                      + '<details><summary>판 사람이 적은 원문 보기 (끝이 잘려 있어요)</summary><div class="raw">' + esc(raw) + '</div></details>'
+                    : (isCut(raw) ? '<div class="cut">이 줄은 목록에 넣느라 끝이 잘려 있어요. 전문은 사고 나서 열려요.</div>' : ''))
                 + '<div class="lk"><span class="lock">지적한 말 원문 · 잠김</span><span class="lock">바뀐 코드 · 잠김</span><span class="lock">그 단계 화면 · 잠김</span></div>'
-                + (s.record_sha256 ? '<div class="hashline">지문 ' + esc(s.record_sha256) + '</div>' : '')
+                + (s.record_sha256 ? '<div class="hashline">지문 ' + esc(String(s.record_sha256).slice(0,16)) + '…</div>' : '')
                 + '</div>';
             }).join('')
-          + '</div>'
-          + '<p style="color:#8a827c;font-size:13px;margin-top:14px">지문은 올린 뒤에 내용을 바꿔치기하지 않았다는 걸 확인하는 값이에요.</p>'
-          + '</div>');
+          + '</div></div>');
       }
 
-      h.push('<div class="wrap block"><h2>산 AI 가 실제로 낸 결과</h2>'
-        + '<p class="lead">같은 문제가 있는 다른 페이지로 재봤어요.</p>'
-        + resultsTable() + '</div>');
+      if(p.id === STORY_PACK){
+        h.push('<div class="wrap block"><h2>이 묶음을 산 AI가 실제로 낸 결과</h2>'
+          + '<p class="lead">같은 문제가 있는 다른 페이지를 고치게 해봤어요.</p>'
+          + resultsTable() + '</div>');
+      }
 
     } else if(pv.kind === 'text'){
       var texts = pv.texts || [];
-      var rest = Math.max(0, Number(p.memory_count) - texts.length);
+      var total = Number(p.memory_count) || texts.length;
+      var rest = Math.max(0, total - texts.length);
       h.push('<div class="wrap block"><h2>맛보기로 열어둔 ' + texts.length + '개</h2>'
-        + '<p class="lead">이 묶음은 화면 기록이 아니라 글 묶음이에요. 아래 ' + texts.length + '개는 그냥 볼 수 있고, 나머지 ' + rest + '개는 사고 나서 열려요.</p>'
+        + '<p class="lead">이 묶음은 화면 기록이 아니라 글 묶음이에요. ' + total + '개 중 아래 ' + texts.length + '개는 그냥 볼 수 있고, 나머지 ' + rest + '개는 사고 나서 열려요.</p>'
         + texts.map(function(t){ return '<div class="quote">' + esc(t.trim()) + '</div>'; }).join('')
         + '</div>');
       h.push('<div class="wrap block"><h2>이 묶음엔 없는 것</h2>'
-        + '<p class="lead">고치기 전후 화면이랑 자동 검사 결과는 이 묶음에 안 들어 있어요. 글로 남긴 기록만 있어요.</p></div>');
+        + '<p class="lead">고치기 전후 화면이랑 자동 검사 결과는 이 묶음에 안 들어 있어요. 개발하다 막힌 지점을 글로 남긴 기록만 있어요.</p></div>');
     } else {
       h.push('<div class="wrap block">'
         + '<div class="errbox"><p>미리보기를 못 불러왔어요. 저장소가 잠깐 느릴 때가 있어요.</p>'
         + '<button class="retry" type="button" data-retry>다시 불러오기</button></div></div>');
     }
 
-    h.push(howToBuy().replace('<div class="block">', '<div class="wrap block">').replace(/<\/div>$/, '</div>'));
+    h.push(howToBuy());
 
     var recTx = state.receipts[p.id];
     h.push('<div class="wrap block"><h2>체인에 남아 있는 것</h2>'
@@ -870,10 +1001,10 @@
       + '<div class="linklist">'
       + '<a href="' + SCAN + 'object/' + esc(p.id) + '" target="_blank" rel="noopener"><span>묶음 자체</span><span class="id">' + esc(shortId(p.id)) + '</span></a>'
       + '<a href="' + SCAN + 'object/' + esc(p.owner) + '" target="_blank" rel="noopener"><span>올린 사람 지갑</span><span class="id">' + esc(shortId(p.owner)) + '</span></a>'
-      + (recTx ? '<a href="' + SCAN + 'tx/' + esc(recTx) + '" target="_blank" rel="noopener"><span>산 AI 가 남긴 후기</span><span class="id">' + esc(shortId(recTx)) + '</span></a>' : '')
+      + (recTx ? '<a href="' + SCAN + 'tx/' + esc(recTx) + '" target="_blank" rel="noopener"><span>이 묶음을 산 AI가 남긴 후기</span><span class="id">' + esc(shortId(recTx)) + '</span></a>' : '')
       + '</div></div>');
 
-    h.push(limitsBlock().replace('<div class="block">', '<div class="wrap block">'));
+    h.push(limitsBlock());
 
     h.push('<div class="wrap" style="padding:72px 0 96px"><a class="btn ghost" href="#/">← 다른 묶음도 보기</a></div>');
 
@@ -881,9 +1012,63 @@
 
     var frames = detailEl.querySelectorAll('.frame[data-img]');
     for(var i=0;i<frames.length;i++){
-      putImg(frames[i], frames[i].getAttribute('data-img'), '랜딩 화면');
+      putImg(frames[i], frames[i].getAttribute('data-img'), frames[i].getAttribute('data-alt') || '랜딩 화면');
     }
   }
+
+  /* ---------- lightbox ---------- */
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lb-img');
+  var lbCap = document.getElementById('lb-cap');
+  var lbOpener = null;
+
+  function openLb(url, cap){
+    lbImg.src = url;
+    lbImg.alt = cap || '';
+    lbCap.textContent = cap || '';
+    lb.hidden = false;
+    document.getElementById('lb-close').focus();
+  }
+  function closeLb(){
+    lb.hidden = true;
+    lbImg.removeAttribute('src');
+    if(lbOpener && lbOpener.focus) lbOpener.focus();
+    lbOpener = null;
+  }
+  lb.addEventListener('click', function(e){
+    if(e.target === lb || e.target.id === 'lb-close') closeLb();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !lb.hidden) closeLb();
+  });
+
+  /* ---------- clicks ---------- */
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    while(t && t !== document.body){
+      if(t.hasAttribute && t.hasAttribute('data-retry')){
+        e.preventDefault();
+        t.setAttribute('disabled','disabled');
+        t.textContent = '불러오는 중…';
+        state.packs = null;
+        state.error = null;
+        var box = document.getElementById('cards');
+        if(box && !box.querySelector('.card.sk')){
+          box.innerHTML = '<div class="card sk"><div class="l" style="width:70%"></div><div class="l" style="width:52%;height:10px"></div><div class="l" style="width:96%;margin-top:18px"></div><div class="l" style="width:88%"></div><div class="l" style="width:64%;margin-top:18px;height:10px"></div></div>'
+                        + '<div class="card sk"><div class="l" style="width:60%"></div><div class="l" style="width:44%;height:10px"></div><div class="l" style="width:92%;margin-top:18px"></div><div class="l" style="width:80%"></div><div class="l" style="width:58%;margin-top:18px;height:10px"></div></div>';
+        }
+        boot();
+        return;
+      }
+      if(t.classList && t.classList.contains('frame') && t.getAttribute('data-full')){
+        e.preventDefault();
+        lbOpener = t;
+        openLb(t.getAttribute('data-full'), t.getAttribute('data-cap') || '');
+        return;
+      }
+      t = t.parentNode;
+    }
+  });
 
   /* ---------- router ---------- */
   var currentView = null;
@@ -896,46 +1081,34 @@
 
   function applyRoute(){
     var r = parseRoute();
-    var changed = (r.view !== currentView) || (r.view === 'detail' && detailEl.getAttribute('data-id') !== r.id);
 
     if(r.view === 'detail'){
+      var sameDetail = (currentView === 'detail' && detailEl.getAttribute('data-id') === r.id);
       if(currentView === 'list') listScroll = window.pageYOffset || 0;
       detailEl.setAttribute('data-id', r.id);
       listEl.hidden = true;
       detailEl.hidden = false;
       renderDetail(r.id);
-      if(changed) window.scrollTo(0, 0);
+      if(!sameDetail) window.scrollTo(0, 0);
       document.title = '묶음 상세 — 당신의 시행착오를 사겠습니다';
-    } else {
-      detailEl.hidden = true;
-      detailEl.removeAttribute('data-id');
-      listEl.hidden = false;
-      renderList();
-      if(currentView === 'detail'){
-        var y = listScroll;
-        window.scrollTo(0, y);
-      }
-      document.title = '당신의 시행착오를 사겠습니다';
-      sweep();
+      currentView = 'detail';
+      return;
     }
-    currentView = r.view;
+
+    /* 목록 안에서 앵커만 바뀐 경우에는 다시 그리지 않는다 */
+    if(currentView === 'list') return;
+
+    detailEl.hidden = true;
+    detailEl.removeAttribute('data-id');
+    listEl.hidden = false;
+    renderList();
+    if(currentView === 'detail') window.scrollTo(0, listScroll);
+    document.title = '당신의 시행착오를 사겠습니다';
+    currentView = 'list';
+    sweep();
   }
 
   window.addEventListener('hashchange', applyRoute);
-
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    while(t && t !== document.body){
-      if(t.hasAttribute && t.hasAttribute('data-retry')){
-        e.preventDefault();
-        state.packs = null;
-        state.error = null;
-        boot();
-        return;
-      }
-      t = t.parentNode;
-    }
-  });
 
   /* ---------- reveal ---------- */
   var reduce = false;
@@ -979,7 +1152,8 @@
   function boot(){
     applyRoute();
     loadAll().then(function(){
-      if(parseRoute().view === 'detail') renderDetail(parseRoute().id);
+      var r = parseRoute();
+      if(r.view === 'detail') renderDetail(r.id);
       else renderList();
       sweep();
     });
