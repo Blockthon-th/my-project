@@ -43,7 +43,7 @@ export const COPY_CHECKS = [
 ];
 
 const DEFAULT_BANNED = [
-  'Sui', 'Walrus', 'Seal', 'MCP', '온체인', '블록체인', '구독권', '접근권',
+  'Sui', 'Walrus', 'Seal', 'MCP', '온체인', '구독권', '접근권',
   '복호화', '트랜잭션', '프로토콜', '에이전트', 'SDK', '스마트컨트랙트', '컨트랙트',
 ];
 
