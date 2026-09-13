@@ -4,6 +4,7 @@
 > 사람이 아니라 **다른 사람의 AI 에이전트**에게 파는 시장. Sui · Walrus · Seal 위의 앱 층, 프로토콜 수정 없음.
 
 소개·실측·설치는 [README.md](README.md), 데모 대본은 [docs/DEMO.md](docs/DEMO.md). 이 문서는 **왜 이걸 만드는가**에 집중한다.
+숫자가 나오는 자리는 전부 [docs/ground-truth.md](docs/ground-truth.md) 의 값을 그대로 쓴다. 어긋나면 ground-truth 가 맞다.
 
 ## 1. 문제
 
@@ -39,8 +40,9 @@ MemWal 의 공유 장치(델리게이트)는 친구용이다. 소유자가 상�
 | 만료 | 소유자가 손으로 회수 | 온체인 Clock 기준 자동 |
 | 검증 | 데이터 무변조·소유권 | + 공개 manifest 해시 대조 + 구매자만 남기는 영수증 |
 
-근거: MemWal 문서(`ownership-and-access.md`)는 "memory marketplace"를 미래 기능으로 한 문장 언급만 하고,
-컨트랙트(`account.move`)는 소유자당 Seal 열쇠 1개 구조라 팩 단위 접근 제어가 불가능하다.
+근거: MemWal 쪽 문서(그쪽 저장소의 `ownership-and-access.md`)는 "memory marketplace"를 미래 기능으로 한 문장 언급만 하고,
+그쪽 컨트랙트(`account.move`)는 소유자당 Seal 열쇠 1개 구조라 기록 단위로 접근을 나눌 수 없다.
+(둘 다 우리 저장소 파일이 아니다.)
 arXiv 2605.11032("Portable Agent Memory")도 memory marketplace 를 future work 로 남겼다.
 
 ## 2. 해결 — 과정을 기간제로 구독한다
@@ -56,13 +58,17 @@ arXiv 2605.11032("Portable Agent Memory")도 memory marketplace 를 future work 
 - **텍스트 기억 팩** — 한 단위는 "증상 → 원인 → 해결" 한 건. 원천은 `docs/dev-memories.md` 또는 MemWal 네임스페이스.
   소비는 `market_list` → `market_preview` → `market_subscribe` → `market_recall`.
 
+지금 testnet 목록에 올라와 있는 팩은 **넷**이다 — 디자인 과정 팩 셋(5 · 10 · 8단계)과 텍스트 기억 팩 하나(30건).
+셋의 모양이 다 달라서(스크린샷 있음 / 없음 / manifest 없음) 도구가 한 형태에만 맞춰져 있지 않다는 증거가 된다.
+목록·주소·값은 [README](README.md#지금-올라와-있는-기록--정확히-4개) 와 ground-truth 참고.
+
 ## 3. 구조 (전부 앱 층)
 
 흐름 다이어그램은 README. 구성 요소는 넷이고 전부 testnet 에서 동작한다.
 
 1. **Move 패키지** `memory_market` — `MemoryPack`(shared) · `PackCap`(판매자) · `Subscription`(구매자),
-   `subscribe` · `seal_approve` · `publish` · `add_preview` · `leave_receipt` · `retract`.
-   Seal 공식 `subscription.move` 패턴 기반. → [contracts/memory_market/README.md](contracts/memory_market/README.md)
+   `subscribe` · `seal_approve` · `publish` · `add_preview` · `set_terms` · `leave_receipt` · `retract`.
+   Seal 공식 `subscription.move` 패턴 기반. 테스트 19개. → [contracts/memory_market/README.md](contracts/memory_market/README.md)
 2. **포집 도구** (`tools/`) — 훅이 작업 중 단계를 기록하고 검사 5항목을 함께 남긴다. LLM 호출 없음, 네트워크 없음.
    → [tools/README.md](tools/README.md)
 3. **발행·구매 층** (`scripts/`) — `mm` CLI, 그리고 텍스트 기억용 `sync`(export → 개인정보 필터 → 암호화 → 업로드 → publish).
@@ -72,17 +78,21 @@ arXiv 2605.11032("Portable Agent Memory")도 memory marketplace 를 future work 
 
 **신뢰 모델.** 발행·복호화 코드는 평문을 잠시 본다 — 다만 그 코드는 판매자/구매자 **자기 기계에서** 돌고, 우리가 운영하는 서버는 없다.
 제3자 인프라는 Seal 키 서버(Mysten 운영)와 Walrus 공개 엔드포인트뿐이다.
-남는 한계(복호화된 평문 회수 불가, 자기 팩 자가 구매, 지어낸 단계)는 README "한계" 절에 그대로 적었다.
+남는 한계(복호화된 평문 회수 불가, 자기 팩 자가 구매, 지어낸 단계)는 README "솔직한 한계" 절에 그대로 적었다.
 
 ## 4. 데모 (3분)
 
 디자인 과정 팩으로 간다. 판매자가 랜딩 `index.html` 을 5턴 고쳐 만든 팩을, 구매자 에이전트가 **다른** 랜딩(같은 결함 유형)에서
 `/improve` 한 번으로 찾아 사고 적용한다. 비교 축은 팩 없이 돌린 기준선 2종(검사 도구 있음/없음).
-그다음 만료 거부와 폐기를 실제 트랜잭션으로 보여준다. → [docs/DEMO.md](docs/DEMO.md) · [demo/README.md](demo/README.md)
+그다음 만료 거부와 폐기를 실제 트랜잭션으로 보여준다.
+구매자 지갑이 이미 그 팩을 사고 영수증까지 남겨 둔 상태라 **예비 지갑을 쓰는 절차**가 대본에 들어 있다.
+→ [docs/DEMO.md](docs/DEMO.md) · [demo/README.md](demo/README.md)
 
 ## 5. 심사 기준 대응
 
-- **문제 정의 20%** — 1절. "도착점만 판다"는 진단이 우리 실측(기준선 셋 다 같은 항목에서 4/5 로 멈춤)으로 다시 확인된다.
+- **문제 정의 20%** — 1절. "도착점만 판다"는 진단이 우리 실측으로 다시 확인된다: 팩 없이 돌린 기준선 셋은 끝까지 같은 항목
+  (제목 줄바꿈)을 못 잡았다. 다만 **검사 도구만 쥐여주면 기록 없이도 셋 다 결국 다 잡는다(176 / 201 / 226초).**
+  그래서 우리가 파는 값은 "되냐 안 되냐"가 아니라 **"얼마나 빨리 되냐"** 다 — 시간·주고받은 횟수·AI 사용료가 절반이다.
 - **기술 완성도 30%** — 구성 요소 넷 전부 testnet 동작. Move 테스트 19개, 포집 도구 셀프테스트 통과.
 - **Sui·Walrus 활용도 25%** — Sui(공유 객체·결제·Clock·dynamic field), Walrus(암호화 블롭·증거 블롭),
   Seal(구독 정책 `seal_approve`, 배치 fetchKeys).
@@ -92,10 +102,15 @@ arXiv 2605.11032("Portable Agent Memory")도 memory marketplace 를 future work 
 
 - 개인정보 필터만 적용. 기밀·규제 필터는 향후 과제.
 - 사본 판매(buyout) 없음, 구독만. 재판매 방지는 평문 미전달로 구조적 해결 — 단 **이미 복호화된 평문은 회수되지 않는다**(한계로 명시).
-- 검사 항목은 웹 랜딩 5항목 고정. 팩이 검사 항목을 직접 싣고 오는 확장은 로드맵.
+- 검사 항목은 웹 랜딩 5항목이 기본값이다. `.mm/config.json` 의 `checks` 로 다른 목록을 manifest 에 실을 수는 있지만,
+  **그 검사를 무엇으로 재는지 사는 쪽에 알려줄 방법이 아직 없다** — 카피 팩(`0x8e36…`)의 검사 결과 칸이 비어 있는 이유다. 확장은 로드맵.
 
 ## 7. 진행
 
 9/3~9/14 온라인 예선, 혼자, Move 처음. 실제로는 — Move 패키지 배포 → Seal·Walrus end-to-end → 텍스트 기억 팩 sync·MCP →
-**포집 훅과 디자인 과정 팩으로 상품 축을 옮김**(과정이 곧 상품이라는 게 이 단계에서 분명해졌다) → 기준선 실측·데모 리허설 → 플러그인화·문서.
+**포집 훅과 디자인 과정 팩으로 상품 축을 옮김**(과정이 곧 상품이라는 게 이 단계에서 분명해졌다) → 기준선 실측·데모 리허설 →
+플러그인화·랜딩·문서 정합.
+
+**제출물은 이 저장소와 랜딩 페이지 둘뿐이고, 데모데이는 아직 일주일 넘게 남았다.**
+지금 해야 하는 일은 새 기능이 아니라 **랜딩 · 저장소 · 실제 체인 상태를 한 값으로 맞춰 두는 것**이다.
 남은 항목은 README "로드맵".
