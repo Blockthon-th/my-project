@@ -221,6 +221,20 @@
   .lock b{ position:absolute; left:2.5px; top:0; width:8px; height:8px; border:2px solid var(--ondark-mute); border-bottom:0; }
 
   /* ───────── 실측 두 칸 ───────── */
+  /* 처음부터 했을 때 vs 경험을 샀을 때 — 이긴 쪽만 크다 */
+  .vs{ display:grid; grid-template-columns:5fr 7fr; gap:32px; margin-top:28px; align-items:stretch; }
+  .vbox{ padding-top:22px; border-top:1px solid #5b5b5b; }
+  .vbox .vlab{ font-size:17px; color:var(--ondark-soft); }
+  .vbox .vnum{ font-family:var(--mono); line-height:1.05; letter-spacing:-.02em; margin-top:12px; }
+  .vbox.lose .vnum{ font-size:34px; color:var(--ondark-mute); }
+  .vbox.win{ border-top-color:var(--dark-accent); }
+  .vbox.win .vlab{ color:var(--ondark); font-weight:600; }
+  .vbox.win .vnum{ font-size:92px; color:var(--dark-accent); font-weight:600; }
+  .vbox .vdelta{ display:inline-block; margin-top:14px; padding:6px 12px; background:var(--dark-accent); color:#141414;
+    font-family:var(--mono); font-size:15px; letter-spacing:.02em; font-weight:700; }
+  .vbox .vmeta{ font-family:var(--mono); font-size:15px; color:var(--ondark-mute); margin-top:14px; }
+  .vbox .note{ font-size:17px; line-height:1.6; color:var(--ondark-soft); margin:12px 0 0; max-width:520px; }
+  @media (max-width:768px){ .vs{ grid-template-columns:1fr; gap:24px; } .vbox.win .vnum{ font-size:64px; } }
   .mgrid{ display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:32px; }
   .mbox{ display:flex; flex-direction:column; padding-top:22px; border-top:1px solid #5b5b5b; }
   .mbox .big{ font-family:var(--mono); font-size:44px; line-height:1.1; letter-spacing:-.01em; }
@@ -275,11 +289,11 @@
   .items .row{ grid-template-columns:40px minmax(0,1fr); gap:20px; }
   .items .row::after{ background:#d8d8d8; transform:scaleX(1); }
   /* 이 기록을 쓰면 — 시간·사용료·횟수 세 칸 */
-  .save{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 32px; }
+  .save{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 32px; }
   .sv{ padding:18px 0 20px; border-top:1px solid #d8d8d8; }
   .sv .k{ font-family:var(--mono); font-size:14px; letter-spacing:.06em; color:var(--mute); }
-  .sv .v{ font-size:30px; line-height:1.2; font-weight:600; margin-top:10px; }
-  .sv .v s{ color:var(--mute); font-weight:400; font-size:20px; margin-right:8px; }
+  .sv .v{ font-size:40px; line-height:1.15; font-weight:600; margin-top:10px; }
+  .sv .v s{ color:var(--mute); font-weight:400; font-size:18px; margin-right:10px; }
   .sv .v b{ color:var(--accent-dark); font-weight:600; }
   .sv .d{ font-size:16px; color:var(--mute); margin-top:6px; }
   @media (max-width:760px){ .save{ grid-template-columns:1fr; } .sv{ padding:14px 0; } }
@@ -472,19 +486,20 @@
         </div>
       </div>
 
-      <p class="lead w reveal" style="margin-top:32px">얼마나 빨라지는지는 웹퍼블리셔 경험으로 재봤어요. 같은 곳이 틀린 페이지를 기록 없이 세 번, 기록을 사서 한 번 고치게 한 값이에요.</p>
+      <p class="lead w reveal" style="margin-top:36px">같은 페이지의 같은 문제를 AI 한테 고치라고 시켰어요. 처음부터 하게 한 것과, 경험을 사서 하게 한 것을 나란히 놓으면 이래요. 웹퍼블리셔 경험으로 잰 값이에요.</p>
 
-      <div class="mgrid">
-        <div class="mbox reveal">
-          <div class="big">3분 30초</div>
-          <div class="who">기록 없이, 세 번 중 제일 빨랐던 때</div>
-          <div class="meta">주고받은 횟수 16 · AI 사용료 $1.17</div>
-          <p class="note">세 번 다 첫 수정에서는 제목 줄바꿈을 놓쳤어요. 검사 도구를 따로 쥐여주면 기록 없이도 세 번 다 결국 잡긴 해요.</p>
+      <div class="vs">
+        <div class="vbox lose reveal">
+          <div class="vlab">처음부터 했을 때</div>
+          <div class="vnum">3분 30초</div>
+          <div class="vmeta">주고받은 횟수 16 · AI 사용료 $1.17</div>
+          <p class="note">세 번 해봤는데 그중 제일 빨랐던 때예요. 첫 수정에서는 세 번 다 제목 줄바꿈을 놓쳤어요.</p>
         </div>
-        <div class="mbox win reveal" style="--d:120ms">
-          <div class="big">2분 0초</div>
-          <div class="who">그 기록을 산 AI</div>
-          <div class="meta">주고받은 횟수 15 · AI 사용료 $0.70</div>
+        <div class="vbox win reveal" style="--d:120ms">
+          <div class="vlab">경험을 샀을 때</div>
+          <div class="vnum">2분 0초</div>
+          <div class="vdelta">43% 빨라요 · AI 사용료 40% 덜 들어요</div>
+          <div class="vmeta">주고받은 횟수 15 · AI 사용료 $0.70</div>
           <p class="note">다섯 군데를 첫 수정에서 다 잡았어요. 되돌아간 적이 한 번도 없어요.</p>
         </div>
       </div>
@@ -940,14 +955,12 @@
   function savingsBlock(p){
     var measured = (p.id === STORY_ID);
     var cells = measured
-      ? [['걸리는 시간', '<s>4분 20초</s><b>2분 0초</b>', '절반으로 줄어요'],
-         ['AI 사용료 (토큰값)', '<s>$1.42</s><b>$0.70</b>', '절반으로 줄어요'],
-         ['주고받는 횟수', '<s>약 20번</s><b>15번</b>', '4분의 1 줄어요']]
-      : [['걸리는 시간', '<b>약 절반</b>', '잰 기록에서 4분 20초 → 2분 0초'],
-         ['AI 사용료 (토큰값)', '<b>약 절반</b>', '잰 기록에서 $1.42 → $0.70'],
-         ['주고받는 횟수', '<b>4분의 1 줄어요</b>', '잰 기록에서 약 20번 → 15번']];
+      ? [['걸리는 시간 — 처음부터 했을 때 → 경험을 샀을 때', '<s>3분 30초</s><b>2분 0초</b>', '43% 빨라요'],
+         ['AI 사용료 (토큰값) — 처음부터 → 샀을 때', '<s>$1.17</s><b>$0.70</b>', '40% 덜 들어요']]
+      : [['걸리는 시간', '<b>약 40% 빨라요</b>', '잰 기록에서 3분 30초 → 2분 0초'],
+         ['AI 사용료 (토큰값)', '<b>약 40% 덜 들어요</b>', '잰 기록에서 $1.17 → $0.70']];
     var note = measured
-      ? '같은 곳이 틀린 페이지를 기록 없이 세 번, 이 기록을 사서 한 번 고치게 하고 잰 값이에요. 기록 없이 한 세 번의 평균과 비교했어요.'
+      ? '같은 페이지의 같은 문제를 처음부터 고치게 한 것과 이 경험을 사서 고치게 한 것을 비교했어요. 처음부터 한 쪽은 세 번 중 제일 빨랐던 때예요.'
       : '웹퍼블리셔 경험에서 실제로 잰 비율이에요. 이 기록도 비슷할 거라고 보는 예상이에요.';
     return '<div class="wrap block"><h2>' + (measured ? '이 기록을 쓰면' : '이 기록을 쓰면 (예상)') + '</h2>'
       + '<div class="save">'
