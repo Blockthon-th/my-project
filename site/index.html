@@ -165,8 +165,6 @@
   .price b{ font-size:34px; font-weight:700; margin-right:12px; }
   .price span{ color:var(--ink); }
   .price small{ display:block; font-size:15px; color:var(--mute); margin-top:4px; }
-  .chat.lt .msg.me{ background:var(--accent); color:#141414; }
-  .chat.lt .msg.ai{ background:#f1ede7; color:var(--ink); }
   .facts{ display:grid; grid-template-columns:96px minmax(0,1fr); gap:14px 24px; margin:28px 0 24px; max-width:760px; }
   .facts dt{ font-family:var(--mono); font-size:14px; letter-spacing:.06em; color:var(--mute); padding-top:4px; }
   .facts dd{ margin:0; font-size:21px; line-height:1.5; font-weight:500; overflow-wrap:anywhere; }
@@ -230,17 +228,21 @@
 
   /* ───────── 실측 두 칸 ───────── */
   /* 대화 말풍선: 오른쪽이 나, 왼쪽이 AI. 스크롤하면 .reveal 로 하나씩 나타난다 */
-  .chat{ display:flex; flex-direction:column; gap:14px; margin-top:28px; max-width:820px; }
-  .msg{ max-width:72%; padding:14px 18px; border-radius:18px; font-size:18px; line-height:1.55;
-    opacity:0; transform:translateY(28px); transition:opacity .45s ease-out, transform .45s ease-out; transition-delay:var(--d,0ms); }
+  .chat{ display:flex; flex-direction:column; gap:16px; margin-top:28px; max-width:760px; }
+  .msg{ display:flex; align-items:flex-end; gap:10px; max-width:78%;
+    opacity:0; transform:translateY(24px); transition:opacity .45s ease-out, transform .45s ease-out; transition-delay:var(--d,0ms); }
   .msg.in{ opacity:1; transform:none; }
-  .msg p{ margin:0; }
-  .msg .from{ display:block; font-family:var(--mono); font-size:12px; letter-spacing:.06em; margin-bottom:6px; opacity:.72; }
-  .msg.me{ align-self:flex-end; background:var(--dark-accent); color:#141414; border-bottom-right-radius:5px; }
-  .msg.me .from{ text-align:right; }
-  .msg.ai{ align-self:flex-start; background:#f1ede7; color:var(--ink); border-bottom-left-radius:5px; }
-  .on-dark .msg.ai{ background:#262626; color:var(--ondark); }
-  @media (max-width:768px){ .msg{ max-width:88%; font-size:17px; } }
+  .msg .ic{ flex:0 0 auto; width:32px; height:32px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+  .msg .ic svg{ width:19px; height:19px; display:block; }
+  .msg p{ margin:0; padding:12px 16px; border-radius:16px; font-size:17px; line-height:1.5; color:var(--ink); }
+  .msg .from{ display:none; }
+  .msg.ai{ align-self:flex-start; }
+  .msg.ai .ic{ background:#e7e2da; color:#3b3733; }
+  .msg.ai p{ background:#f3f0ea; border-bottom-left-radius:5px; }
+  .msg.me{ align-self:flex-end; flex-direction:row-reverse; }
+  .msg.me .ic{ background:#dfe7f3; color:#2f3d55; }
+  .msg.me p{ background:#e9eef6; border-bottom-right-radius:5px; }
+  @media (max-width:768px){ .msg{ max-width:92%; } .msg p{ font-size:16px; } }
   /* 전후 사진: 화살표 하나, 바뀐 것 세 줄 */
   .ba{ display:grid; grid-template-columns:1fr 56px 1fr; gap:18px; align-items:center; max-width:980px; margin:36px auto 0; }
   .baf{ margin:0; text-align:center; }
@@ -335,7 +337,7 @@
   /* 이 기록을 쓰면 — 시간·사용료·횟수 세 칸 */
   .save{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 32px; }
   .sv{ padding:18px 0 20px; border-top:1px solid #d8d8d8; }
-  .sv .k{ font-family:var(--mono); font-size:14px; letter-spacing:.06em; color:var(--mute); }
+  .sv .k{ font-size:17px; font-weight:700; color:var(--ink); }
   .sv .v{ font-size:40px; line-height:1.15; font-weight:600; margin-top:10px; }
   .sv .v s{ color:var(--mute); font-weight:400; font-size:18px; margin-right:10px; }
   .sv .v b{ color:var(--accent-dark); font-weight:600; }
@@ -498,12 +500,12 @@
       </ul>
 
       <div class="chat">
-        <div class="msg me"><span class="from">나</span><p>보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.</p></div>
-        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>그라데이션이랑 흐림 효과를 걷어냈어요. 색은 하나만 남기고, 나머지는 검정 글자와 가는 선으로 정리했어요.</p></div>
-        <div class="msg me"><span class="from">나</span><p>버튼도 그 사이트처럼 바꿔줘. 둥근 알약 말고 각진 사각형에 작은 글씨. 강조색은 정말 눈길이 가야 하는 딱 한 곳에만 남기고 나머지는 무채색으로.</p></div>
-        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>버튼을 각진 사각형으로 바꿨어요. 강조색은 제일 중요한 버튼 하나에만 남기고, 나머지는 테두리만 뒀어요.</p></div>
-        <div class="msg me"><span class="from">나</span><p>제목이 네 줄로 떨어져서 첫 화면을 다 잡아먹었어. 크기를 낮추지 말고 문장을 줄여서 두 줄 안에 들어오게 해줘.</p></div>
-        <div class="msg ai" style="--d:160ms"><span class="from">AI</span><p>글자 크기는 그대로 두고 문장을 줄여서 두 줄에 맞췄어요. 한 줄에 들어가는 글자 수부터 세고 카피를 다시 썼어요.</p></div>
+        <div class="msg me"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20.5c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8" fill="currentColor"/></svg></span><p>보라색 그라데이션이랑 빛나는 효과 빼줘. 색은 하나만.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3.5" fill="currentColor"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><rect x="11" y="3.5" width="2" height="4.5" rx="1" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/></svg></span><p>그라데이션을 걷어내고 색을 하나만 남겼어요.</p></div>
+        <div class="msg me"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20.5c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8" fill="currentColor"/></svg></span><p>버튼은 각진 사각형으로. 강조색은 딱 한 곳만.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3.5" fill="currentColor"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><rect x="11" y="3.5" width="2" height="4.5" rx="1" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/></svg></span><p>버튼을 각지게 바꾸고 강조색을 하나에만 남겼어요.</p></div>
+        <div class="msg me"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20.5c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8" fill="currentColor"/></svg></span><p>제목이 네 줄이야. 크기 말고 문장을 줄여서 두 줄로.</p></div>
+        <div class="msg ai" style="--d:160ms"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3.5" fill="currentColor"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><rect x="11" y="3.5" width="2" height="4.5" rx="1" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/></svg></span><p>문장을 줄여서 제목을 두 줄에 맞췄어요.</p></div>
       </div>
 
 
@@ -613,26 +615,28 @@
   /* 어두운 칸에 옮겨 적은 다섯 마디. 저장된 값의 지문으로 이어 붙여 어긋날 수 없게 한다. */
   /* 상세 화면에서 먼저 보여주는 세 개. 저장된 값의 지문으로 고른다. */
   /* 그때 실제로 한 말(원문)과 AI 가 한 일. 저장된 값의 지문으로 묶는다. */
+  var IC_ME = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20.5c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8" fill="currentColor"/></svg>';
+  var IC_AI = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3.5" fill="currentColor"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><rect x="11" y="3.5" width="2" height="4.5" rx="1" fill="currentColor"/><circle cx="12" cy="3" r="1.4" fill="currentColor"/></svg>';
   var SAID_BY_SHA = {};
   var REPLY_BY_SHA = {};
-  SAID_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '보라색 그라데이션이랑 빛나는 효과, 흐림 처리 좀 걷어내줘. 밝고 담백하게. 색은 하나만 써.';
-  REPLY_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '그라데이션이랑 흐림 효과를 걷어냈어요. 색은 하나만 남기고, 나머지는 검정 글자와 가는 선으로 정리했어요.';
-  SAID_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼도 그 사이트처럼 바꿔줘. 둥근 알약 말고 각진 사각형에 작은 글씨. 그림자랑 빛나는 효과는 빼고. 강조색은 정말 눈길이 가야 하는 딱 한 곳에만 남기고 나머지는 무채색으로.';
-  REPLY_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼을 각진 사각형으로 바꿨어요. 강조색은 제일 중요한 버튼 하나에만 남기고, 나머지는 테두리만 뒀어요.';
-  SAID_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '제목이 네 줄로 떨어져서 첫 화면을 다 잡아먹었어. 89px 은 그대로 두고 문장을 줄여서 두 줄 안에 들어오게 해줘. 크기를 낮추지 말고 카피를 줄이는 쪽으로.';
-  REPLY_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '글자 크기는 그대로 두고 문장을 줄여서 두 줄에 맞췄어요. 한 줄에 들어가는 글자 수부터 세고 카피를 다시 썼어요.';
-  SAID_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼이 그라데이션에 묻혀 안 보여. 나머지 레이아웃은 승인. 버튼 대비만 고쳐.';
-  REPLY_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼 배경을 비치는 색에서 꽉 찬 색으로 바꿨어요. 뒤가 무슨 색이든 글자가 보여요.';
-  SAID_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '제목이 세 줄로 떨어져서 답답해. 1280px 에서 두 줄 안에 들어오게 카피를 줄이든 크기를 조정하든 해. 히어로의 다른 건 그대로.';
-  REPLY_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '글자 크기는 두고 문장을 줄여서 두 줄에 맞췄어요. 폭 640px 에 56px 글자면 22자 안쪽이에요.';
-  SAID_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '폰(375px)에서 보면 옆으로 스크롤돼. 지원 국가 줄이 범인 같아. 가로 스크롤만 없애고 데스크톱 모양은 유지해.';
-  REPLY_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '지원 국가 줄에 박아둔 최소 폭을 빼고, 좁아지면 아랫줄로 넘어가게 했어요. 넓은 화면 모양은 그대로예요.';
-  SAID_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '랜딩 페이지를 하나 만들건데, 우리 서비스를 소개하고 웹 페이지를 만듦으로써 목적은 우리 서비스가 사실 설명하기가 어렵잖아, 그걸 이해하기 편하게 하고 싶어';
-  REPLY_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '첫 화면에서 회사 이름과 기술 이름을 뺐어요. 처음 온 사람이 모르는 말은 안 써요.';
-  SAID_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '일반 사용자가 우리 프로덕트를 이해하고 있는게 아니면 지금 너가 쓴 설명들이 이해가 가겠냐? 되게 직관적으로 써도 모자랄 판에 설명을 왜 이렇게 하는지 모르겠네. 멋부리지 말고 진솔한 설명으로 바꿔줘';
-  REPLY_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '제목을 제품 소개가 아니라 읽는 사람이 겪어본 상황으로 바꿨어요. 꾸미는 말도 뺐어요.';
-  SAID_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '이 페이지처럼 스크롤을 내리면 AI와 대화한 기록이 한줄 씩 보이는 형태로 표현하고 싶은데 (ohmy.skin)';
-  REPLY_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '말투를 해요체 하나로 통일했어요. 설명 대신 읽는 사람이 했을 법한 말로 썼어요.';
+  SAID_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '보라색 그라데이션이랑 빛나는 효과 빼줘. 색은 하나만.';
+  REPLY_BY_SHA['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31'] = '그라데이션을 걷어내고 색을 하나만 남겼어요.';
+  SAID_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼은 각진 사각형으로. 강조색은 딱 한 곳만.';
+  REPLY_BY_SHA['e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757'] = '버튼을 각지게 바꾸고 강조색을 하나에만 남겼어요.';
+  SAID_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '제목이 네 줄이야. 크기 말고 문장을 줄여서 두 줄로.';
+  REPLY_BY_SHA['8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'] = '문장을 줄여서 제목을 두 줄에 맞췄어요.';
+  SAID_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼이 배경에 묻혀서 안 보여. 버튼만 고쳐.';
+  REPLY_BY_SHA['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222'] = '버튼 배경을 꽉 찬 색으로 바꿨어요.';
+  SAID_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '제목이 세 줄이야. 두 줄 안에 넣어줘.';
+  REPLY_BY_SHA['8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e'] = '문장을 줄여서 두 줄에 맞췄어요.';
+  SAID_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '폰에서 옆으로 스크롤돼. 이것만 없애줘.';
+  REPLY_BY_SHA['c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'] = '국가 목록이 좁아지면 아랫줄로 넘어가게 했어요.';
+  SAID_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '우리 서비스 소개 랜딩을 만들어줘. 어려운 걸 쉽게.';
+  REPLY_BY_SHA['dd944dc55655b524b21eaffb13f5ff4501d6f4bee3c36efa9579a4302f5ef8eb'] = '첫 화면에서 회사 이름과 기술 용어를 뺐어요.';
+  SAID_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '처음 보는 사람이 이해가 가겠어? 멋부리지 말고 진솔하게.';
+  REPLY_BY_SHA['80f2dd390c3171a379623e77a6a530329636d1ac82f47379c63fa6416e51872f'] = '제목을 읽는 사람이 겪어본 상황으로 바꿨어요.';
+  SAID_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '스크롤하면 대화가 한 줄씩 보이게 해줘.';
+  REPLY_BY_SHA['f2a1c921ca6ea48b3e6ca86249af5a42257c79ac2de2b2fe2f17c07264c98b30'] = '대화처럼 한 줄씩 풀고 말투를 해요체로 통일했어요.';
   var SHOW3 = {};
   SHOW3['0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e'] = ['7bb4c70c1752680a9c0475b2f2266fbaa13f616afa65bd0dede6532dc0426c31', 'e0cf5b547995b23cf12bf03566bd81bb92bda594365498fe10c01d398e47a757', '8102dfa716a87c37c367f54e302f36884126e6e21cba4fd6efb0177ba28f4c10'];
   SHOW3['0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d'] = ['02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222', '8e16c0035b2ff5aec660798ae94990272bc325aea7c64bc8ff1984a14f5b262e', 'c051caff6518b40caeeddf08723c21cb64c0f783864aa6b3a0fd525698d545d8'];
@@ -1023,8 +1027,8 @@
     idx.forEach(function(i){
       var sh = steps[i].record_sha256;
       var said = SAID_BY_SHA[sh], reply = REPLY_BY_SHA[sh] || open[i] || '';
-      if(said) out += '<div class="msg me"><span class="from">나</span><p>' + esc(said) + '</p></div>';
-      if(reply) out += '<div class="msg ai"><span class="from">AI</span><p>' + esc(reply) + '</p></div>';
+      if(said) out += '<div class="msg me"><span class="ic">' + IC_ME + '</span><p>' + esc(said) + '</p></div>';
+      if(reply) out += '<div class="msg ai" style="--d:160ms"><span class="ic">' + IC_AI + '</span><p>' + esc(reply) + '</p></div>';
     });
     return '<div class="wrap block"><h2>안에 든 대화</h2>'
       + '<p class="bl">전부 ' + steps.length + '개 중 ' + idx.length + '개예요. 나머지는 사면 열려요.</p>'
@@ -1038,17 +1042,13 @@
   function savingsBlock(p){
     var measured = (p.id === STORY_ID);
     var cells = measured
-      ? [['걸리는 시간 — 처음부터 했을 때 → 경험을 샀을 때', '<s>3분 30초</s><b>2분 0초</b>', '43% 빨라요'],
-         ['AI 사용료 (토큰값) — 처음부터 → 샀을 때', '<s>$1.17</s><b>$0.70</b>', '40% 덜 들어요']]
-      : [['걸리는 시간', '<b>약 40% 빨라요</b>', '잰 기록에서 3분 30초 → 2분 0초'],
-         ['AI 사용료 (토큰값)', '<b>약 40% 덜 들어요</b>', '잰 기록에서 $1.17 → $0.70']];
-    var note = measured
-      ? '웹퍼블리셔 경험으로 잰 값이에요.'
-      : '웹퍼블리셔 경험에서 잰 비율이에요.';
-    return '<div class="wrap block"><h2>' + (measured ? '이 기록을 쓰면' : '이 기록을 쓰면 (예상)') + '</h2>'
-      + '<div class="save">'
-      + cells.map(function(c){ return '<div class="sv"><div class="k">' + c[0] + '</div><div class="v">' + c[1] + '</div><div class="d">' + c[2] + '</div></div>'; }).join('')
-      + '</div><p class="bl" style="margin-top:18px">' + note + '</p></div>';
+      ? [['걸리는 시간', '<s>3분 30초</s><b>2분 0초</b>', '43% 빨라요'],
+         ['AI 사용료 (토큰값)', '<s>$1.17</s><b>$0.70</b>', '40% 덜 들어요']]
+      : [['걸리는 시간', '<b>약 40% 빨라요</b>', ''],
+         ['AI 사용료 (토큰값)', '<b>약 40% 덜 들어요</b>', '']];
+    return '<div class="wrap block"><h2>이 기록을 쓰면</h2><div class="save">'
+      + cells.map(function(c){ return '<div class="sv"><div class="k">' + c[0] + '</div><div class="v">' + c[1] + '</div>' + (c[2] ? '<div class="d">' + c[2] + '</div>' : '') + '</div>'; }).join('')
+      + '</div></div>';
   }
   function resultsBlock(){
     return '<div class="wrap block"><h2>이 기록 하나를 두고 재본 것</h2>'
@@ -1158,7 +1158,7 @@
       h.push('<div class="wrap block"><h2>안에 든 것</h2>'
         + '<p class="bl">전부 ' + total + '개 중 ' + texts.length + '개예요. 나머지는 사면 열려요.</p>'
         + '<div class="chat lt">'
-        + texts.map(function(t){ return '<div class="msg ai"><span class="from">AI</span><p>' + esc(plain(t.trim())) + '</p></div>'; }).join('')
+        + texts.map(function(t){ return '<div class="msg ai"><span class="ic">' + IC_AI + '</span><p>' + esc(plain(t.trim())) + '</p></div>'; }).join('')
         + '</div>'
         + '<div class="locked" style="margin-top:14px"><div class="mgrp">' + maskRows(3, 3, 88) + '</div>'
         + '<button class="unlock" type="button" data-goto="howto"><span class="lock" aria-hidden="true"><b></b><i></i></span>잠금해제</button></div>'
