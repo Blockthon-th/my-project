@@ -63,14 +63,14 @@
   /* ───────── 글자 사다리 ───────── */
   h1{
     font-size:clamp(30px, 5.6vw, 72px);
-    line-height:1.22; letter-spacing:0; font-weight:400;
+    line-height:1.22; letter-spacing:-.01em; font-weight:600;
     margin:18px 0 24px;
   }
   h1 .l1, h1 .l2{ display:block; }
-  .h2{ font-size:34px; line-height:1.3; font-weight:400; letter-spacing:0; margin:0 0 18px; }
+  .h2{ font-size:34px; line-height:1.3; font-weight:600; letter-spacing:0; margin:0 0 18px; }
   .lead{ font-size:21px; line-height:1.55; color:var(--mute); }
   .lead.w{ max-width:900px; }
-  .body{ font-size:18px; line-height:1.6; }
+  .body{ font-weight:500; font-size:18px; line-height:1.6; }
   .eyebrow{
     font-size:16px; line-height:1.5; letter-spacing:.04em; color:var(--mute);
     display:flex; align-items:center; gap:10px; margin:0 0 36px;
@@ -140,7 +140,7 @@
   .on-dark .row::after{ background:#5b5b5b; }
   .row .n{ font-family:var(--mono); font-size:16px; color:var(--mute); padding-top:6px; letter-spacing:.04em; }
   .on-dark .row .n{ color:var(--ondark-mute); }
-  .row .nm{ font-size:26px; line-height:1.35; font-weight:400; }
+  .row .nm{ font-size:26px; line-height:1.35; font-weight:600; }
   .row .ds{ font-size:18px; line-height:1.6; color:var(--mute); margin-top:8px; max-width:820px; }
   .row .mt{ font-family:var(--mono); font-size:15px; color:var(--mute); margin-top:12px; letter-spacing:.02em; }
   a.row .go{ position:absolute; right:0; top:28px; font-size:21px; color:var(--ink); }
@@ -166,20 +166,23 @@
   .on-dark .row .ds{ color:var(--ondark-soft); }
   .on-dark .row .mt{ color:var(--ondark-mute); }
 
-  .lab{ font-size:15px; letter-spacing:.04em; color:var(--mute); margin-bottom:6px; }
+  .lab{ font-size:14px; letter-spacing:.06em; color:var(--mute); margin-bottom:6px; font-weight:500; }
   .on-dark .lab{ color:var(--ondark-mute); }
   .on-dark .lab.hi{ color:var(--dark-accent); }
-  .said{ font-size:20px; line-height:1.55; }
+  .said{ font-size:20px; line-height:1.55; font-weight:500; }
   .got{ font-size:18px; line-height:1.6; color:var(--ondark-soft); }
   .said + .lab{ margin-top:18px; }
 
-  /* ───────── 가려진 자리. 글자를 한 자도 넣지 않는다 ───────── */
-  .mgrp{ margin:2px 0 0; }
+  /* ───────── 가려진 자리. 글자를 한 자도 넣지 않는다 ─────────
+     대화 모양의 흐린 덩어리다. 오른쪽이 사람, 왼쪽이 AI. 모양만으로 대화가 있다는 게 읽힌다. */
+  .mgrp{ margin:6px 0 0; display:flex; flex-direction:column; gap:10px; max-width:640px; }
   .mask{
-    display:block; height:12px; margin:0 0 8px; border-radius:0;
-    background-color:#2e2a27;
-    background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.09) 0 5px, transparent 5px 10px);
+    display:block; flex:0 0 auto; height:44px; border-radius:18px 18px 18px 5px;
+    background:#d9d3cb; filter:blur(5px); opacity:.92; transform:translateZ(0);
   }
+  .mask.me{ align-self:flex-end; border-radius:18px 18px 5px 18px; background:#ffcdbd; }
+  .on-dark .mask{ background:#4b4642; }
+  .on-dark .mask.me{ background:#7a4d3e; }
   .mask:last-child{ margin-bottom:0; }
   .lockline{ display:flex; align-items:center; gap:8px; margin-top:12px; font-size:15px; color:var(--ondark-mute); }
   .lock{ position:relative; flex:0 0 auto; width:13px; height:16px; }
@@ -224,16 +227,16 @@
   .back{ display:inline-block; text-decoration:none; color:var(--mute); font-size:16px; margin-bottom:40px; }
   .back:hover{ color:var(--ink); }
   .dtop{ padding-top:48px; }
-  .dtitle{ font-size:clamp(28px,3.6vw,44px); line-height:1.28; font-weight:400; margin:0 0 16px; max-width:900px; }
+  .dtitle{ font-size:clamp(28px,3.6vw,44px); line-height:1.28; font-weight:600; margin:0 0 16px; max-width:900px; }
   .dsub{ font-size:18px; color:var(--mute); max-width:759px; margin:0 0 20px; }
   .orig{ font-size:16px; color:var(--mute); max-width:759px; margin:0 0 24px; padding-left:16px; border-left:1px solid var(--accent); }
-  .orig b{ font-weight:400; color:var(--ink); }
+  .orig b{ font-weight:500; color:var(--ink); }
   .dmeta{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:8px; }
   .chip{ border:1px solid #d8d8d8; border-radius:0; padding:7px 14px; font-family:var(--mono); font-size:15px; color:var(--mute); }
   button.chip{ cursor:pointer; }
   .chip.hi{ background:var(--accent); border-color:var(--accent); color:#141414; }
   .block{ padding-top:56px; }
-  .block h2{ font-size:26px; font-weight:400; margin:0 0 10px; }
+  .block h2{ font-size:26px; font-weight:600; margin:0 0 10px; }
   .block .bl{ color:var(--mute); font-size:18px; margin:0 0 24px; max-width:759px; }
   .dmask{ background-color:#ddd8d2; background-image:repeating-linear-gradient(135deg, rgba(0,0,0,.055) 0 5px, transparent 5px 10px); }
   .dlock i, .dlock b{ background:var(--mute); border-color:var(--mute); }
@@ -512,6 +515,13 @@
   OURNAME['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] =
     ['가상화폐 개발자 경험', '처음 붙이는 사람이 막히는 자리만 서른 개 모았어요. 사진 없이 글로만 들어 있어요.'];
 
+  /* 체인에 사진이 없는 기록에 붙이는 우리 사진. 안에 든 실제 글로 만들었다. */
+  var OURIMG = {};
+  OURIMG['0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683'] =
+    ['img/copy-record.jpg', '한국어 랜딩 문구를 고치며 알게 된 것들'];
+  OURIMG['0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40'] =
+    ['img/sui-record.jpg', 'Sui 를 처음 붙이며 막힌 자리를 적어둔 것'];
+
   /* 어두운 칸에 옮겨 적은 다섯 마디. 저장된 값의 지문으로 이어 붙여 어긋날 수 없게 한다. */
   var LESSON_BY_SHA = {
     '02ed2f47859353650df13c0bb33d74363762a566a53ed340c1e5c55cf7786222':
@@ -626,12 +636,14 @@
     if(ticks % 2 === 1) t = t.replace(/`[^`]*$/, '').replace(/[\s,·]+$/, '');
     return plain(t.trim());
   }
-  /* 글자가 없는 회색 줄. DOM 에 텍스트를 넣지 않는다. */
+  /* 글자가 없는 흐린 말풍선. DOM 에 텍스트를 넣지 않는다. 사람 말(오른쪽)과 AI 답(왼쪽)이 번갈아 나온다. */
   function maskRows(seed, n, base){
     var out = '';
     for(var k = 0; k < n; k++){
       var w = base - ((seed * 17 + k * 29) % 27);
-      out += '<span class="mask dmask" style="width:' + w + '%"></span>';
+      var hgt = 38 + ((seed * 13 + k * 19) % 22);
+      var me = (k % 2 === 0);
+      out += '<span class="mask' + (me ? ' me' : '') + '" style="width:' + w + '%;height:' + hgt + 'px" aria-hidden="true"></span>';
     }
     return out;
   }
@@ -754,11 +766,27 @@
     + '<div><div class="cap">AI 가 만든 것</div>'
     + '<button class="shot" type="button" data-full="img/slop-before.jpg" data-cap="AI 가 만든 것" aria-label="AI 가 만든 것 — 눌러서 크게 보기">'
     + '<img src="img/slop-before.jpg" width="1280" height="800" alt="보라색 배경에 영어 문구가 박힌 랜딩 화면"></button></div>'
-    + '<div><div class="cap">열 번 고친 것</div>'
-    + '<button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="열 번 고친 것" aria-label="열 번 고친 것 — 눌러서 크게 보기">'
-    + '<img src="img/clean-after.jpg" width="1280" height="800" alt="장식을 걷어내고 실제 제품 화면이 보이는 랜딩"></button></div>'
+    + '<div><div class="cap">이 기록대로 고친 것</div>'
+    + '<button class="shot" type="button" data-full="img/clean-after.jpg" data-cap="이 기록대로 고친 것" aria-label="이 기록대로 고친 것 — 눌러서 크게 보기">'
+    + '<img src="img/clean-after.jpg" width="1280" height="800" alt="지금 보고 있는 이 랜딩의 첫 화면"></button></div>'
     + '</div>';
 
+  /* 줄 밑에 붙는 사진. 01 은 우리 전후, Paylane 은 체인에 있는 전후, 나머지는 우리가 찍은 한 장. */
+  function rowShots(p){
+    if(p.id === SLOP_ID) return SHOTS;
+    if(p.id === STORY_ID && isSheet(p) && p.preview.sheet.previews && p.preview.sheet.previews.before && p.preview.sheet.previews.after){
+      var pv = p.preview.sheet.previews;
+      return '<div class="shots">'
+        + '<div><div class="cap">고치기 전</div><button class="shot" type="button" data-img="' + esc(pv.before) + '" data-alt="고치기 전 랜딩 화면"><span class="skel" style="width:100%;height:100%"></span></button></div>'
+        + '<div><div class="cap">고친 뒤</div><button class="shot" type="button" data-img="' + esc(pv.after) + '" data-alt="고친 뒤 랜딩 화면"><span class="skel" style="width:100%;height:100%"></span></button></div>'
+        + '</div>';
+    }
+    var im = OURIMG[p.id];
+    if(!im) return '';
+    return '<div class="shots"><div><div class="cap">안에 든 것</div>'
+      + '<button class="shot" type="button" data-full="' + im[0] + '" data-cap="' + esc(im[1]) + '" aria-label="' + esc(im[1]) + ' — 눌러서 크게 보기">'
+      + '<img src="' + im[0] + '" width="1280" height="800" alt="' + esc(im[1]) + '" loading="lazy"></button></div></div>';
+  }
   function renderRows(){
     var box = document.getElementById('rows');
     var err = document.getElementById('rows-err');
@@ -793,11 +821,12 @@
         +   '<span class="ds" style="display:block">' + esc(ourDesc(p)) + '</span>'
         +   '<span class="mt" style="display:block">' + countText(p) + ' · ' + esc(sui(p.fee))
         +     ' · ' + esc(ttlText(p.ttl_ms)) + ' 동안 열려요 · ' + esc(buyers(p.subscriber_count)) + '</span>'
-        +   (p.id === SLOP_ID ? SHOTS : '')
+        +   rowShots(p)
         + '</span>'
         + '<span class="go" aria-hidden="true">→</span>'
         + '</a>';
     }).join('');
+    fillShots(box);
     sweep();
   }
 
