@@ -16,6 +16,7 @@
  *   6. 사기 전에는 안 보여야 할 글이 화면 코드에 새어나갔나
  *   7. 체인에 올라간 컨트랙트가 저장소 소스와 같나
  *   8. 문서가 근거로 건 거래가 실제로 체인에 있고 성공했나
+ *   9. README 의 기록 표(값·산 사람 수)가 체인과 같나
  *   8. 문서가 근거로 건 거래가 실제로 체인에 있고 성공했나
  *
  * 하나라도 어긋나면 종료 코드 1 로 끝난다.
@@ -252,6 +253,26 @@ console.log('\n=== 8. 문서에 적힌 거래가 실제로 체인에 있나 ==='
     else if (t.effects.status !== 'SUCCESS') bad('실패한 거래를 근거로 걸었다 ' + d.slice(0, 14));
     else ok(d.slice(0, 14) + '... 성공한 거래 (' + [...files].join(', ') + ')');
   }
+}
+
+
+console.log('\n=== 9. README 의 기록 표가 체인과 같나 ===');
+{
+  const md = readFileSync(join(ROOT, 'README.md'), 'utf8');
+  let checked = 0;
+  for (const p of chain.listed) {
+    // 이름으로 시작하는 표 줄을 찾는다
+    const row = md.split('\n').find((ln) => ln.startsWith('| ' + p.name + ' |'));
+    if (!row) { warn('README 표에 없는 기록: ' + p.name); continue; }
+    const cells = row.split('|').map((c) => c.trim());
+    const feeCell = cells.find((c) => /SUI$/.test(c));
+    const buyerCell = cells.find((c, i) => i > 0 && /^\d+$/.test(c) && cells[i - 1] && /시간$|일$/.test(cells[i - 1]));
+    if (feeCell && parseFloat(feeCell) !== p.fee) bad(p.name + ' 값이 다르다 — README ' + feeCell + ' vs 체인 ' + p.fee + ' SUI');
+    if (buyerCell !== undefined && Number(buyerCell) !== p.buyers)
+      bad(p.name + ' 산 사람 수가 다르다 — README ' + buyerCell + ' vs 체인 ' + p.buyers);
+    checked++;
+  }
+  if (checked === chain.listed.length) ok('기록 ' + checked + '개의 값과 산 사람 수가 표와 일치');
 }
 
 console.log('\n어긋남 ' + mismatches + '건 · 확인 필요 ' + unsure + '건');

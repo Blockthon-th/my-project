@@ -51,13 +51,15 @@ Paylane 기록(다섯 번 고친 것)에서 두 번째로 고친 대목입니다
 ## 지금 올라와 있는 기록 — 정확히 4개
 
 이름은 판 사람이 체인에 적은 그대로라 저희가 고칠 수 없습니다. 기준값은 [docs/ground-truth.md](docs/ground-truth.md).
+**산 사람 수는 2026-09-13 기준입니다.** 이 값은 누가 살 때마다 늘어납니다. 지금 값은 랜딩에서 바로 읽어 옵니다 —
+`node tools/consistency.mjs` 를 돌리면 이 표와 체인이 어긋나는지 알려줍니다.
 
 | 기록 (판 사람이 적은 이름) | 몇 번 | 값 | 기간 | 산 사람 | 사기 전에 보이는 것 |
 |---|---|---|---|---|---|
 | Paylane 랜딩 5턴 교정 과정 | 5번 | 0.05 SUI | 7일 | 1 | 고치기 전·후 화면 2장 + 설명 |
 | AI가 뱉은 랜딩을 고쳐나간 기록 | 10번 | 0.05 SUI | 7일 | 0 | 고치기 전·후 화면 2장 + 설명 |
 | 한국어 랜딩 카피 8번 고친 과정 | 8번 | 0.03 SUI | 7일 | 0 | 설명만 (화면 사진 없음) |
-| Sui 온보딩 실전 기억 | 글 30건 | 0.01 SUI | 24시간 | 0 | 실제 교훈 글 2건 |
+| Sui 온보딩 실전 기억 | 글 30건 | 0.01 SUI | 24시간 | 1 | 실제 교훈 글 2건 |
 
 SUI 는 Sui 네트워크의 가상화폐 단위입니다. 지금은 연습용 네트워크(testnet)라 진짜 돈이 들지 않습니다.
 객체 주소와 링크는 아래 [체인에 올라간 주소](#체인에-올라간-주소-sui-testnet) 에 있습니다.
@@ -164,7 +166,7 @@ node check-copy.mjs ..\site\index.html                           # 한국어 카
 cd ..; node tools\consistency.mjs                                # 랜딩·저장소·체인이 어긋나는지
 ```
 
-마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 여덟 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
+마지막 것이 이 저장소의 주장을 스스로 검사합니다. 체인을 직접 읽어서 문서와 랜딩에 적힌 기록 주소·수치·거래가 실제와 맞는지, 컨트랙트 함수가 소스와 같은지 아홉 가지를 대조하고, 하나라도 어긋나면 종료 코드 1 로 끝납니다.
 인터넷 연결이 필요합니다.
 
 `.env` 는 [.env.example](.env.example) 참고, 커밋 금지. 데모 실행은 [demo/README.md](demo/README.md).
@@ -181,7 +183,7 @@ cd ..; node tools\consistency.mjs                                # 랜딩·저�
 | Paylane 랜딩 5턴 교정 과정 | 5 | 0.05 SUI | 7일 | 1 | [`0x75b25d24…22cfcb1d`](https://suiscan.xyz/testnet/object/0x75b25d24377a92fd976d7690ed73b7b31496c5c4d3b13c96720cf00222cfcb1d) |
 | AI가 뱉은 랜딩을 고쳐나간 기록 | 10 | 0.05 SUI | 7일 | 0 | [`0x02524aa2…cd27387e`](https://suiscan.xyz/testnet/object/0x02524aa2bf2f05a3cbd6a41ad0ba147f4de524956ff074f515e0b76fcd27387e) |
 | 한국어 랜딩 카피 8번 고친 과정 | 8 | 0.03 SUI | 7일 | 0 | [`0x8e366e40…1ecde683`](https://suiscan.xyz/testnet/object/0x8e366e409998682402364c08822d62e2e84639113c712223c0c897521ecde683) |
-| Sui 온보딩 실전 기억 | 30 (글) | 0.01 SUI | 24시간 | 0 | [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40) |
+| Sui 온보딩 실전 기억 | 30 (글) | 0.01 SUI | 24시간 | 1 | [`0xaa3b7edc…36b52a40`](https://suiscan.xyz/testnet/object/0xaa3b7edcbc7281896372c43a3ca8eae75f3b20accba985af9f4622bc36b52a40) |
 
 - `0x02524aa2…` 는 이번에 새로 올린 것입니다. AI에게 "랜딩 만들어줘" 해서 나온 보라색 그라데이션 페이지
   (Supercharge · Power of AI · 🚀 · Lightning Fast 카드)에서 시작해, 한 번에 하나씩 열 번 고쳐 실제 제품이 보이는 페이지로 만든 과정입니다.
