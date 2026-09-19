@@ -110,9 +110,9 @@ function walk(dir, out = []) {
 }
 
 const chain = await readChain();
-console.log('체인에서 읽었다 — 전체 ' + chain.all.length + '개, 목록에 보이는 것 ' + chain.listed.length + '개\n');
+console.log('체인에서 읽었다. 전체 ' + chain.all.length + '개, 목록에 보이는 것 ' + chain.listed.length + '개\n');
 for (const p of chain.listed) {
-  console.log('  ' + p.name + ' — ' + p.count + '개 · ' + p.fee + ' SUI · '
+  console.log('  ' + p.name + ' · ' + p.count + '개 · ' + p.fee + ' SUI · '
     + (p.ttlMs / 3600000) + '시간 · 산 사람 ' + p.buyers + ' · 사기 전에 볼 수 있는 것 ' + p.previews);
 }
 
@@ -271,9 +271,9 @@ console.log('\n=== 9. README 의 기록 표가 체인과 같나 ===');
     const cells = row.split('|').map((c) => c.trim());
     const feeCell = cells.find((c) => /SUI$/.test(c));
     const buyerCell = cells.find((c, i) => i > 0 && /^\d+$/.test(c) && cells[i - 1] && /시간$|일$/.test(cells[i - 1]));
-    if (feeCell && parseFloat(feeCell) !== p.fee) bad(p.name + ' 값이 다르다 — README ' + feeCell + ' vs 체인 ' + p.fee + ' SUI');
+    if (feeCell && parseFloat(feeCell) !== p.fee) bad(p.name + ' 값이 다르다. README ' + feeCell + ' vs 체인 ' + p.fee + ' SUI');
     if (buyerCell !== undefined && Number(buyerCell) !== p.buyers)
-      bad(p.name + ' 산 사람 수가 다르다 — README ' + buyerCell + ' vs 체인 ' + p.buyers);
+      bad(p.name + ' 산 사람 수가 다르다. README ' + buyerCell + ' vs 체인 ' + p.buyers);
     checked++;
   }
   if (checked === chain.listed.length) ok('기록 ' + checked + '개의 값과 산 사람 수가 표와 일치');
