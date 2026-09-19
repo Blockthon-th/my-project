@@ -1469,6 +1469,11 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     ['유튜버 경험', '5년차 채널 운영', 12, 0.03, 7, 6, 1, 10, '영상'],
     ['강사 경험', '12년차 학원 강사', 14, 0.02, 30, 3, 0, 11, '교육']
   ];
+  function hasShots(p){
+    if(!isSheet(p)) return false;
+    var pv = p.preview.sheet.previews;
+    return !!(pv && (pv.after || pv.before));
+  }
   var mkQuery = '';
   var mkSort = 'new';
   var mkLiveOnly = false;
@@ -1480,7 +1485,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
         live: true, id: p.id, name: ourName(p), owner: who[0],
         steps: Number(p.memory_count), fee: Number(p.fee) / 1e9,
         days: Number(p.ttl_ms) / 86400000, buyers: Number(p.subscriber_count),
-        shots: isSheet(p) ? 1 : 0, at: Number(p.created_at_ms) || 0,
+        shots: hasShots(p) ? 1 : 0, at: Number(p.created_at_ms) || 0,
         kind: isSheet(p) ? '웹 디자인' : 'Sui 개발', ord: i
       };
     });
