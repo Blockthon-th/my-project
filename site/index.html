@@ -1684,6 +1684,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     loadAll().then(function(){
       var r = parseRoute();
       if(r.view === 'detail') renderDetail(r.id);
+      else if(r.view === 'market') renderMarket();
       else renderList();
       sweep();
     });
