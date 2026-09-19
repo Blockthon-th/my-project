@@ -359,6 +359,37 @@
   .mkcard .bdg.live{ border-color:var(--accent); color:var(--accent-dark); font-weight:700; }
   .mkcard.demo{ background:#fbfaf8; }
   .mkcard.demo .ic{ opacity:.55; }
+  .mksec{ margin:52px 0 0; }
+  .mksec:first-of-type{ margin-top:30px; }
+  .mksech{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .mksech h2{ font-size:21px; font-weight:700; margin:0; letter-spacing:-.01em;
+    display:inline-flex; align-items:center; gap:7px; }
+  .mksech h2 .arw{ font-size:17px; color:#b0aaa0; font-weight:400; }
+  .mksech .cnt{ font-family:var(--mono); font-size:13px; color:var(--mute); }
+  .mkrail{ display:flex; gap:16px; margin:18px 0 0; overflow-x:auto; padding:2px 2px 10px;
+    scroll-snap-type:x proximity; scrollbar-width:thin; }
+  .mkrail > *{ flex:0 0 258px; scroll-snap-align:start; }
+  .mkrail::-webkit-scrollbar{ height:7px; }
+  .mkrail::-webkit-scrollbar-thumb{ background:#dcd6cc; border-radius:99px; }
+  .shotcard{ position:relative; display:block; text-decoration:none; color:inherit;
+    border:1px solid #e6e2db; border-radius:14px; overflow:hidden; background:#fff;
+    transition:border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+  a.shotcard:hover{ border-color:var(--ink); transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+  .shotcard .cv{ display:block; aspect-ratio:16/10; background:#f2efea; overflow:hidden; }
+  .shotcard .cv img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+  .shotcard .cv.gen{ display:flex; align-items:center; justify-content:center; background:var(--c); }
+  .shotcard .cv.gen span{ font-family:var(--mono); font-size:15px; font-weight:700; color:#3a3a3a; letter-spacing:.02em; }
+  .shotcard .bd{ display:block; padding:13px 14px 15px; }
+  .shotcard .nm{ display:block; font-size:15px; font-weight:700; line-height:1.4; }
+  a.shotcard:hover .nm{ color:var(--accent-dark); }
+  .shotcard .sub{ display:block; margin:6px 0 0; font-family:var(--mono); font-size:11.5px; color:var(--mute); line-height:1.6; }
+  .shotcard.demo{ background:#fbfaf8; }
+  .shotcard .bdg{ position:absolute; top:11px; right:11px; z-index:1; background:rgba(255,255,255,.94); }
+  @media(max-width:560px){
+    .mksec{ margin-top:40px; }
+    .mksech h2{ font-size:18px; }
+    .mkrail > *{ flex:0 0 220px; }
+  }
   .mkempty{ padding:44px 4px; color:var(--mute); }
   .mknote{ margin:26px 0 0; font-size:14px; color:var(--mute); line-height:1.75; }
   @media(max-width:1100px){ .mkgrid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
@@ -1548,14 +1579,16 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
         live: true, id: p.id, name: ourName(p), owner: who[0], cat: cat, desc: ourDesc(p),
         steps: Number(p.memory_count), fee: Number(p.fee) / 1e9,
         days: Number(p.ttl_ms) / 86400000, buyers: Number(p.subscriber_count),
-        shots: hasShots(p) ? 1 : 0, at: Number(p.created_at_ms) || 0, ord: i
+        shots: hasShots(p) ? 1 : 0, at: Number(p.created_at_ms) || 0, ord: i,
+        cover: coverOf({ id: p.id }, p)
       };
     });
     var now = Date.now();
     DEMO_ROWS.forEach(function(d, i){
       rows.push({
         live: false, id: null, name: d[0], owner: d[1], cat: d[2], steps: d[3], fee: d[4],
-        days: d[5], buyers: d[6], shots: d[7], at: now - d[8] * 86400000, desc: d[9], ord: 100 + i
+        days: d[5], buyers: d[6], shots: d[7], at: now - d[8] * 86400000, desc: d[9], ord: 100 + i,
+        cover: null
       });
     });
     return rows;
@@ -1601,14 +1634,71 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
       ? rows.map(mkCard).join('')
       : '<div class="mkempty">찾는 게 없어요. 다른 말로 찾아보세요.</div>';
   }
+  /* 결과물 줄에 쓰는 겉그림. 체인 기록은 실제 화면, 예시는 갈래 색 판. */
+  function coverOf(r, p){
+    if(r.id === SLOP_ID) return 'img/clean-after.jpg';
+    if(p && isSheet(p) && p.preview.sheet.previews && p.preview.sheet.previews.after){
+      return blobUrl(p.preview.sheet.previews.after);
+    }
+    var im = p ? OURIMG[p.id] : null;
+    return im ? im[0] : null;
+  }
+  function shotCard(r){
+    var cv = r.cover
+      ? '<span class="cv"><img src="' + esc(r.cover) + '" alt="' + esc(r.name) + ' 결과물" loading="lazy"></span>'
+      : '<span class="cv gen" style="--c:' + (CATCOLOR[r.cat] || '#eee') + '"><span>' + esc(r.cat) + '</span></span>';
+    var bdg = r.live ? '<span class="bdg live">체인</span>' : '<span class="bdg">예시</span>';
+    var inner = bdg + cv
+      + '<span class="bd"><span class="nm">' + esc(r.name) + '</span>'
+      + '<span class="sub">' + esc(r.owner) + '<br>' + r.steps + '단계 · '
+      + (Math.round(r.fee * 1000) / 1000) + ' SUI · 산 사람 ' + r.buyers + '</span></span>';
+    return r.live
+      ? '<a class="shotcard" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
+      : '<div class="shotcard demo">' + inner + '</div>';
+  }
+  function secHead(title, count, more){
+    return '<div class="mksech"><h2>' + esc(title) + '<span class="arw" aria-hidden="true">›</span></h2>'
+      + (count ? '<span class="cnt">' + esc(count) + '</span>' : '') + '</div>';
+  }
   function renderMarket(){
     var rows = mkRowsData();
     var liveN = rows.filter(function(r){ return r.live; }).length;
-    var shown = mkSorted(mkFilter(rows));
+    var inCat = mkFilter(rows);
+
+    var hot = inCat.slice().sort(function(a,b){
+      return b.buyers - a.buyers || (a.live === b.live ? a.ord - b.ord : (a.live ? -1 : 1));
+    }).slice(0, 10);
+
+    var shots = inCat.slice().sort(function(a,b){
+      if(!!b.cover !== !!a.cover) return b.cover ? 1 : -1;
+      if(a.live !== b.live) return a.live ? -1 : 1;
+      return a.ord - b.ord;
+    }).slice(0, 10);
+
+    var all = mkSorted(inCat);
+
     var h = [];
     h.push('<div class="wrap mkhead">');
     h.push('<a class="mkback" href="#/">← 처음으로</a>');
     h.push('<div class="mktitle"><h1>올라온 경험</h1><span class="mkcount">' + rows.length + '</span></div>');
+    h.push('<div class="mkcats">' + CATS.map(function(c){
+      var n = c === '전체' ? rows.length : rows.filter(function(r){ return r.cat === c; }).length;
+      return '<button class="cat' + (mkCat === c ? ' on' : '') + '" type="button" data-cat="' + esc(c) + '">'
+        + esc(c) + ' ' + n + '</button>';
+    }).join('') + '</div>');
+
+    h.push('<div class="mksec">');
+    h.push(secHead('이번 주 많이 팔린 경험', '옆으로 밀어서 더 보세요'));
+    h.push('<div class="mkrail">' + hot.map(shotCard).join('') + '</div>');
+    h.push('</div>');
+
+    h.push('<div class="mksec">');
+    h.push(secHead('사기 망설여진다면 결과물부터 보세요', '사기 전에 누구나 볼 수 있어요'));
+    h.push('<div class="mkrail">' + shots.map(shotCard).join('') + '</div>');
+    h.push('</div>');
+
+    h.push('<div class="mksec">');
+    h.push(secHead('전부 보기', all.length + '개'));
     h.push('<div class="mkbar">'
       + '<span class="mksearch"><input id="mkq" type="search" placeholder="직군이나 하고 싶은 일로 찾아보세요" value="' + esc(mkQuery) + '" aria-label="기록 찾기"></span>'
       + '<select class="mksort" id="mksort" aria-label="정렬">'
@@ -1617,12 +1707,9 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
       + '<option value="cheap"' + (mkSort === 'cheap' ? ' selected' : '') + '>값이 싼 순</option>'
       + '<option value="steps"' + (mkSort === 'steps' ? ' selected' : '') + '>단계가 많은 순</option>'
       + '</select></div>');
-    h.push('<div class="mkcats">' + CATS.map(function(c){
-      var n = c === '전체' ? rows.length : rows.filter(function(r){ return r.cat === c; }).length;
-      return '<button class="cat' + (mkCat === c ? ' on' : '') + '" type="button" data-cat="' + esc(c) + '">'
-        + esc(c) + ' ' + n + '</button>';
-    }).join('') + '</div>');
-    h.push('<div class="mkgrid" id="mkgrid">' + mkGridHtml(shown) + '</div>');
+    h.push('<div class="mkgrid" id="mkgrid">' + mkGridHtml(all) + '</div>');
+    h.push('</div>');
+
     h.push('<p class="mknote"><b>체인</b> 표시가 붙은 ' + liveN + '개는 지금 실제로 살 수 있어요. 값과 산 사람 수는 체인에서 그때그때 읽어와요. '
       + '<b>예시</b> 표시가 붙은 것은 아직 안 올라왔어요. 어떤 갈래가 올라올 수 있는지 보여주려고 적어둔 것이에요.</p>');
     h.push('</div>');
