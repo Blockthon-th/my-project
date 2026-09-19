@@ -26,11 +26,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 랜딩은 site/index.html 한 장과 그 옆 사진뿐이다. 빌드가 없다.
+      # 정적 HTML과 마켓 스타일, 이미지를 함께 배포한다.
       - name: 올릴 것만 추려낸다
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
+          cp site/market.css _site/market.css
           if [ -d site/img ]; then cp -r site/img _site/img; fi
           touch _site/.nojekyll
           ls -R _site

@@ -548,6 +548,7 @@
     .skel{ animation:none; }
   }
 </style>
+<link rel="stylesheet" href="market.css">
 </head>
 <body>
 
@@ -587,11 +588,11 @@
     <div class="wrap"><span class="fold reveal" style="display:block"></span></div>
   </section>
 
-  <!-- ────────── 지금 올라와 있는 것 ────────── -->
+  <!-- ────────── 이번주 인기있는 경험 ────────── -->
   <section class="sec" id="sec-list">
     <span class="gl" aria-hidden="true"></span>
     <div class="wrap">
-      <h2 class="h2 reveal">지금 올라와 있는 것</h2>
+      <h2 class="h2 reveal">이번주 인기있는 경험</h2>
       <p class="lead w reveal" style="--d:100ms"><span id="packcount"></span></p>
       <p class="reveal" style="--d:140ms;margin:18px 0 0"><a class="btn sm" href="#/market">전체 기록 보기</a></p>
       <div id="rows" style="margin-top:24px">
@@ -1491,7 +1492,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     '개발':'#dbe7ff', '디자인':'#ffdfd4', '글·콘텐츠':'#e7f0d9', '금융':'#fdeec6',
     '법무·세무':'#e2ddf5', '마케팅·기획':'#ffe2ef', '교육·연구':'#d7efe9'
   };
-  /* 아직 안 올라온 갈래를 보여주는 예시 카드. 체인에 없다는 것을 카드마다 표시한다. */
+  /* 준비 중인 갈래. 판매 정보는 체인 기록에만 표시한다. */
   /* [이름, 판 사람, 갈래, 단계, 값 SUI, 기간(일), 산 사람, 사진, 며칠 전, 설명] */
   var DEMO_ROWS = [
     ['프론트엔드 개발자 경험', '6년차 프론트엔드 개발자', '개발', 12, 0.05, 7, 3, 1, 1,
@@ -1571,6 +1572,23 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     var m = String(name).replace(/\s+/g, '');
     return m.slice(0, 2);
   }
+  var MARKET_COVERS = {
+    '개발': ['workspace', 'development'], '디자인': ['content', 'design'],
+    '글·콘텐츠': ['research', 'content'], '금융': ['finance'],
+    '법무·세무': ['legal', 'finance'], '마케팅·기획': ['planning', 'design'],
+    '교육·연구': ['research', 'planning']
+  };
+  function marketCover(r){
+    if(r.cover) return r.cover;
+    var choices = MARKET_COVERS[r.cat] || ['development'];
+    return 'img/market/' + choices[(r.ord || 0) % choices.length] + '.jpg';
+  }
+  function marketImage(r, cls){
+    return '<img class="' + cls + '" src="' + esc(marketCover(r)) + '" alt="' + esc(r.name + ' 대표 이미지') + '" loading="lazy" decoding="async" data-fallback="img/market/development.jpg">';
+  }
+  function marketTerms(r){
+    return r.live ? '<b>' + (Math.round(r.fee * 1000) / 1000) + ' SUI</b> · ' + r.days + '일 이용' : '공개 준비 중';
+  }
   function mkRowsData(){
     var rows = (state.packs || []).map(function(p, i){
       var who = SELLER[p.id] || ['판 사람', '', '#e8e4de'];
@@ -1580,7 +1598,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
         steps: Number(p.memory_count), fee: Number(p.fee) / 1e9,
         days: Number(p.ttl_ms) / 86400000, buyers: Number(p.subscriber_count),
         shots: hasShots(p) ? 1 : 0, at: Number(p.created_at_ms) || 0, ord: i,
-        cover: coverOf({ id: p.id }, p)
+        cover: hasShots(p) ? coverOf({ id: p.id }, p) : null
       };
     });
     var now = Date.now();
@@ -1603,9 +1621,9 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
   }
   function mkSorted(rows){
     var c = rows.slice();
-    if(mkSort === 'cheap') c.sort(function(a,b){ return a.fee - b.fee || a.ord - b.ord; });
-    else if(mkSort === 'bought') c.sort(function(a,b){ return b.buyers - a.buyers || a.ord - b.ord; });
-    else if(mkSort === 'steps') c.sort(function(a,b){ return b.steps - a.steps || a.ord - b.ord; });
+    if(mkSort === 'cheap') c.sort(function(a,b){ return (a.live === b.live ? 0 : a.live ? -1 : 1) || (a.live ? a.fee - b.fee : 0) || a.ord - b.ord; });
+    else if(mkSort === 'bought') c.sort(function(a,b){ return (a.live === b.live ? 0 : a.live ? -1 : 1) || (a.live ? b.buyers - a.buyers : 0) || a.ord - b.ord; });
+    else if(mkSort === 'steps') c.sort(function(a,b){ return (a.live === b.live ? 0 : a.live ? -1 : 1) || (a.live ? b.steps - a.steps : 0) || a.ord - b.ord; });
     else c.sort(function(a,b){ if(a.live !== b.live) return a.live ? -1 : 1; return b.at - a.at || a.ord - b.ord; });
     return c;
   }
@@ -1616,25 +1634,19 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     return d + '일 전';
   }
   function mkCard(r){
-    var meta = '<b>' + r.steps + '단계</b> · <b>' + (Math.round(r.fee * 1000) / 1000) + ' SUI</b> · '
-      + (r.days >= 1 ? r.days + '일' : Math.round(r.days * 24) + '시간') + '<br>'
-      + '산 사람 ' + r.buyers + ' · ' + (r.shots ? '사진 있어요' : '글로만 있어요') + ' · ' + agoText(r.at);
-    var bdg = r.live ? '<span class="bdg live">체인</span>' : '<span class="bdg">예시</span>';
-    var inner = bdg
-      + '<span class="ic" style="background:' + (CATCOLOR[r.cat] || '#eee') + '" aria-hidden="true">' + esc(initials(r.owner.replace(/^\d+년차\s*/, ''))) + '</span>'
-      + '<h3>' + esc(r.name) + '</h3>'
-      + '<p class="ds">' + esc(r.desc) + '</p>'
-      + '<span class="mt">' + esc(r.owner) + '<br>' + meta + '</span>';
-    return r.live
-      ? '<a class="mkcard" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
-      : '<div class="mkcard demo">' + inner + '</div>';
+    var inner = (r.live ? '<span class="mkavailable">구매 가능</span>' : '')
+      + '<span class="ic">' + marketImage({cat:r.cat, ord:r.ord, name:r.name}, 'profile-image') + '</span>'
+      + '<h3>' + esc(r.name) + '</h3><p class="ds">' + esc(r.desc) + '</p>'
+      + '<span class="mt">' + marketTerms(r) + '</span>';
+    return r.live ? '<a class="mkcard" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
+      : '<article class="mkcard pending">' + inner + '</article>';
   }
   function mkGridHtml(rows){
     return rows.length
-      ? rows.map(mkCard).join('')
+      ? rows.map(shotCard).join('')
       : '<div class="mkempty">찾는 게 없어요. 다른 말로 찾아보세요.</div>';
   }
-  /* 결과물 줄에 쓰는 겉그림. 체인 기록은 실제 화면, 예시는 갈래 색 판. */
+  /* 체인 기록에 등록된 화면이 있으면 대표 이미지보다 우선한다. */
   function coverOf(r, p){
     if(r.id === SLOP_ID) return 'img/clean-after.jpg';
     if(p && isSheet(p) && p.preview.sheet.previews && p.preview.sheet.previews.after){
@@ -1644,21 +1656,17 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     return im ? im[0] : null;
   }
   function shotCard(r){
-    var cv = r.cover
-      ? '<span class="cv"><img src="' + esc(r.cover) + '" alt="' + esc(r.name) + ' 결과물" loading="lazy"></span>'
-      : '<span class="cv gen" style="--c:' + (CATCOLOR[r.cat] || '#eee') + '"><span>' + esc(r.cat) + '</span></span>';
-    var bdg = r.live ? '<span class="bdg live">체인</span>' : '<span class="bdg">예시</span>';
-    var inner = bdg + cv
+    var inner = '<span class="cv">' + marketImage(r, 'cover-image') + '</span>'
       + '<span class="bd"><span class="nm">' + esc(r.name) + '</span>'
-      + '<span class="sub">' + esc(r.owner) + '<br>' + r.steps + '단계 · '
-      + (Math.round(r.fee * 1000) / 1000) + ' SUI · 산 사람 ' + r.buyers + '</span></span>';
-    return r.live
-      ? '<a class="shotcard" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
-      : '<div class="shotcard demo">' + inner + '</div>';
+      + '<span class="mkterms">' + marketTerms(r) + '</span>'
+      + '<span class="mkseller"><span class="seller-avatar" style="background:' + (CATCOLOR[r.cat] || '#eee') + '">' + esc(initials(r.cat)) + '</span>' + esc(r.owner) + '</span></span>';
+    return r.live ? '<a class="shotcard" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
+      : '<article class="shotcard pending">' + inner + '</article>';
   }
-  function secHead(title, count, more){
+  function secHead(title, count, rail){
     return '<div class="mksech"><h2>' + esc(title) + '<span class="arw" aria-hidden="true">›</span></h2>'
-      + (count ? '<span class="cnt">' + esc(count) + '</span>' : '') + '</div>';
+      + '<div class="mksection-actions">' + (count ? '<span class="cnt">' + esc(count) + '</span>' : '')
+      + (rail ? '<button class="mkprev" type="button" data-rail="' + rail + '" data-direction="-1" aria-label="' + esc(title) + ' 이전">‹</button><button class="mknext" type="button" data-rail="' + rail + '" data-direction="1" aria-label="' + esc(title) + ' 다음">›</button>' : '') + '</div></div>';
   }
   function renderMarket(){
     var rows = mkRowsData();
@@ -1666,7 +1674,8 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     var inCat = mkFilter(rows);
 
     var hot = inCat.slice().sort(function(a,b){
-      return b.buyers - a.buyers || (a.live === b.live ? a.ord - b.ord : (a.live ? -1 : 1));
+      if(a.live !== b.live) return a.live ? -1 : 1;
+      return (a.live ? b.buyers - a.buyers : 0) || a.ord - b.ord;
     }).slice(0, 10);
 
     var shots = inCat.slice().sort(function(a,b){
@@ -1679,26 +1688,28 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
 
     var h = [];
     h.push('<div class="wrap mkhead">');
-    h.push('<a class="mkback" href="#/">← 처음으로</a>');
-    h.push('<div class="mktitle"><h1>올라온 경험</h1><span class="mkcount">' + rows.length + '</span></div>');
-    h.push('<div class="mkcats">' + CATS.map(function(c){
+    h.push('<header class="market-header"><a class="market-brand" href="#/">memory<span>market</span><i></i></a><a class="market-sell" href="#sec-sell">내 경험 팔기 ↗</a></header>');
+    h.push('<div class="mktitle"><h1>경험 마켓</h1><span class="mkcount">' + rows.length + '</span></div>');
+    h.push('<p class="mkintro">누군가 먼저 겪은 경험에서, 다음 일의 힌트를 찾아보세요.</p>');
+    h.push('<div class="mksech mkfeatured"><h2>눈여겨볼 경험 <span class="arw">›</span></h2><div class="mksection-actions"><button class="mkprev" type="button" data-rail="mkhot" data-direction="-1" aria-label="눈여겨볼 경험 이전">‹</button><button class="mknext" type="button" data-rail="mkhot" data-direction="1" aria-label="눈여겨볼 경험 다음">›</button></div></div>');
+    h.push('<div class="mkcats" aria-label="경험 분야">' + CATS.map(function(c){
       var n = c === '전체' ? rows.length : rows.filter(function(r){ return r.cat === c; }).length;
-      return '<button class="cat' + (mkCat === c ? ' on' : '') + '" type="button" data-cat="' + esc(c) + '">'
-        + esc(c) + ' ' + n + '</button>';
+      return '<button class="cat' + (mkCat === c ? ' on' : '') + '" type="button" aria-pressed="' + (mkCat === c) + '" data-cat="' + esc(c) + '">'
+        + esc(c) + '</button>';
     }).join('') + '</div>');
 
     h.push('<div class="mksec">');
-    h.push(secHead('이번 주 많이 팔린 경험', '옆으로 밀어서 더 보세요'));
-    h.push('<div class="mkrail">' + hot.map(shotCard).join('') + '</div>');
+
+    h.push('<div class="mkrail profile-rail" id="mkhot" tabindex="0" aria-label="눈여겨볼 경험">' + (hot.length ? hot.map(mkCard).join('') : '<p class="mkempty">이 분야의 기록을 준비하고 있어요.</p>') + '</div>');
     h.push('</div>');
 
     h.push('<div class="mksec">');
-    h.push(secHead('사기 망설여진다면 결과물부터 보세요', '사기 전에 누구나 볼 수 있어요'));
-    h.push('<div class="mkrail">' + shots.map(shotCard).join('') + '</div>');
+    h.push(secHead('어떤 경험인지, 먼저 둘러보세요', '관심 있는 기록을 골라보세요', 'mkpreview'));
+    h.push('<div class="mkrail" id="mkpreview" tabindex="0" aria-label="경험 미리보기">' + shots.map(shotCard).join('') + '</div>');
     h.push('</div>');
 
     h.push('<div class="mksec">');
-    h.push(secHead('전부 보기', all.length + '개'));
+    h.push(secHead('모든 경험', all.length + '개'));
     h.push('<div class="mkbar">'
       + '<span class="mksearch"><input id="mkq" type="search" placeholder="직군이나 하고 싶은 일로 찾아보세요" value="' + esc(mkQuery) + '" aria-label="기록 찾기"></span>'
       + '<select class="mksort" id="mksort" aria-label="정렬">'
@@ -1710,8 +1721,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     h.push('<div class="mkgrid" id="mkgrid">' + mkGridHtml(all) + '</div>');
     h.push('</div>');
 
-    h.push('<p class="mknote"><b>체인</b> 표시가 붙은 ' + liveN + '개는 지금 실제로 살 수 있어요. 값과 산 사람 수는 체인에서 그때그때 읽어와요. '
-      + '<b>예시</b> 표시가 붙은 것은 아직 안 올라왔어요. 어떤 갈래가 올라올 수 있는지 보여주려고 적어둔 것이에요.</p>');
+    h.push('<footer class="market-footer"><span>MEMORY MARKET</span><p>구매 가능한 기록 ' + liveN + '개 · Sui testnet</p><a href="#/">서비스 소개 ↗</a></footer>');
     h.push('</div>');
     marketEl.innerHTML = h.join('');
   }
@@ -1736,7 +1746,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
       marketEl.hidden = false;
       renderMarket();
       if(currentView !== 'market') window.scrollTo(0, 0);
-      document.title = '올라온 경험 · 당신의 경험을 사겠습니다';
+      document.title = '경험 마켓 · Memory Market';
       currentView = 'market';
       return;
     }
@@ -1770,12 +1780,28 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
       mkQuery = e.target.value;
       var box = document.getElementById('mkgrid');
       if(!box) return;
-      box.innerHTML = mkGridHtml(mkSorted(mkFilter(mkRowsData())));
+      var filtered = mkSorted(mkFilter(mkRowsData()));
+      box.innerHTML = mkGridHtml(filtered);
+      var count = box.parentElement.querySelector('.cnt');
+      if(count) count.textContent = filtered.length + '개';
     }
   });
   document.addEventListener('change', function(e){
     if(e.target && e.target.id === 'mksort'){ mkSort = e.target.value; renderMarket(); }
   });
+  document.addEventListener('click', function(e){
+    var button = e.target.closest('[data-rail]');
+    if(!button) return;
+    var rail = document.getElementById(button.getAttribute('data-rail'));
+    if(rail) rail.scrollBy({left: Number(button.getAttribute('data-direction')) * (rail.clientWidth + 16), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  });
+  document.addEventListener('error', function(e){
+    var image = e.target;
+    if(image.tagName === 'IMG' && image.hasAttribute('data-fallback')){
+      var fallback = image.getAttribute('data-fallback');
+      image.removeAttribute('data-fallback'); image.src = fallback;
+    }
+  }, true);
   window.addEventListener('hashchange', applyRoute);
   window.addEventListener('hashchange', syncStartTab);
   syncStartTab();
