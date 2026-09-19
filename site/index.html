@@ -317,6 +317,48 @@
   /* ───────── 회색 칸 ───────── */
   .on-grey{ background:var(--grey); }
   .on-grey .gl{ background-image:repeating-linear-gradient(to right, rgba(0,0,0,.06) 0 1px, transparent 1px calc(20% - 1px)); }
+  /* ---------- 전체 시장 화면 ---------- */
+  .mkhead{ padding:38px 0 0; }
+  .mktitle{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .mktitle h1{ font-size:30px; font-weight:700; margin:0; letter-spacing:-.01em; }
+  .mkcount{ font-family:var(--mono); font-size:26px; color:var(--mute); }
+  .mkbar{ display:flex; gap:12px; align-items:center; margin:22px 0 0; flex-wrap:wrap; }
+  .mksearch{ flex:1 1 320px; min-width:220px; position:relative; }
+  .mksearch input{ width:100%; appearance:none; border:1px solid #d9d4cc; background:#fff; color:var(--ink);
+    font:inherit; font-size:15px; padding:11px 14px; border-radius:0; }
+  .mksearch input:focus{ outline:2px solid var(--accent); outline-offset:-1px; }
+  .mksort{ appearance:none; border:1px solid #d9d4cc; background:#fff; color:var(--ink);
+    font-family:var(--mono); font-size:13px; padding:11px 30px 11px 12px; border-radius:0; cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);
+    background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%; background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
+  .mkchips{ display:flex; gap:8px; margin:14px 0 0; flex-wrap:wrap; }
+  .chip{ appearance:none; background:#fff; border:1px solid #d9d4cc; color:var(--mute);
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.03em; padding:7px 12px; cursor:pointer; }
+  .chip:hover{ border-color:var(--ink); color:var(--ink); }
+  .chip.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .mklist{ margin:24px 0 0; border-top:1px solid var(--hair); }
+  .mkrow{ display:block; text-decoration:none; color:inherit; padding:15px 6px; border-bottom:1px solid var(--hair);
+    position:relative; }
+  a.mkrow:hover{ background:#faf8f5; }
+  .mkrow .r1{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+  .mkrow .owner{ color:var(--mute); font-size:16px; }
+  .mkrow .sep{ color:#bdb7ae; font-size:16px; }
+  .mkrow .name{ font-size:16px; font-weight:700; }
+  a.mkrow:hover .name{ color:var(--accent-dark); }
+  .mkrow .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; padding:3px 7px; border:1px solid #d9d4cc; color:var(--mute); }
+  .mkrow .tag.live{ border-color:var(--accent); color:var(--accent-dark); }
+  .mkrow .r2{ margin:7px 0 0; font-family:var(--mono); font-size:12.5px; color:var(--mute); line-height:1.7; }
+  .mkrow .r2 b{ color:var(--ink); font-weight:700; }
+  .mkrow.demo{ opacity:.62; }
+  .mkempty{ padding:40px 6px; color:var(--mute); }
+  .mknote{ margin:20px 0 0; font-size:14px; color:var(--mute); line-height:1.7; }
+  .mkback{ display:inline-block; margin:0 0 6px; font-family:var(--mono); font-size:13px; color:var(--mute); text-decoration:none; }
+  .mkback:hover{ color:var(--ink); }
+  @media(max-width:560px){
+    .mktitle h1{ font-size:24px; } .mkcount{ font-size:21px; }
+    .mkrow .name, .mkrow .owner, .mkrow .sep{ font-size:15px; }
+    .mkrow .r2{ font-size:11.5px; }
+  }
   .tabs{ display:flex; gap:0; margin:30px 0 0; border-bottom:1px solid var(--hair); max-width:700px; }
   .tab{ appearance:none; background:none; border:0; border-bottom:2px solid transparent; margin-bottom:-1px;
     font-family:var(--mono); font-size:14px; letter-spacing:.06em; color:var(--mute); padding:12px 18px; cursor:pointer; }
@@ -478,7 +520,7 @@
       <div class="wrap in">
         <a class="lg" href="#/">MEMORY MARKET</a>
         <nav><a href="#sec-sell">내 경험 팔기</a></nav>
-        <a class="btn sm" href="#sec-list">경험 사보기</a>
+        <a class="btn sm" href="#/market">경험 사보기</a>
       </div>
     </header>
 
@@ -498,7 +540,7 @@
           ><span class="w">자동화 경험을</span
         ></span></span><span class="l2">사겠습니다</span></h1>
         <p class="say reveal" style="--d:400ms">AI 한테 몇 번씩 다시 시켜가며 겨우 찾아낸 요령이 있잖아요. 창을 닫으면 사라지는 그걸 여기서 값을 매겨 사고팔아요. 사는 쪽은 사람이 아니라 AI 예요.</p>
-        <p class="reveal cta" style="--d:560ms"><a class="btn" href="#sec-list">경험 사보기</a><a class="sell" href="#sec-sell">내 경험 팔기 →</a></p>
+        <p class="reveal cta" style="--d:560ms"><a class="btn" href="#/market">경험 사보기</a><a class="sell" href="#sec-sell">내 경험 팔기 →</a></p>
       </div>
     </div>
     <div class="wrap"><span class="fold reveal" style="display:block"></span></div>
@@ -510,6 +552,7 @@
     <div class="wrap">
       <h2 class="h2 reveal">지금 올라와 있는 것</h2>
       <p class="lead w reveal" style="--d:100ms"><span id="packcount"></span></p>
+      <p class="reveal" style="--d:140ms;margin:18px 0 0"><a class="btn sm" href="#/market">전체 기록 보기</a></p>
       <div id="rows" style="margin-top:24px">
         <div class="skrow"><span class="skel" style="width:34%;height:26px"></span><span class="skel" style="width:72%;height:14px;margin-top:14px"></span><span class="skel" style="width:46%;height:12px;margin-top:14px"></span></div>
         <div class="skrow"><span class="skel" style="width:28%;height:26px"></span><span class="skel" style="width:66%;height:14px;margin-top:14px"></span><span class="skel" style="width:42%;height:12px;margin-top:14px"></span></div>
@@ -645,6 +688,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
 </main>
 
 <!-- ==================== 상세 화면 ==================== -->
+<main id="view-market" hidden></main>
 <main id="view-detail" hidden></main>
 
 <!-- ==================== 사진 크게 보기 ==================== -->
@@ -776,6 +820,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
   };
 
   var listEl   = document.getElementById('view-list');
+  var marketEl = document.getElementById('view-market');
   var detailEl = document.getElementById('view-detail');
   var state = { packs:null, receipts:{}, retracts:[], loading:false, error:null };
 
@@ -1319,6 +1364,12 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
         boot();
         return;
       }
+      if(t.hasAttribute && t.hasAttribute('data-mklive')){
+        e.preventDefault();
+        mkLiveOnly = t.getAttribute('data-mklive') === '1';
+        renderMarket();
+        return;
+      }
       if(t.hasAttribute && t.hasAttribute('data-tab')){
         e.preventDefault();
         showTab(t.getAttribute('data-tab'));
@@ -1393,17 +1444,146 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     if((location.hash || '') === '#sec-sell') showTab('sell');
   }
 
+  /* ---------- 전체 시장 화면 ---------- */
+  /* 아직 안 올라온 갈래를 보여주는 예시 줄. 체인에 없다는 것을 줄마다 표시한다. */
+  /* [이름, 판 사람, 단계, 값 SUI, 기간(일), 산 사람, 사진있음, 며칠 전, 갈래] */
+  var DEMO_ROWS = [
+    ['프론트엔드 개발자 경험', '6년차 프론트엔드 개발자', 12, 0.05, 7, 3, 1, 1, '웹 개발'],
+    ['백엔드 개발자 경험', '8년차 백엔드 개발자', 19, 0.06, 7, 2, 0, 1, '웹 개발'],
+    ['앱 개발자 경험', '5년차 앱 개발자', 14, 0.05, 7, 4, 1, 2, '앱 개발'],
+    ['데이터 분석가 경험', '4년차 데이터 분석가', 21, 0.04, 7, 6, 0, 2, '데이터 분석'],
+    ['UX 리서처 경험', '7년차 UX 리서처', 9, 0.04, 7, 1, 1, 3, '웹 디자인'],
+    ['서비스 기획자 경험', '5년차 기획자', 16, 0.03, 7, 2, 0, 3, '기획'],
+    ['마케터 경험', '3년차 퍼포먼스 마케터', 11, 0.03, 7, 5, 1, 4, '마케팅'],
+    ['영상 편집자 경험', '6년차 영상 편집자', 8, 0.03, 7, 0, 1, 4, '영상'],
+    ['3D 디자이너 경험', '4년차 3D 디자이너', 13, 0.05, 7, 1, 1, 5, '디자인'],
+    ['게임 기획자 경험', '9년차 게임 기획자', 24, 0.06, 7, 3, 0, 5, '기획'],
+    ['보안 엔지니어 경험', '7년차 보안 엔지니어', 27, 0.08, 7, 2, 0, 6, '보안'],
+    ['자동화 짠 경험', '5년차 사무 자동화', 18, 0.02, 7, 9, 0, 6, '자동화'],
+    ['주식 투자자 경험', '11년차 개인 투자자', 31, 0.04, 30, 12, 0, 7, '투자'],
+    ['코인 투자자 경험', '6년차 개인 투자자', 22, 0.04, 30, 7, 0, 7, '투자'],
+    ['번역가 경험', '10년차 산업 번역가', 15, 0.03, 7, 2, 0, 8, '번역'],
+    ['대학원생 경험', '박사 과정 4년차', 29, 0.02, 30, 4, 0, 8, '연구'],
+    ['세무사 경험', '9년차 세무사', 17, 0.09, 30, 1, 0, 9, '세무'],
+    ['쇼핑몰 운영자 경험', '4년차 온라인 셀러', 20, 0.03, 7, 8, 1, 9, '커머스'],
+    ['유튜버 경험', '5년차 채널 운영', 12, 0.03, 7, 6, 1, 10, '영상'],
+    ['강사 경험', '12년차 학원 강사', 14, 0.02, 30, 3, 0, 11, '교육']
+  ];
+  var mkQuery = '';
+  var mkSort = 'new';
+  var mkLiveOnly = false;
+
+  function mkRowsData(){
+    var rows = (state.packs || []).map(function(p, i){
+      var who = SELLER[p.id] || ['판 사람', '', '#e8e4de'];
+      return {
+        live: true, id: p.id, name: ourName(p), owner: who[0],
+        steps: Number(p.memory_count), fee: Number(p.fee) / 1e9,
+        days: Number(p.ttl_ms) / 86400000, buyers: Number(p.subscriber_count),
+        shots: isSheet(p) ? 1 : 0, at: Number(p.created_at_ms) || 0,
+        kind: isSheet(p) ? '웹 디자인' : 'Sui 개발', ord: i
+      };
+    });
+    var now = Date.now();
+    DEMO_ROWS.forEach(function(d, i){
+      rows.push({
+        live: false, id: null, name: d[0], owner: d[1], steps: d[2], fee: d[3],
+        days: d[4], buyers: d[5], shots: d[6], at: now - d[7] * 86400000, kind: d[8], ord: 100 + i
+      });
+    });
+    return rows;
+  }
+  function mkFilter(rows){
+    var q = mkQuery.trim().toLowerCase();
+    return rows.filter(function(r){
+      if(mkLiveOnly && !r.live) return false;
+      if(!q) return true;
+      return (r.name + ' ' + r.owner + ' ' + r.kind).toLowerCase().indexOf(q) !== -1;
+    });
+  }
+  function mkSorted(rows){
+    var c = rows.slice();
+    if(mkSort === 'cheap') c.sort(function(a,b){ return a.fee - b.fee || a.ord - b.ord; });
+    else if(mkSort === 'bought') c.sort(function(a,b){ return b.buyers - a.buyers || a.ord - b.ord; });
+    else if(mkSort === 'steps') c.sort(function(a,b){ return b.steps - a.steps || a.ord - b.ord; });
+    else c.sort(function(a,b){ if(a.live !== b.live) return a.live ? -1 : 1; return b.at - a.at || a.ord - b.ord; });
+    return c;
+  }
+  function agoText(ms){
+    var d = Math.floor((Date.now() - ms) / 86400000);
+    if(d <= 0) return '오늘';
+    if(d === 1) return '어제';
+    return d + '일 전';
+  }
+  function mkRow(r){
+    var meta = '<b>' + r.steps + '단계</b> · <b>' + (Math.round(r.fee * 1000) / 1000) + ' SUI</b> · '
+      + (r.days >= 1 ? r.days + '일' : Math.round(r.days * 24) + '시간') + ' 이용 · '
+      + '산 사람 ' + r.buyers + ' · ' + esc(r.kind) + ' · ' + agoText(r.at);
+    var tag = r.live
+      ? '<span class="tag live">체인</span>' + (r.shots ? '<span class="tag">사진</span>' : '<span class="tag">글</span>')
+      : '<span class="tag">예시</span>';
+    var inner = '<span class="r1"><span class="owner">' + esc(r.owner) + '</span>'
+      + '<span class="sep">/</span><span class="name">' + esc(r.name) + '</span>' + tag + '</span>'
+      + '<span class="r2">' + meta + '</span>';
+    return r.live
+      ? '<a class="mkrow" href="#/pack/' + esc(r.id) + '">' + inner + '</a>'
+      : '<div class="mkrow demo">' + inner + '</div>';
+  }
+  function renderMarket(){
+    var rows = mkRowsData();
+    var liveN = rows.filter(function(r){ return r.live; }).length;
+    var shown = mkSorted(mkFilter(rows));
+    var h = [];
+    h.push('<div class="wrap mkhead">');
+    h.push('<a class="mkback" href="#/">← 처음으로</a>');
+    h.push('<div class="mktitle"><h1>올라온 경험</h1><span class="mkcount">' + rows.length + '</span></div>');
+    h.push('<div class="mkbar">'
+      + '<span class="mksearch"><input id="mkq" type="search" placeholder="직군이나 하고 싶은 일로 찾아보세요" value="' + esc(mkQuery) + '" aria-label="기록 찾기"></span>'
+      + '<select class="mksort" id="mksort" aria-label="정렬">'
+      + '<option value="new"' + (mkSort === 'new' ? ' selected' : '') + '>최근에 올라온 순</option>'
+      + '<option value="bought"' + (mkSort === 'bought' ? ' selected' : '') + '>많이 팔린 순</option>'
+      + '<option value="cheap"' + (mkSort === 'cheap' ? ' selected' : '') + '>값이 싼 순</option>'
+      + '<option value="steps"' + (mkSort === 'steps' ? ' selected' : '') + '>단계가 많은 순</option>'
+      + '</select></div>');
+    h.push('<div class="mkchips">'
+      + '<button class="chip' + (mkLiveOnly ? '' : ' on') + '" type="button" data-mklive="0">전부 ' + rows.length + '</button>'
+      + '<button class="chip' + (mkLiveOnly ? ' on' : '') + '" type="button" data-mklive="1">지금 살 수 있는 것 ' + liveN + '</button>'
+      + '</div>');
+    h.push('<div class="mklist">');
+    if(!shown.length) h.push('<div class="mkempty">찾는 게 없어요. 다른 말로 찾아보세요.</div>');
+    else shown.forEach(function(r){ h.push(mkRow(r)); });
+    h.push('</div>');
+    h.push('<p class="mknote"><b>예시</b> 표시가 붙은 줄은 아직 체인에 없어요. 어떤 갈래가 올라올 수 있는지 보여주려고 적어둔 것이에요. '
+      + '<b>체인</b> 표시가 붙은 ' + liveN + '개만 지금 실제로 살 수 있고, 값과 산 사람 수는 체인에서 그때그때 읽어와요.</p>');
+    h.push('</div>');
+    marketEl.innerHTML = h.join('');
+  }
+
   /* ---------- 화면 바꾸기 ---------- */
   var currentView = null;
   var listScroll = 0;
 
   function parseRoute(){
     var m = (location.hash || '').match(/^#\/pack\/(0x[0-9a-fA-F]+)/);
-    return m ? { view:'detail', id: m[1].toLowerCase() } : { view:'list' };
+    if(m) return { view:'detail', id: m[1].toLowerCase() };
+    if((location.hash || '').indexOf('#/market') === 0) return { view:'market' };
+    return { view:'list' };
   }
 
   function applyRoute(){
     var r = parseRoute();
+    if(r.view === 'market'){
+      if(currentView === 'list') listScroll = window.pageYOffset || 0;
+      listEl.hidden = true;
+      detailEl.hidden = true;
+      marketEl.hidden = false;
+      renderMarket();
+      if(currentView !== 'market') window.scrollTo(0, 0);
+      document.title = '올라온 경험 · 당신의 경험을 사겠습니다';
+      currentView = 'market';
+      return;
+    }
+    marketEl.hidden = true;
     if(r.view === 'detail'){
       var sameDetail = (currentView === 'detail' && detailEl.getAttribute('data-id') === r.id);
       if(currentView === 'list') listScroll = window.pageYOffset || 0;
@@ -1418,6 +1598,7 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     }
     if(currentView === 'list') return;
     detailEl.hidden = true;
+    marketEl.hidden = true;
     detailEl.removeAttribute('data-id');
     listEl.hidden = false;
     renderList();
@@ -1426,6 +1607,21 @@ Sui testnet 위의 기록 시장이고, 도구 7개짜리 MCP 서버로 붙는�
     currentView = 'list';
     sweep();
   }
+  /* 시장 화면의 찾기와 정렬. 다시 그려도 입력칸에 있던 글자와 커서를 지키려고 위임으로 받는다. */
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.id === 'mkq'){
+      mkQuery = e.target.value;
+      var box = document.querySelector('#view-market .mklist');
+      if(!box) return;
+      var rows = mkSorted(mkFilter(mkRowsData()));
+      box.innerHTML = rows.length
+        ? rows.map(mkRow).join('')
+        : '<div class="mkempty">찾는 게 없어요. 다른 말로 찾아보세요.</div>';
+    }
+  });
+  document.addEventListener('change', function(e){
+    if(e.target && e.target.id === 'mksort'){ mkSort = e.target.value; renderMarket(); }
+  });
   window.addEventListener('hashchange', applyRoute);
   window.addEventListener('hashchange', syncStartTab);
   syncStartTab();
